@@ -120,3 +120,77 @@ class TestCrossClientOAuthBoundaries:
         response = clients.rest.get("/api/v1/inbox/")
         assert response.status_code == 403
         assert "synthetic-private-body-0" not in response.content.decode()
+
+
+@pytest.mark.django_db
+class TestCachedKeyAuthorizationBoundaries:
+    """A previously used bearer must not preserve stale permissions."""
+
+    def test_cached_key_revoked_denies_rest_and_mcp(self, clients):
+        from apps.api_keys import services
+        from apps.api_keys.models import ApiKey
+
+        assert clients.rest.get("/api/v1/accounts/").status_code == 200
+        key = ApiKey.objects.get(name="client-a-only")
+        services.revoke_api_key(key)
+        assert clients.rest.get("/api/v1/accounts/").status_code == 401
+        assert _call_mcp(clients.rest, "list_accounts", {}).status_code == 401
+
+    def test_cached_key_permissions_reduced_denies_inbox(self, clients):
+        from apps.api_keys.models import ApiKey
+
+        assert clients.rest.get("/api/v1/inbox/").status_code == 200
+        key = ApiKey.objects.get(name="client-a-only")
+        key.permissions = []
+        key.save(update_fields=["permissions"])
+        assert clients.rest.get("/api/v1/inbox/").status_code == 403
+        response = _call_mcp(clients.rest, "list_inbox_messages", {})
+        assert response.status_code == 200
+        assert "error" in response.json()
+        assert "synthetic-private-body-0" not in response.content.decode()
+
+    def test_cached_key_forward_allowlist_remove(self, clients):
+        from apps.api_keys.models import ApiKey
+
+        assert len(_accounts(clients.rest)) == 1
+        key = ApiKey.objects.get(name="client-a-only")
+        key.social_accounts.remove(clients.accounts[0])
+        response = clients.rest.get("/api/v1/accounts/")
+        assert response.status_code == 200
+        assert response.json()["accounts"] == []
+        assert _accounts(clients.rest) == []
+
+    def test_cached_key_reverse_allowlist_remove(self, clients):
+        from apps.api_keys.models import ApiKey
+
+        assert len(_accounts(clients.rest)) == 1
+        key = ApiKey.objects.get(name="client-a-only")
+        clients.accounts[0].api_keys.remove(key)
+        assert _accounts(clients.rest) == []
+
+    def test_cached_key_reverse_allowlist_clear(self, clients):
+        assert len(_accounts(clients.rest)) == 1
+        clients.accounts[0].api_keys.clear()
+        assert _accounts(clients.rest) == []
+
+    def test_cached_key_offboarding_denies_rest_and_mcp(self, clients):
+        assert clients.rest.get("/api/v1/accounts/").status_code == 200
+        WorkspaceMembership.objects.filter(
+            user=clients.user,
+            workspace=clients.workspaces[0],
+        ).delete()
+        assert clients.rest.get("/api/v1/accounts/").status_code == 401
+        assert _call_mcp(clients.rest, "list_accounts", {}).status_code == 401
+
+    def test_cached_key_expiry_change_denies_next_request(self, clients):
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from apps.api_keys.models import ApiKey
+
+        assert clients.rest.get("/api/v1/accounts/").status_code == 200
+        key = ApiKey.objects.get(name="client-a-only")
+        key.expires_at = timezone.now() - timedelta(seconds=1)
+        key.save(update_fields=["expires_at"])
+        assert clients.rest.get("/api/v1/accounts/").status_code == 401
