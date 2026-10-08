@@ -17,8 +17,9 @@
 - [ ] PR #9: validar novos testes de papéis, troca de workspace OAuth/MCP, offboarding e restrição de API keys (CI pendente).
 - [x] PR #9: CI aprovada para 10 cenários OAuth/MCP, permissões e offboarding; 2.390 passed / 1 skipped.
 - [x] PR #10: sete regressões de API keys com cache preenchido aprovadas (CI #37773171776; 2.397 passed / 1 skipped).
-- [ ] PR #11: validar três cenários Meta webhook com conta nativa distinta ou repetida entre workspaces (CI pendente).
-- [ ] Cobrir depois Redis multiworker, tarefas, demais webhooks, relatórios, downloads e storage privado de evidências.
+- [x] PR #11: três cenários Meta webhook com ID nativo distinto/repetido aprovados (CI #37778759366; 2.400 passed / 1 skipped).
+- [ ] PR #12: validar cinco regressões de inbox em tarefas de fundo, IDs remotos, atualização e notificações A/B/C (CI pendente).
+- [ ] Cobrir depois Redis multiworker, demais tarefas, webhooks, relatórios, downloads e storage privado de evidências.
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
