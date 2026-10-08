@@ -22,19 +22,13 @@ def _member(org, workspace, email, role):
         tos_accepted_at=timezone.now(),
     )
     # The upstream signal creates an unrelated default org per user.
-    auto_org_ids = list(
-        OrgMembership.objects.filter(user=user).values_list("organization_id", flat=True)
-    )
+    auto_org_ids = list(OrgMembership.objects.filter(user=user).values_list("organization_id", flat=True))
     WorkspaceMembership.objects.filter(user=user).delete()
     OrgMembership.objects.filter(user=user).delete()
     Organization.objects.filter(id__in=auto_org_ids).delete()
 
-    OrgMembership.objects.create(
-        user=user, organization=org, org_role=OrgMembership.OrgRole.MEMBER
-    )
-    WorkspaceMembership.objects.create(
-        user=user, workspace=workspace, workspace_role=role
-    )
+    OrgMembership.objects.create(user=user, organization=org, org_role=OrgMembership.OrgRole.MEMBER)
+    WorkspaceMembership.objects.create(user=user, workspace=workspace, workspace_role=role)
     return user
 
 
@@ -47,31 +41,33 @@ class ClientCommentVisibilityGateTests(TestCase):
         self.ws_c = Workspace.objects.create(organization=self.org_c, name="Client C")
 
         self.editor = _member(
-            self.org_a, self.ws_a, "editor-a@example.test",
+            self.org_a,
+            self.ws_a,
+            "editor-a@example.test",
             WorkspaceMembership.WorkspaceRole.EDITOR,
         )
         self.client_a = _member(
-            self.org_a, self.ws_a, "client-a@example.test",
+            self.org_a,
+            self.ws_a,
+            "client-a@example.test",
             WorkspaceMembership.WorkspaceRole.CLIENT,
         )
         self.editor_b = _member(
-            self.org_a, self.ws_b, "editor-b@example.test",
+            self.org_a,
+            self.ws_b,
+            "editor-b@example.test",
             WorkspaceMembership.WorkspaceRole.EDITOR,
         )
         self.editor_c = _member(
-            self.org_c, self.ws_c, "editor-c@example.test",
+            self.org_c,
+            self.ws_c,
+            "editor-c@example.test",
             WorkspaceMembership.WorkspaceRole.EDITOR,
         )
 
-        self.post_a = Post.objects.create(
-            workspace=self.ws_a, author=self.editor, caption="Synthetic post A"
-        )
-        self.post_b = Post.objects.create(
-            workspace=self.ws_b, author=self.editor_b, caption="Synthetic post B"
-        )
-        self.post_c = Post.objects.create(
-            workspace=self.ws_c, author=self.editor_c, caption="Synthetic post C"
-        )
+        self.post_a = Post.objects.create(workspace=self.ws_a, author=self.editor, caption="Synthetic post A")
+        self.post_b = Post.objects.create(workspace=self.ws_b, author=self.editor_b, caption="Synthetic post B")
+        self.post_c = Post.objects.create(workspace=self.ws_c, author=self.editor_c, caption="Synthetic post C")
 
     @staticmethod
     def _url(workspace, post):
@@ -87,11 +83,7 @@ class ClientCommentVisibilityGateTests(TestCase):
             {"body": "forged internal note", "visibility": PostComment.Visibility.INTERNAL},
         )
         self.assertEqual(response.status_code, 403)
-        self.assertFalse(
-            PostComment.objects.filter(
-                post=self.post_a, body="forged internal note"
-            ).exists()
-        )
+        self.assertFalse(PostComment.objects.filter(post=self.post_a, body="forged internal note").exists())
 
     def test_client_cannot_use_unknown_visibility_to_bypass_gate(self):
         self.client.force_login(self.client_a)
@@ -114,9 +106,7 @@ class ClientCommentVisibilityGateTests(TestCase):
 
     def test_client_default_visibility_remains_external(self):
         self.client.force_login(self.client_a)
-        response = self.client.post(
-            self._url(self.ws_a, self.post_a), {"body": "default external"}
-        )
+        response = self.client.post(self._url(self.ws_a, self.post_a), {"body": "default external"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             PostComment.objects.get(post=self.post_a).visibility,
@@ -137,9 +127,7 @@ class ClientCommentVisibilityGateTests(TestCase):
 
     def test_existing_session_uses_downgraded_role(self):
         self.client.force_login(self.editor)
-        membership = WorkspaceMembership.objects.get(
-            user=self.editor, workspace=self.ws_a
-        )
+        membership = WorkspaceMembership.objects.get(user=self.editor, workspace=self.ws_a)
         membership.workspace_role = WorkspaceMembership.WorkspaceRole.CLIENT
         membership.save(update_fields=["workspace_role"])
 
