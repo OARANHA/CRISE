@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from apps.accounts.models import User
+from apps.approvals.comments import delete_comment as delete_comment_service
 from apps.approvals.models import PostComment
 from apps.composer.models import Post
 from apps.members.models import OrgMembership, WorkspaceMembership
@@ -83,3 +84,81 @@ class EditCommentWorkspaceScopeTests(TestCase):
         self.assertLess(response.status_code, 400)
         self.comment.refresh_from_db()
         self.assertEqual(self.comment.body, "rewritten")
+
+
+class DeleteCommentWorkspaceBoundaryTests(EditCommentWorkspaceScopeTests):
+    """Negative IDOR cases, plus preserving intended same-workspace deletion."""
+
+    def _delete_url(self, workspace, post, comment):
+        return reverse(
+            "approvals:delete_comment",
+            kwargs={
+                "workspace_id": workspace.id,
+                "post_id": post.id,
+                "comment_id": comment.id,
+            },
+        )
+
+    def _manager(self, email, workspace):
+        manager = _make_user(email)
+        OrgMembership.objects.create(user=manager, organization=workspace.organization, org_role="member")
+        WorkspaceMembership.objects.create(user=manager, workspace=workspace, workspace_role="manager")
+        return manager
+
+    def test_author_cannot_delete_other_workspace_comment_using_foreign_url(self):
+        self.client.force_login(self.user)
+        response = self.client.post(self._delete_url(self.ws_a, self.post_b, self.comment))
+        self.assertEqual(response.status_code, 404)
+        self.comment.refresh_from_db()
+        self.assertIsNone(self.comment.deleted_at)
+
+    def test_wrong_post_uuid_in_same_workspace_cannot_delete_comment(self):
+        unrelated_post = Post.objects.create(workspace=self.ws_b, author=self.user, caption="other")
+        self.client.force_login(self.user)
+        response = self.client.post(self._delete_url(self.ws_b, unrelated_post, self.comment))
+        self.assertEqual(response.status_code, 404)
+        self.comment.refresh_from_db()
+        self.assertIsNone(self.comment.deleted_at)
+
+    def test_manager_from_a_cannot_delete_b_comment_via_service(self):
+        manager_a = self._manager("manager-a@example.test", self.ws_a)
+        with self.assertRaisesRegex(ValueError, "Comment not found"):
+            delete_comment_service(self.comment.id, manager_a, self.ws_a)
+        self.comment.refresh_from_db()
+        self.assertIsNone(self.comment.deleted_at)
+
+    def test_author_can_delete_comment_in_own_workspace(self):
+        self.client.force_login(self.user)
+        response = self.client.post(self._delete_url(self.ws_b, self.post_b, self.comment))
+        self.assertEqual(response.status_code, 200)
+        self.comment.refresh_from_db()
+        self.assertIsNotNone(self.comment.deleted_at)
+
+    def test_manager_can_moderate_comment_in_own_workspace(self):
+        manager_b = self._manager("manager-b@example.test", self.ws_b)
+        self.client.force_login(manager_b)
+        response = self.client.post(self._delete_url(self.ws_b, self.post_b, self.comment))
+        self.assertEqual(response.status_code, 200)
+        self.comment.refresh_from_db()
+        self.assertIsNotNone(self.comment.deleted_at)
+
+    def test_non_author_contributor_cannot_delete_same_workspace_comment(self):
+        contributor = _make_user("contributor-b@example.test")
+        OrgMembership.objects.create(user=contributor, organization=self.org, org_role="member")
+        WorkspaceMembership.objects.create(user=contributor, workspace=self.ws_b, workspace_role="contributor")
+        self.client.force_login(contributor)
+        response = self.client.post(self._delete_url(self.ws_b, self.post_b, self.comment))
+        self.assertEqual(response.status_code, 403)
+        self.comment.refresh_from_db()
+        self.assertIsNone(self.comment.deleted_at)
+
+    def test_manager_a_cannot_delete_comment_in_other_organization_via_service(self):
+        org_c = Organization.objects.create(name="Other org")
+        ws_c = Workspace.objects.create(organization=org_c, name="Client C")
+        post_c = Post.objects.create(workspace=ws_c, author=self.user, caption="C")
+        comment_c = PostComment.objects.create(post=post_c, author=self.user, body="private c")
+        manager_a = self._manager("manager-a-for-c@example.test", self.ws_a)
+        with self.assertRaisesRegex(ValueError, "Comment not found"):
+            delete_comment_service(comment_c.id, manager_a, self.ws_a)
+        comment_c.refresh_from_db()
+        self.assertIsNone(comment_c.deleted_at)

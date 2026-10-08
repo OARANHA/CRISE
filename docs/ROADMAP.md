@@ -21,7 +21,9 @@
 - [x] PR #13: notificação de responsáveis revogados/outro workspace corrigida e aprovada (CI #37787128260; 2.413 passed / 1 skipped, 8 novos testes).
 - [ ] Cobrir depois Redis multiworker, demais tarefas, webhooks, relatórios, downloads e storage privado de evidências.
 - [x] PR #15: requisitos para cliente observador/operador no portal (CI #37799250321 verde, documentação integrada; ADR-0003 ainda proposta).
-- [ ] PR #16: proteção de comentários internos e anexos por URL no portal do cliente, seis casos sintéticos (CI pendente).
+- [x] PR #16: privacidade no portal e anexos internos (CI #37803584176, 2.419 passed/1 skipped; 6 casos novos).
+- [ ] PR #17: corrigir exclusão de comentários entre workspaces/postagens; sete regressões sintéticas, CI pendente.
+- [ ] Revisar replies internas de comentário em rotas de equipe usadas por clientes (próximo slice).
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 

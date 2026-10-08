@@ -62,3 +62,6 @@ Validar casos A/B/C, acesso direto, mudanças/revogação de permissão durante 
 O portal do cliente não deve revelar comentários internos quando uma associação `CLIENT` for promovida a outro papel mantendo uma sessão ativa. A filtragem EXTERNAL deve ser incondicional na superfície do portal e alcançar replies previamente carregadas. A view autenticada de download de anexo deve negar ao papel CLIENT a mídia marcada INTERNAL mesmo que tenha UUID e participação válida no workspace.
 
 Essa defesa **não caracteriza isolamento completo dos usuários externos com papel de editor**, porque o BrightBean não diferencia ainda identidade "funcionário da agência" versus "funcionário do cliente" independentemente do papel. Sujeito a testes e definição da ADR-0003. Nunca armazenar evidências privadas no prefixo de mídia pública.
+
+## PR #17 — tentativa de exclusão de comentário de outro cliente
+Identificado por inspeção: `apps/approvals/comments.py::delete_comment` filtrava apenas UUID e estado; calculava a permissão do solicitante no workspace passado, sem validar que o objeto também pertencia a ele. A view ignorava a relação entre `post_id` da URL e o comentário antes da exclusão. A PR #17 propõe checagem dupla em serviço e view com testes adversariais A/B/C. **CI pendente**, sem homologação de toda a área de comentários.
