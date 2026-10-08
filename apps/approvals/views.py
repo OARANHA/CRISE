@@ -196,7 +196,7 @@ def add_comment(request, workspace_id, post_id):
         request.workspace_membership.workspace_role == WorkspaceMembership.WorkspaceRole.CLIENT
         and visibility != PostComment.Visibility.EXTERNAL
     ):
-        return HttpResponse("Client comments must be external.", status=403)
+        return HttpResponse("Clientes só podem enviar comentários externos.", status=403)
 
     parent_id = request.POST.get("parent_id") or None
     attachment = request.FILES.get("attachment")
