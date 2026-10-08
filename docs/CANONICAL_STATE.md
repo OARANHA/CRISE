@@ -1,31 +1,29 @@
 # VIGIAFAST — estado canônico verificável
 
-**Snapshot:** 2026-10-08. O conteúdo é pontual e deve ser reconciliado com GitHub antes de qualquer ação.
+**Snapshot de verificação:** 2026-10-08. Sempre reconciliar com GitHub antes de agir. Sem deploy ou homologação de clientes reais.
 
-## REAL NOW — repositório e integrações
+## REAL NOW
 
-| Referência | Estado observado |
+| Referência | Verificação pontual |
 | --- | --- |
 | `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f` — BrightBean não integrado |
-| `feat/brightbean-upstream-import` | `da900ea4f6a65963538e5defe7c081122e78dece` — merge PR #24 |
-| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta em Draft; base `main`; não integrar automaticamente |
-| PRs #19–#24 | Integradas somente à branch de importação |
-| [PR #24](https://github.com/OARANHA/CRISE/pull/24) | Merge confirmado no SHA `da900ea4f6a65963538e5defe7c081122e78dece` |
-| CI da PR #24 | Pré-merge: registrada como aprovada no handoff anterior; CI **pós-merge não verificada** nesta retomada |
-| Branch de trabalho | `fix/client-comment-visibility-gate` — slice M24 proposto; CI ainda não verificada |
-| Deploy/homologação | Nenhum autorizado ou comprovado; sem clientes reais |
+| `feat/brightbean-upstream-import` | `84139275e16efcd2201191275b24cc9ea3513fa6` — PR #25 integrada |
+| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, Draft, base `main`; sem merge autorizado |
+| [PR #25](https://github.com/OARANHA/CRISE/pull/25) | Integrada à branch de importação no SHA `84139275e16e...` |
+| [CI pós-merge PR #25](https://github.com/OARANHA/CRISE/actions/runs/37848566089) | `completed/success` no SHA `84139275e16e...`; Pytest, Ruff, Mypy, Gitleaks e Docker: 5/5 |
+| Slice atual M10 | Branch isolada de testes e auditoria de caracterização; execução de testes novos e CI **não verificadas** |
 
 ## PROVEN EVIDENCE
 
-- Base BrightBean Studio (Django/Python/PostgreSQL, AGPL-3.0) preservada na branch de importação com editor, calendário, aprovação, inbox, analytics, portal, mídias, API/MCP e RBAC. Presença no código não equivale a homologação funcional completa.
-- [PR #22 / auditoria de diretório](audits/2026-10-08-org-directory-http-reproduction.md): defesa do diretório `/members/` por vínculo de workspace para org members; 14 regressões sintéticas documentadas e CI aprovada no respectivo SHA.
-- [PR #24 / aprovação em sessão ativa](audits/2026-10-08-portal-approval-live-permissions.md): `portal_approval_required` reutiliza `WorkspaceMembership.effective_permissions` nas quatro ações POST de aprovação, incluindo revogação/downgrade. Não refazer essa correção.
-- **Novo slice em revisão:** [auditoria M24](audits/2026-10-08-client-internal-comment-visibility.md) comprova por inspeção fluxo de `visibility=internal` não autorizado de `CLIENT` para `PostComment`; branch dedicada adiciona gate de escrita e oito testes HTTP sintéticos. **Testes ainda não executados/CI pendente de comunicação manual.** O risco foi identificado por leitura estática, não por exploração HTTP executada.
+- BrightBean Studio Django/Python/PostgreSQL, AGPL-3.0, presente apenas na branch de importação; recursos de editor, calendário, aprovações, inbox, analytics, portal, mídias, API/MCP e RBAC preservados. Existência de código não equivale a homologação.
+- PR #22: defesa pontual do diretório organizacional; PR #24: checagem de permissão atual nas quatro ações de aprovação; PR #25: bloqueio de comentário interno forjado pelo papel CLIENT, com oito regressões sintéticas e CI pós-merge aprovada. Não refazer.
+- [M10](audits/2026-10-08-m10-editor-internal-visibility.md): código mostra filtros de comentários/replies e anexos INTERNAL somente para papel CLIENT. O papel EDITOR retém acesso, independentemente da afiliação de negócio pretendida. Testes de **caracterização** foram adicionados, mas **ainda não foram executados ou aprovados nesta entrega**.
+- Na tela do portal as raízes/replies são filtradas para EXTERNAL; isso não substitui os controles de dados das rotas de edição.
 
 ## GAPS → REUSE GATE → DECISION
 
-1. [ADR-0001](decisions/ADR-0001-brightbean-foundation.md) e [ADR-0002](decisions/ADR-0002-canonical-documentation.md) são **aceitas**. [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) seguem **propostas/não aceitas**.
-2. Identidade funcionário interno × cliente operador ainda não é atributo confiável; `EDITOR` externo e classes internas requerem política aprovada e testes específicos. Não alterar tenancy ou interpretação de `EDITOR` no slice M24.
-3. Mídia org-shared, possível fanout Meta por conta duplicada, REST/MCP, notificações, downloads e armazenamento privado de evidências seguem sem homologação global. Proibido colocar evidências privadas em `media_library/`.
-4. A próxima ação é aguardar `green`/`red` informado pelo operador **para a branch M24**, validar uma única vez Pytest, Ruff, Mypy, Gitleaks e Docker no SHA exato, revisar resultados e pedir autorização explícita para qualquer merge.
-5. Não realizar deploy, uso de clientes reais, coleta social, alteração da VPS ou integração da PR #2 à `main` sem autorização específica.
+1. ADR-0001 e ADR-0002: **aceitas**. ADR-0003 (isolamento multi-cliente/identidade) e ADR-0004 (storage de evidências): **propostas, não aceitas**.
+2. Identidade interna VIGIAFAST × operador de cliente ainda não existe como controle persistido confiável. Dois EDITOR de origem distinta têm acesso interno idêntico nas rotas estudadas; esta divergência **não está corrigida**.
+3. Mídia compartilhada pela organização, eventuais IDs sociais duplicados, REST/MCP, demais superfícies e storage de evidências privadas não estão homologados globalmente; evidências privadas não devem ir ao `media_library/`.
+4. Próxima ação: operador informa `green` ou `red` para a PR M10; verificar a CI **uma única vez** no SHA exato. Uma CI verde não aprova ADR nem autoriza merge. Após evidência, deliberar separadamente a afiliação e autorização por classe de dados na ADR-0003.
+5. Sem merge na `main` ou PR #2; sem deploy, infraestrutura externa, dados reais de clientes ou coletas sociais.
