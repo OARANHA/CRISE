@@ -8,13 +8,14 @@
 - Não usar `media_library/` para evidências privadas; classificação jurídico-reputacional exige revisão humana. Nenhum deploy ou homologação com clientes reais.
 
 ## GitHub verificado em 08/10/2026
-- `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f` (sem BrightBean); branch import `feat/brightbean-upstream-import`: `9beba79939d90242c3f6c7cee508f35f5ecafd77`.
-- PRs #19–#22 integradas **somente na branch de importação**. [PR #2](https://github.com/OARANHA/CRISE/pull/2) continua **Draft**, base `main`, **não integrada**.
+- `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f` (sem BrightBean); branch import `feat/brightbean-upstream-import`: `e142acdaf0902a53040498c43abeb02c9fcbe936`.
+- PRs #19–#23 integradas **somente na branch de importação**. [PR #2](https://github.com/OARANHA/CRISE/pull/2) continua **Draft**, base `main`, **não integrada**.
 - [PR #22](https://github.com/OARANHA/CRISE/pull/22): corrigiu `/members/` para membros organizacionais usando workspaces explicitamente associados, preservando o acesso `OWNER/ADMIN`. [Auditoria e 14 testes sintéticos](docs/audits/2026-10-08-org-directory-http-reproduction.md).
 - CI [#37831790876](https://github.com/OARANHA/CRISE/actions/runs/37831790876) passou no head `5545b297`; CI pós-merge [#37833488194](https://github.com/OARANHA/CRISE/actions/runs/37833488194) passou no merge `9beba799`. Todos os cinco jobs da CI pós-merge concluíram com sucesso.
+- [CI após PR #23](https://github.com/OARANHA/CRISE/actions/runs/37835321028): sucesso no SHA `e142acdaf0902a53040498c43abeb02c9fcbe936` (Pytest, Ruff, Mypy, Gitleaks e Docker).
 - A CI verde é **localizada**: não prova tenancy global, segurança de evidências privadas, nem prontidão de produção.
 
 ## Próximo gate
 - ADR-0003 (limites multi-cliente) e ADR-0004 (evidências privadas) seguem **PROPOSTAS / NÃO ACEITAS**.
-- Após sincronização documental em PR própria, retomar matriz de autorização PR #21; selecionar **um** próximo cenário adversarial sintético e investigar reuso antes de qualquer código.
+- Slice isolado proposto: revalidar `approve_posts` em quatro ações POST do portal após downgrade de papel/sessão existente. Ver `docs/audits/2026-10-08-portal-approval-live-permissions.md`. Novos testes ainda não executados; aguardar `green`/`red` da CI da nova PR.
 - O operador informa `green`/`red`; conferir CI **uma vez** no SHA da PR, sem polling, sem merges automáticos. Não modificar `main`, PR #2 ou VPS sem autorização.
