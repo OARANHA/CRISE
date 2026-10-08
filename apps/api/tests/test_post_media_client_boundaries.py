@@ -15,7 +15,7 @@ import pytest
 from apps.api.tests.test_cross_client_isolation import (
     _SecureClient,
     _call_mcp,
-    clients,
+    clients as clients,
 )
 from apps.api_keys import services
 from apps.composer.models import PlatformPost, Post
