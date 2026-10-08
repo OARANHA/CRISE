@@ -57,3 +57,8 @@ Leia `docs/PROJECT_SOURCE.md` → `AGENTS.md` → estado canônico → memória 
 - [Formatter #37770295100](https://github.com/OARANHA/CRISE/actions/runs/37770295100) success; SHA do bot `0642e15e7ca5a5e11287e3772f739d7e13984d78`, com workflow temporário removido.
 - [CI #37770299933](https://github.com/OARANHA/CRISE/actions/runs/37770299933) red de commit anterior; Pytest, Mypy, Gitleaks e Ruff lint verdes (2.390 testes passed, 1 skipped, 848 warnings, incluindo dez casos OAuth/MCP).
 - [CI #37770322477](https://github.com/OARANHA/CRISE/actions/runs/37770322477) action_required no bot commit e sem jobs. Um commit de docs pelo conector solicitará nova CI; **aguardar green/red**. Não mesclar a PR #9 antes dos cinco jobs aprovados.
+
+## PR #9 validada; PR #10 — credenciais aquecidas em cache (2026-10-08)
+- PR #9 integrada na branch de importação em `0c07b97047e92573553a1bd6f8fff1b3a44c2eb2`. [Run CI #37771059913](https://github.com/OARANHA/CRISE/actions/runs/37771059913): cinco jobs success, **2.390 passed, 1 skipped, 848 warnings**, **10/10** cenários OAuth/MCP aprovados.
+- **PR #10 proposta, CI pendente:** sete regressões com token API **previamente utilizado** e linha de credencial em cache; testar revogação, remoção/redução de permissões, modificações M2M allowlist nos dois sentidos, exclusão de membership e vencimento, em REST/MCP. Reutiliza o código de `apps/api_keys/services.py` e `apps/api_keys/signals.py`, sem alterar código de produção.
+- Cache de testes Django não equivale a uma validação real de Redis com múltiplos processos. Esse gate seguirá aberto. Sem merge na `main`, sem deploy, contas sociais reais ou dados de clientes. Aguardar green/red do operador sem polling.

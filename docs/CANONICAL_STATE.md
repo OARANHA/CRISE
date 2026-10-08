@@ -74,3 +74,8 @@ Não usar dados reais antes de concluir os gates, não executar deploy nem opera
 - [CI #37770322477](https://github.com/OARANHA/CRISE/actions/runs/37770322477) sobre o SHA corrigido `0642e15...` está concluída como **action_required**, com **zero jobs**, originada por `github-actions[bot]`. **Não houve CI completa sobre a versão corrigida**.
 - Um commit documental separado via conector GitHub é utilizado para provocar uma execução `pull_request` normal sem alterar código/testes. **Aguardamos comunicação green/red do operador** antes de consultar esse novo resultado, sem polling.
 - PR #9 não integrada; PR #2 ainda draft fora da main. Nenhum deploy, segredo ou dado real.
+
+## PR #9 validada; PR #10 — credenciais aquecidas em cache (2026-10-08)
+- PR #9 integrada na branch de importação em `0c07b97047e92573553a1bd6f8fff1b3a44c2eb2`. [Run CI #37771059913](https://github.com/OARANHA/CRISE/actions/runs/37771059913): cinco jobs success, **2.390 passed, 1 skipped, 848 warnings**, **10/10** cenários OAuth/MCP aprovados.
+- **PR #10 proposta, CI pendente:** sete regressões com token API **previamente utilizado** e linha de credencial em cache; testar revogação, remoção/redução de permissões, modificações M2M allowlist nos dois sentidos, exclusão de membership e vencimento, em REST/MCP. Reutiliza o código de `apps/api_keys/services.py` e `apps/api_keys/signals.py`, sem alterar código de produção.
+- Cache de testes Django não equivale a uma validação real de Redis com múltiplos processos. Esse gate seguirá aberto. Sem merge na `main`, sem deploy, contas sociais reais ou dados de clientes. Aguardar green/red do operador sem polling.

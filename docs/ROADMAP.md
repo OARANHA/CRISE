@@ -15,7 +15,9 @@
 - [x] Executar 16 testes de isolamento da inbox REST/MCP/HTMX e API keys com clientes A/B/C (PR #6, 16/16 aprovados, 2.364 testes na suíte).
 - [x] PR #8: 16 novos casos em posts e mídia A/B/C aprovados na CI (2.380 testes no total); compartilhamento org-shared comprovado, privacidade de evidências ainda pendente.
 - [ ] PR #9: validar novos testes de papéis, troca de workspace OAuth/MCP, offboarding e restrição de API keys (CI pendente).
-- [ ] Cobrir depois workers, cache, webhooks, relatórios, downloads e storage privado de evidências.
+- [x] PR #9: CI aprovada para 10 cenários OAuth/MCP, permissões e offboarding; 2.390 passed / 1 skipped.
+- [ ] PR #10: validar sete regressões de API keys com cache já preenchido, revogação e alterações de escopo (CI pendente).
+- [ ] Cobrir depois Redis multiworker, tarefas, webhooks, relatórios, downloads e storage privado de evidências.
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
