@@ -41,3 +41,8 @@ Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante
 - PR #3 merged em branch de importação, commit `a9d397bf34c699b50b4237142cc50b905e3b105f`.
 - [CI baseline](https://github.com/OARANHA/CRISE/actions/runs/37728858063): 2.337 testes aprovados, 1 ignorado; lint, mypy, PostgreSQL, build sem publicação e Gitleaks verdes.
 - PR #4 em preparação: Caddy allowlist da mídia pública, Compose com segredo explícito e testes sintéticos. Sem CI confirmada, sem deploy.
+
+## Segurança validada / próximo slice (2026-10-08)
+- PR #4 merge na branch de importação: `4d5f9d400eab88ae80ca58b3087fc6537249c41b`. CI #37729909304 verde (5 jobs, smoke tests Caddy).
+- PR #5 em desenvolvimento: reaproveitar resolvedor `_client_ip` da Agent API no login; validar cadeia `X-Forwarded-For` direita→esquerda. Testes pendentes da CI.
+- Ainda sem deploy, sem dados de clientes e sem avaliação abrangente de isolamento entre tenants.

@@ -20,6 +20,7 @@ on ``tier`` without parsing free text.
 from __future__ import annotations
 
 import datetime as dt
+from ipaddress import ip_address
 
 from django.conf import settings
 from django.core.cache import cache as _cache
@@ -336,32 +337,30 @@ def record_failed_auth(request: HttpRequest) -> None:
 
 
 def _client_ip(request: HttpRequest) -> str | None:
-    """Return the originating client IP, honouring proxies safely.
+    """Resolve the nearest untrusted client hop, never the spoofable leftmost IP.
 
-    Codex review flagged: the previous version unconditionally trusted
-    the leftmost ``X-Forwarded-For`` value, which a remote client can
-    set to any string. That defeats the failed-auth IP throttle (rotate
-    XFF per request to escape the per-IP bucket) and lets the attacker
-    pin audit-log rows to a victim's IP.
-
-    Hardening: only honour ``X-Forwarded-For`` when the direct
-    ``REMOTE_ADDR`` is in ``settings.BB_TRUSTED_PROXIES``. On platforms
-    that terminate TLS at a proxy you actually run (Cloudflare, ALB,
-    nginx, …), set that list in env config. Otherwise fall back to the
-    socket peer — which is the only IP we can vouch for ourselves.
+    Only accept X-Forwarded-For when the socket peer is explicitly trusted.
+    BB_TRUSTED_PROXIES accepts exact proxy IPs, not CIDR ranges.
     """
-    trusted = set(getattr(settings, "BB_TRUSTED_PROXIES", ()) or ())
     remote = request.META.get("REMOTE_ADDR")
-    if trusted and remote in trusted:
-        forwarded = request.META.get("HTTP_X_FORWARDED_FOR")
-        if forwarded:
-            # Per RFC 7239 the rightmost value is the closest proxy to
-            # us; we want the originating client, which is the leftmost
-            # value that wasn't itself a trusted proxy. Cheapest safe
-            # heuristic: take the leftmost untrusted hop.
-            hops = [h.strip() for h in forwarded.split(",") if h.strip()]
-            for hop in hops:
-                if hop not in trusted:
-                    return hop
-            # Every hop was a trusted proxy — fall back to remote.
+    trusted = set(getattr(settings, "BB_TRUSTED_PROXIES", ()) or ())
+    if not remote or remote not in trusted:
+        return remote
+
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR") or ""
+    if not forwarded:
+        return remote
+
+    hops = [part.strip() for part in forwarded.split(",")]
+    if not all(hops):
+        return remote
+
+    for hop in reversed(hops):
+        try:
+            addr = str(ip_address(hop))
+        except ValueError:
+            return remote
+        if addr not in trusted:
+            return addr
+
     return remote

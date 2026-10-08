@@ -30,3 +30,10 @@ Não fazer deploy nem ingerir dados reais enquanto não houver configuração se
 - Caddy publica só `media_library/`, `avatars/`, `workspaces/icons/`; anexos internos e outras rotas de mídia retornam 404 na borda.
 - CI fará validação sintática de Compose/Caddy e teste HTTP sintético de mídia pública/privada. Não considerar aprovado antes do workflow.
 - Continuam abertos gates de isolamento entre clientes, cabeçalho IP e storage privado de evidências.
+
+## PR #5 — resolução de IP com proxies confiáveis (proposta sob teste)
+- Login e Agent API usam o mesmo `_client_ip`; só se considera `X-Forwarded-For` quando `REMOTE_ADDR` corresponde a um proxy presente em `BB_TRUSTED_PROXIES`.
+- A cadeia XFF é analisada da direita para a esquerda, para não confiar em IP arbitrário inserido à esquerda pelo cliente. Hop inválido retorna `REMOTE_ADDR`.
+- Configurar somente IPs de proxies reais e estáveis, sem curingas. CIDR não é suportado.
+- Em instalações com múltiplas instâncias, usar cache compartilhado para rate limiting; o contador atual não é atômico sob alta concorrência.
+- PR #5 precisa passar na CI antes de integração. Validação inter-tenant permanece pendente.
