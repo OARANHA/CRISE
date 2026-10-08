@@ -85,7 +85,7 @@ s = s.replace(
 s = s.replace(
     "## O que NÃO está comprovado/implementado",
     "## Atualização da branch de importação\n"
-    f"- Snapshot original: \`{sha}\`. Arquivos binários incluídos. README/CI originais preservados em docs/upstream.\n"
+    f"- Snapshot original: `{sha}`. Arquivos binários incluídos. README/CI originais preservados em docs/upstream.\n"
     "- Importação em PR, não disponível em produção; validação CI da aplicação é etapa separada.\n\n"
     "## O que NÃO está comprovado/implementado",
 )
@@ -102,7 +102,7 @@ p.write_text(s, encoding="utf-8")
 p = Path("MEMORY.md")
 s = p.read_text(encoding="utf-8")
 s += "\n## Atualização após importação (branch em revisão)\n"
-s += f"- Snapshot integral do BrightBean copiado na branch de importação, com SHA \`{sha}\` e verificação byte a byte de todos os arquivos versionados. Sem execução de testes da aplicação, sem deploy e sem aprovação de merge.\n"
+s += f"- Snapshot integral do BrightBean copiado na branch de importação, com SHA `{sha}` e verificação byte a byte de todos os arquivos versionados. Sem execução de testes da aplicação, sem deploy e sem aprovação de merge.\n"
 p.write_text(s, encoding="utf-8")
 p = Path("README.md")
 s = p.read_text(encoding="utf-8")
