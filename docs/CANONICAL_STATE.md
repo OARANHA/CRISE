@@ -1,42 +1,34 @@
 # VIGIAFAST — estado canônico verificável
 
-**Snapshot verificado:** 2026-10-08, a partir de leitura pontual do GitHub. **Não é sincronizado automaticamente**: na retomada, confirmar novamente SHAs, PRs e CI antes de afirmar qualquer status.
+**Snapshot pontual:** 2026-10-08. Atualizar após cada PR integrada; confirmar o estado real no GitHub ao retomar. **Não sincronizado automaticamente.**
 
-## REAL NOW (reconciliado após a integração da PR #19; PR #20 ainda em revisão)
+## REAL NOW — GitHub confirmado antes da PR #21
 
-| Referência | Situação comprovada |
+| Referência | Estado comprovado |
 | --- | --- |
-| `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; fundação documental; BrightBean ainda não integrado |
-| `feat/brightbean-upstream-import` | `0bf37c52b73e4d08996017e081c47138dd568ac8`; inclui PR #19, ainda fora da main |
-| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta e draft, da branch de importação para `main`; não mesclada |
-| [PR #18](https://github.com/OARANHA/CRISE/pull/18) | Integrada à branch de importação, merge `2cd8878cf9dfba08d9c77ec3234b435b3859b378` |
-| [PR #19](https://github.com/OARANHA/CRISE/pull/19) | **Integrada** à branch de importação, merge `0bf37c52b73e4d08996017e081c47138dd568ac8`; sete regressões aprovadas no head `d94288b` |
-| [PR #20](https://github.com/OARANHA/CRISE/pull/20) | Sistema Vivo e skills em revisão; CI anterior verde em `3367e10`, mas **novo commit de reconciliação requer CI própria** |
-| Deploy / produção | Não houve deploy autorizado ou evidenciado neste trabalho; a aplicação não está homologada para dados reais |
+| `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; BrightBean não integrado |
+| `feat/brightbean-upstream-import` | `fba74835fb00e14bcaf80e5bf4ef535f9b0d6069`; base da inspeção da matriz |
+| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, draft, direcionada à `main`; **não integrar** nesta fase |
+| [PR #19](https://github.com/OARANHA/CRISE/pull/19) | Integrada à branch de importação; merge `0bf37c52b73e4d08996017e081c47138dd568ac8` |
+| [PR #20](https://github.com/OARANHA/CRISE/pull/20) | Integrada à branch de importação; merge `fba74835fb00e14bcaf80e5bf4ef535f9b0d6069` |
+| [CI da PR #20 #37814988489](https://github.com/OARANHA/CRISE/actions/runs/37814988489) | Concluída com sucesso no head `d2e9eb0833def2d1da74471957b034ec6ac7a9ba`; cinco jobs, conforme validação anterior |
+| Deploy | Nenhum deploy autorizado ou comprovado; não homologado para clientes reais |
 
-**CI funcional mais recente conferida:** [run #37809392150](https://github.com/OARANHA/CRISE/actions/runs/37809392150) da PR #19, SHA `d94288b2685f9eb0878eda61017fac1e214ce3c9`: cinco jobs verdes, **2.439 passed, 1 skipped, 873 warnings**; sete testes novos aprovados. A [CI documental da PR #20 #37813372669](https://github.com/OARANHA/CRISE/actions/runs/37813372669) passou no SHA anterior `3367e10` com **2.432 passed, 1 skipped**, mas **não comprova o novo commit de reconciliação**.
+## PROVEN EVIDENCE — capacidades e limites
 
-## PROVEN EVIDENCE — o que existe
+- BrightBean importado mantém Django/Python/PostgreSQL e os fluxos de editor/publicação, calendário, inbox, analytics, aprovações, portal, autenticação/RBAC, mídia e API/MCP. Não reconstruir.
+- [Matriz PR #21](audits/2026-10-08-authorization-actor-resource-matrix.md): revisão **estática** de identidade × papel × ação × recurso × escopo; nenhuma regressão nova executada neste slice documental, nenhuma política alterada.
+- `OrgMembership`/`WorkspaceMembership`/`CustomRole` já dão permissões por papel, mas não representam de modo confiável a distinção entre funcionário interno VIGIAFAST e operador do cliente com papel `EDITOR`.
+- Na hipótese de organização única, `/members/` permite a `OrgMembership.MEMBER` consultar diretório e vínculos de toda organização; convite de cliente cria esse papel. É **risco baseado em código**, ainda sem reprodução HTTP sintética nesta PR.
+- Mídia org-shared e fanout de identificador Meta duplicado continuam riscos conhecidos. PRs #6–#19 provam somente cenários localizados.
+- `portal_reports` é placeholder, sem relatório reputacional operacional.
+- ADR-0001 e ADR-0002 **aceitas**; [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) **propostas, NÃO ACEITAS**.
 
-- O código importado preserva a base BrightBean (Django/Python/PostgreSQL), com publicação, calendário, inbox, analytics, aprovações, portal do cliente, API/MCP e gestão de workspaces; validar capacidades e restrições por rota e plataforma.
-- As PRs [#16](https://github.com/OARANHA/CRISE/pull/16), [#17](https://github.com/OARANHA/CRISE/pull/17), [#18](https://github.com/OARANHA/CRISE/pull/18) e [#19](https://github.com/OARANHA/CRISE/pull/19) integraram **correções localizadas** de comentários, isolamento por workspace e links mágicos. Não equivalem a isolamento multi-cliente completo.
-- O portal tem convites, aprovações, publicações e histórico; `apps/client_portal/views.py::portal_reports` **apenas renderiza template**, sem relatório de crise pronto.
-- A [ADR-0002](decisions/ADR-0002-canonical-documentation.md) está **aceita**. A [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e a [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) permanecem **PROPOSTAS, NÃO ACEITAS**.
+## GAPS → REUSE GATE → DECISION
 
-## GAPS — riscos e limites abertos
+1. Primeiro executar cenários sintéticos A/B na mesma organização e C em outra (T01–T10 da matriz), sobretudo diretório organizacional, classes INTERNAL, papel de cliente editor, portal ativo/revogado, API/MCP, webhooks, mídia e notificações.
+2. Preservar o BrightBean e a AGPL-3.0; qualquer vulnerabilidade reproduzida pede PR funcional pequena **separada** da matriz.
+3. Sem aprovação de tenancy, sem evidências privadas em `media_library/`, sem clientes reais, coleta social, deploy ou integração da PR #2 à `main`.
+4. A PR #21 é documental e aguarda CI no **seu próprio head**, comunicada pelo operador (sem polling). Não interpretar sua CI como execução dos testes adversariais planejados.
 
-1. **Multi-cliente:** workspaces da mesma organização têm compartilhamento editorial de `MediaAsset` em nível organizacional; risco de eventos de mesma conta Meta em mais de um workspace. Não declarar isolamento total.
-2. **Cliente operador:** `CLIENT` e `EDITOR` são papéis da mesma participação; um funcionário externo com papel editor ainda não é distinguido de membro interno em todas as superfícies. Exige política própria e regressões.
-3. **Evidências:** storage privado, autorização de download, trilha de custódia, retenção LGPD e integridade verificável ainda não foram implementados.
-4. **Fontes externas:** Obsei, Auto Archiver e descoberta de posts de terceiros ainda não integrados; cobertura Instagram/TikTok/Facebook não é irrestrita.
-5. **Operação:** Redis sob múltiplos workers, revogação concorrente, uploads, relatórios, webhooks e verificações no ambiente final ainda requerem testes/homologação.
-6. **Produto:** branding e interface integral pt-BR, gestão de ocorrências, relatórios de crise e experiências para clientes operadores são trabalho futuro.
-
-## REUSE GATE → DECISION → NEXT ACTION
-
-- Preservar funcionalidades BrightBean e avisos AGPL-3.0; pesquisar código/testes existentes antes de implementar.
-- Aguardar comunicação `green`/`red` da PR #20 no **novo SHA de reconciliação**; **não consultar CI em loop, não mesclar por suposição**.
-- Antes de aceitar ADR-0003 ou conceder papel de editor a funcionário de cliente real, produzir matriz de acesso por identidade/ação/dado, testes negativos e resolver riscos compartilhados.
-- Esta PR documental somente organiza leitura, doutrina e skills; não aprova ADRs, não inclui módulos de monitoramento, não faz deploy nem integra PR #2 à `main`.
-
-**Histórico anterior:** [snapshot de estado](historico/2026-10-08-estado-canonico-anterior.md). Evidências completas continuam nos commits, PRs e logs da CI.
+**Histórico anterior:** Git/PR #19–#20 e [arquivo anterior](historico/2026-10-08-estado-canonico-anterior.md). Documentos históricos não são autoridade para estado atual.
