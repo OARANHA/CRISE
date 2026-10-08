@@ -13,8 +13,9 @@
 - [x] Restringir mídia privada no Caddy e remover configurações demonstrativas do PostgreSQL em Compose (PR #4; smoke tests em CI).
 - [x] Unificar identificação de IP do login/API atrás de proxies confiáveis (PR #5).
 - [x] Executar 16 testes de isolamento da inbox REST/MCP/HTMX e API keys com clientes A/B/C (PR #6, 16/16 aprovados, 2.364 testes na suíte).
-- [ ] Validar na CI PR #8: 16 novos casos em posts e mídia A/B/C, incluindo ativos org-shared; proposta ainda não homologada.
-- [ ] Cobrir depois papéis, OAuth/MCP, workers, cache, webhooks, relatórios e downloads.
+- [x] PR #8: 16 novos casos em posts e mídia A/B/C aprovados na CI (2.380 testes no total); compartilhamento org-shared comprovado, privacidade de evidências ainda pendente.
+- [ ] PR #9: validar novos testes de papéis, troca de workspace OAuth/MCP, offboarding e restrição de API keys (CI pendente).
+- [ ] Cobrir depois workers, cache, webhooks, relatórios, downloads e storage privado de evidências.
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 

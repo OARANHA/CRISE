@@ -42,3 +42,18 @@ Leia `docs/PROJECT_SOURCE.md` → `AGENTS.md` → estado canônico → memória 
 - CI red [#37767401425](https://github.com/OARANHA/CRISE/actions/runs/37767401425) rodou o commit **anterior**, não é regressão comprovada.
 - [#37767422744](https://github.com/OARANHA/CRISE/actions/runs/37767422744) no bot commit foi `action_required` sem jobs.
 - Atualizar PR #8 pelo conector GitHub apenas em docs para pedir CI normal. Esperar resultado real, sem polling/merge/deploy.
+
+## PR #8 validada; novo gate OAuth/MCP (2026-10-08)
+- PR #8 integrada na branch de importação `46546e22ac4f1836de1fe7b1a0b4d3228a77ce4b`. [CI #37768145395](https://github.com/OARANHA/CRISE/actions/runs/37768145395) com 5 jobs verdes; 2.380 testes aprovados, 1 ignorado. Os 16 novos casos de posts/mídia passaram.
+- PR #9 proposta de testes da autenticação OAuth/MCP e revogação/permissões por workspace. Nenhum deploy, cliente real ou aprovação integral de isolamento. Aguardar CI (green/red), sem polling.
+
+## PR #9 — primeira CI falhou somente no Ruff format (2026-10-08)
+- [Run #37769541281](https://github.com/OARANHA/CRISE/actions/runs/37769541281), commit `b269dbf155b161514a6383405d3e0ddea53317e4`: Ruff lint, Mypy, Pytest/PostgreSQL e Gitleaks **aprovados**. Pytest: **2.390 passed, 1 skipped, 848 warnings**, incluindo **10/10 casos novos OAuth/MCP**. Docker build `skipped` devido a `ruff format --check` reprovar **um arquivo**: `apps/api/tests/test_oauth_workspace_isolation.py`.
+- Tentativa de executar Ruff localmente neste ambiente foi bloqueada por ausência de pacote e acesso ao índice de pacotes. Formatação deve ocorrer pelo workflow temporário `format-oauth-boundaries-once.yml`, fixado em `ruff==0.15.9`, que verifica e grava apenas o arquivo de testes e remove o próprio workflow no mesmo commit do bot.
+- **Este workflow ainda não foi validado**. Commits do `github-actions[bot]` podem produzir CI `action_required`; nesse caso um commit normal, sem alteração da lógica dos testes, terá de solicitar nova execução.
+- PR #9 **não mesclar** sem cinco jobs da CI real aprovados sobre commit corrigido. Nenhum deploy ou alteração na main. Aguardar green/red/action_required do operador, sem polling.
+
+## PR #9 — formatador aprovado; action_required em commit bot (2026-10-08)
+- [Formatter #37770295100](https://github.com/OARANHA/CRISE/actions/runs/37770295100) success; SHA do bot `0642e15e7ca5a5e11287e3772f739d7e13984d78`, com workflow temporário removido.
+- [CI #37770299933](https://github.com/OARANHA/CRISE/actions/runs/37770299933) red de commit anterior; Pytest, Mypy, Gitleaks e Ruff lint verdes (2.390 testes passed, 1 skipped, 848 warnings, incluindo dez casos OAuth/MCP).
+- [CI #37770322477](https://github.com/OARANHA/CRISE/actions/runs/37770322477) action_required no bot commit e sem jobs. Um commit de docs pelo conector solicitará nova CI; **aguardar green/red**. Não mesclar a PR #9 antes dos cinco jobs aprovados.
