@@ -32,7 +32,7 @@ class _SecureClient(Client):
 
 
 @pytest.fixture
-def three_client_workspaces(db):
+def clients(db):
     user = User.objects.create_user(
         email="operator-isolation@example.test",
         password="testpasswordonly",
@@ -45,9 +45,13 @@ def three_client_workspaces(db):
     ws_b = Workspace.objects.create(name="Client B", organization=agency)
     ws_c = Workspace.objects.create(name="Client C", organization=other_org)
 
-    OrgMembership.objects.create(user=user, organization=agency, org_role=OrgMembership.OrgRole.OWNER)
+    OrgMembership.objects.create(
+        user=user, organization=agency, org_role=OrgMembership.OrgRole.OWNER
+    )
     WorkspaceMembership.objects.create(
-        user=user, workspace=ws_a, workspace_role=WorkspaceMembership.WorkspaceRole.OWNER
+        user=user,
+        workspace=ws_a,
+        workspace_role=WorkspaceMembership.WorkspaceRole.OWNER,
     )
 
     accounts = []
@@ -96,7 +100,12 @@ def _call_mcp(client: Client, name: str, arguments: dict):
     return client.post(
         "/api/v1/mcp/",
         data=json.dumps(
-            {"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": name, "arguments": arguments}}
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": name, "arguments": arguments},
+            }
         ),
         content_type="application/json",
     )
@@ -104,53 +113,57 @@ def _call_mcp(client: Client, name: str, arguments: dict):
 
 @pytest.mark.django_db
 class TestThreeClientIsolation:
-    def test_rest_list_sees_only_client_a(self, three_client_workspaces):
-        context = three_client_workspaces
+    def test_rest_list_sees_only_client_a(self, clients):
+        context = clients
         response = context.rest.get("/api/v1/inbox/")
         assert response.status_code == 200, response.content
-        assert {row["id"] for row in response.json()["messages"]} == {str(context.messages[0].id)}
+        visible_ids = {row["id"] for row in response.json()["messages"]}
+        assert visible_ids == {str(context.messages[0].id)}
         assert "synthetic-private-body-1" not in response.content.decode()
         assert "synthetic-private-body-2" not in response.content.decode()
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_rest_read_denies_other_clients(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
-        response = context.rest.get(f"/api/v1/inbox/{context.messages[foreign_index].id}")
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_rest_read_denies_other_clients(self, clients, other_idx):
+        context = clients
+        response = context.rest.get(f"/api/v1/inbox/{context.messages[other_idx].id}")
         assert response.status_code == 404
-        assert f"synthetic-private-body-{foreign_index}" not in response.content.decode()
+        assert f"synthetic-private-body-{other_idx}" not in response.content.decode()
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_rest_cannot_create_reply_on_foreign_message(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_rest_cannot_create_reply_on_foreign_message(self, clients, other_idx):
+        context = clients
         response = context.rest.post(
-            f"/api/v1/inbox/{context.messages[foreign_index].id}/replies",
+            f"/api/v1/inbox/{context.messages[other_idx].id}/replies",
             data=json.dumps({"body": "forbidden draft"}),
             content_type="application/json",
         )
         assert response.status_code == 404
         assert InboxReply.objects.count() == 0
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_rest_cannot_edit_or_discard_foreign_reply(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_rest_cannot_edit_or_discard_foreign_reply(self, clients, other_idx):
+        context = clients
         foreign_reply = InboxReply.objects.create(
-            inbox_message=context.messages[foreign_index], body="confidential draft"
+            inbox_message=context.messages[other_idx], body="confidential draft"
         )
         patch_response = context.rest.patch(
             f"/api/v1/inbox/replies/{foreign_reply.id}",
             data=json.dumps({"body": "unauthorized edit"}),
             content_type="application/json",
         )
-        delete_response = context.rest.delete(f"/api/v1/inbox/replies/{foreign_reply.id}")
+        reply_url = f"/api/v1/inbox/replies/{foreign_reply.id}"
+        delete_response = context.rest.delete(reply_url)
         assert patch_response.status_code == 404
         assert delete_response.status_code == 404
         foreign_reply.refresh_from_db()
         assert foreign_reply.body == "confidential draft"
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_rest_cannot_send_foreign_draft(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
-        reply = InboxReply.objects.create(inbox_message=context.messages[foreign_index], body="do not send")
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_rest_cannot_send_foreign_draft(self, clients, other_idx):
+        context = clients
+        reply = InboxReply.objects.create(
+            inbox_message=context.messages[other_idx], body="do not send"
+        )
         with patch("apps.inbox.services._dispatch_to_platform") as dispatch:
             response = context.rest.post(f"/api/v1/inbox/replies/{reply.id}/send")
         assert response.status_code == 404
@@ -158,41 +171,44 @@ class TestThreeClientIsolation:
         reply.refresh_from_db()
         assert reply.status == InboxReply.Status.DRAFT
 
-    def test_mcp_list_sees_only_client_a(self, three_client_workspaces):
-        context = three_client_workspaces
+    def test_mcp_list_sees_only_client_a(self, clients):
+        context = clients
         response = _call_mcp(context.rest, "list_inbox_messages", {})
         data = response.json()
         assert "result" in data, data
         payload = json.loads(data["result"]["content"][0]["text"])
-        assert {row["id"] for row in payload["messages"]} == {str(context.messages[0].id)}
+        visible_ids = {row["id"] for row in payload["messages"]}
+        assert visible_ids == {str(context.messages[0].id)}
         assert "synthetic-private-body-1" not in response.content.decode()
         assert "synthetic-private-body-2" not in response.content.decode()
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_mcp_rejects_foreign_message_id(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_mcp_rejects_foreign_message_id(self, clients, other_idx):
+        context = clients
         response = _call_mcp(
-            context.rest, "get_inbox_message", {"message_id": str(context.messages[foreign_index].id)}
+            context.rest,
+            "get_inbox_message",
+            {"message_id": str(context.messages[other_idx].id)},
         )
         data = response.json()
         assert "error" in data, data
-        assert f"synthetic-private-body-{foreign_index}" not in response.content.decode()
+        assert f"synthetic-private-body-{other_idx}" not in response.content.decode()
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_htmx_denies_other_client_workspaces(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
-        workspace = context.workspaces[foreign_index]
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_htmx_denies_other_client_workspaces(self, clients, other_idx):
+        context = clients
+        workspace = context.workspaces[other_idx]
         response = context.web.get(f"/workspace/{workspace.id}/inbox/")
         assert response.status_code == 403
-        assert f"synthetic-private-body-{foreign_index}" not in response.content.decode()
+        assert f"synthetic-private-body-{other_idx}" not in response.content.decode()
 
-    @pytest.mark.parametrize("foreign_index", [1, 2])
-    def test_key_cannot_include_other_client_social_account(self, three_client_workspaces, foreign_index):
-        context = three_client_workspaces
+    @pytest.mark.parametrize("other_idx", [1, 2])
+    def test_key_cannot_include_other_client_social_account(self, clients, other_idx):
+        context = clients
         with pytest.raises(ValueError, match="does not belong to workspace"):
             services.issue_api_key(
                 workspace=context.workspaces[0],
-                social_accounts=[context.accounts[foreign_index]],
+                social_accounts=[context.accounts[other_idx]],
                 issued_by=context.user,
                 name="invalid-cross-workspace",
                 permissions=["use_inbox"],

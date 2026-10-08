@@ -60,3 +60,9 @@ Registrar data, branch, SHA/PR, comando de teste e resultado, capacidades compro
 - PR #6 traz **testes adicionais de isolamento** entre workspaces/clientes no REST, MCP e HTMX, sem reescrever o código original. **Resultados ainda não validados**.
 - Importação principal permanece em PR #2 draft, não incorporada à main. Sem deploy ou dados reais.
 - Próxima ação: revisar green/red da PR #6 quando o operador comunicar, sem polling. Depois ampliar testes para mídia, posts, OAuth/MCP, workers, caches e evidências.
+
+## Falha de formatação na primeira CI da PR #6 — 2026-10-08
+- [Run #37748699607](https://github.com/OARANHA/CRISE/actions/runs/37748699607): status global **failure** apenas em `ruff format --check` do novo arquivo `apps/api/tests/test_cross_client_isolation.py`.
+- `ruff check`, Mypy, Pytest e Gitleaks passaram. Docker build `skipped` por dependência do lint.
+- Pytest: **2.364 passed, 1 skipped, 822 warnings**, incluindo **16/16** casos novos de isolamento REST/MCP/HTMX/chave API.
+- A formatação foi ajustada nesta branch; resultado da nova CI **ainda pendente**, não declarar PR #6 aprovada antes de green.

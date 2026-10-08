@@ -51,3 +51,8 @@ Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante
 - PR #5 merge em `feat/brightbean-upstream-import`: `82bc2138999160edfd547cfcb1efbee7c8d187ac`. [CI #37730766539](https://github.com/OARANHA/CRISE/actions/runs/37730766539) verde, 2.348 testes passed, 1 skipped; 11 regressões de IP aprovadas.
 - PR #6 proposta de testes inter-workspace/inter-organização para a inbox REST, MCP e HTMX e emissão de chaves API; ainda sem CI validada.
 - Não declarar isolamento integral; faltam mídias, posts, workers, portal, revogação, escopos e arquivos.
+
+## Gate de isolamento — CI inicial red por formatação (2026-10-08)
+- [Run #37748699607](https://github.com/OARANHA/CRISE/actions/runs/37748699607): 16 testes novos aprovados; 2.364 passed, 1 skipped. Apenas `ruff format --check` reprovou por apresentação do arquivo novo; Docker não rodou.
+- Revisão na mesma PR limita-se a formatação da suíte e memória/estado canônico. Nenhum deploy e nenhuma integração à main.
+- Aguardar confirmação green/red do operador na nova execução, sem polling.
