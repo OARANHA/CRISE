@@ -1,0 +1,37 @@
+# VIGIAFAST — matriz inicial de isolamento entre clientes
+
+**Data:** 2026-10-08  
+**Status:** suíte proposta na PR #6, **não validada na CI**. Não constitui auditoria completa.
+
+## Modelo alvo
+
+Para os nove clientes iniciais, a hipótese operacional é **uma organização da equipe com um workspace por cliente**. Também precisamos isolar organizações completamente distintas. Essa hipótese precisa de decisão formal antes de ativar dados reais.
+
+O BrightBean possui `Organization`, `Workspace`, `OrgMembership`, `WorkspaceMembership`, chaves API limitadas por workspace e contas sociais, e `InboxMessage.workspace`. Aproveitamos esses recursos existentes, sem redesenhar autenticação.
+
+## Matriz de testes da PR #6
+
+| Superfície | Mesmo cliente A | Cliente B: mesma organização, workspace diferente | Cliente C: outra organização |
+| --- | --- | --- | --- |
+| REST inbox lista | A permitido | B oculto | C oculto |
+| REST inbox leitura por UUID | A permitido | 404 | 404 |
+| REST criar rascunho em mensagem alheia | — | 404, sem gravação | 404, sem gravação |
+| REST editar, apagar ou enviar rascunho alheio | — | 404, sem efeito | 404, sem efeito |
+| MCP listar e buscar inbox | A permitido | oculto/erro | oculto/erro |
+| HTMX acessar inbox por workspace ID | — | 403 | 403 |
+| Emitir API key com conta social alheia | — | proibido | proibido |
+
+Os testes usam exclusivamente organizações, usuários, contas e comentários **sintéticos**, criados no banco efêmero de testes.
+
+## Gates que continuam abertos mesmo que a CI da PR #6 fique verde
+
+- Outros endpoints de UI, REST e MCP: posts, mídia, permissões customizadas, portal do cliente, relatórios e notificações.
+- Processadores em segundo plano, filas, webhook, cache, resultados de IA, índices e arquivos.
+- Comportamento de organizações diferentes, troca de workspace e revogação de acesso.
+- Testes adversariais com usuário pertencente a dois clientes, papéis Viewer/Client e administrador limitado.
+- Decidir/implementar storage privado de evidências; mídia de publicação pública **não é** storage confidencial.
+- Homologação LGPD, configuração real de proxy confiável, taxa e retenção.
+
+## Critério de aceite
+
+Nenhuma informação de B/C aparece quando a chave ou sessão só está autorizada em A. Operações por identificadores UUID alheios são recusadas sem efeitos colaterais nem envio às redes sociais. Registrar resultado real da CI, sem inferir segurança total.

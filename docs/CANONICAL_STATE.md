@@ -53,3 +53,10 @@ Registrar data, branch, SHA/PR, comando de teste e resultado, capacidades compro
 - PR #5, ainda não testada, unifica o cálculo do IP do login e API e adiciona regressões contra XFF falso.
 - `main` não contém ainda o BrightBean; a PR #2 segue em rascunho, sem deploy.
 - Aguardar green/red da PR #5, sem polling. Após isso, auditar isolamento dos nove clientes.
+
+## PR #5 integrada e gate #6 de isolamento proposto (2026-10-08)
+- [PR #5](https://github.com/OARANHA/CRISE/pull/5) integrada à branch de importação, commit `82bc2138999160edfd547cfcb1efbee7c8d187ac`.
+- [CI #37730766539](https://github.com/OARANHA/CRISE/actions/runs/37730766539) aprovada: Ruff, Mypy, Pytest/PostgreSQL/migrations, Docker sem push e Gitleaks. Pytest: **2.348 passed, 1 skipped, 808 warnings**. Os 11 novos cenários do resolvedor IP passaram.
+- PR #6 traz **testes adicionais de isolamento** entre workspaces/clientes no REST, MCP e HTMX, sem reescrever o código original. **Resultados ainda não validados**.
+- Importação principal permanece em PR #2 draft, não incorporada à main. Sem deploy ou dados reais.
+- Próxima ação: revisar green/red da PR #6 quando o operador comunicar, sem polling. Depois ampliar testes para mídia, posts, OAuth/MCP, workers, caches e evidências.

@@ -46,3 +46,8 @@ Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante
 - PR #4 merge na branch de importação: `4d5f9d400eab88ae80ca58b3087fc6537249c41b`. CI #37729909304 verde (5 jobs, smoke tests Caddy).
 - PR #5 em desenvolvimento: reaproveitar resolvedor `_client_ip` da Agent API no login; validar cadeia `X-Forwarded-For` direita→esquerda. Testes pendentes da CI.
 - Ainda sem deploy, sem dados de clientes e sem avaliação abrangente de isolamento entre tenants.
+
+## PR #5 validada; isolamento multicliente em prova de conceito (2026-10-08)
+- PR #5 merge em `feat/brightbean-upstream-import`: `82bc2138999160edfd547cfcb1efbee7c8d187ac`. [CI #37730766539](https://github.com/OARANHA/CRISE/actions/runs/37730766539) verde, 2.348 testes passed, 1 skipped; 11 regressões de IP aprovadas.
+- PR #6 proposta de testes inter-workspace/inter-organização para a inbox REST, MCP e HTMX e emissão de chaves API; ainda sem CI validada.
+- Não declarar isolamento integral; faltam mídias, posts, workers, portal, revogação, escopos e arquivos.

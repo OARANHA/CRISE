@@ -40,3 +40,9 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 - [x] PR #4, hardening Caddy e Compose validado e integrado na branch de importação.
 - [ ] PR #5, resolver IP por proxy confiável e regressões — aguardar CI.
 - [ ] Gate: autorização e vazamento entre clientes via UI, API, MCP, workers, cache, arquivos e evidências.
+
+## Gate de isolamento — PR #6 (a validar)
+- [x] PR #5 corrigida e aprovada na CI da branch de importação: 2.348 passed, 1 skipped.
+- [ ] Executar testes adversariais da PR #6 (clientes sintéticos A/B/C, REST/MCP/HTMX).
+- [ ] Expandir testes para posts, mídia, workers, cache, notificações, OAuth e evidências.
+- [ ] Definir arquitetura oficial: nove clientes como workspaces distintos em uma organização; validar com ADR.
