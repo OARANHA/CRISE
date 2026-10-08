@@ -14,12 +14,11 @@
 - [x] Unificar identificação de IP do login/API atrás de proxies confiáveis (PR #5).
 - [x] Executar 16 testes de isolamento da inbox REST/MCP/HTMX e API keys com clientes A/B/C (PR #6, 16/16 aprovados, 2.364 testes na suíte).
 - [x] PR #8: 16 novos casos em posts e mídia A/B/C aprovados na CI (2.380 testes no total); compartilhamento org-shared comprovado, privacidade de evidências ainda pendente.
-- [ ] PR #9: validar novos testes de papéis, troca de workspace OAuth/MCP, offboarding e restrição de API keys (CI pendente).
 - [x] PR #9: CI aprovada para 10 cenários OAuth/MCP, permissões e offboarding; 2.390 passed / 1 skipped.
 - [x] PR #10: sete regressões de API keys com cache preenchido aprovadas (CI #37773171776; 2.397 passed / 1 skipped).
 - [x] PR #11: três cenários Meta webhook com ID nativo distinto/repetido aprovados (CI #37778759366; 2.400 passed / 1 skipped).
 - [x] PR #12: cinco regressões de inbox em tarefas de fundo aprovadas (CI #37784489968; 2.405 passed / 1 skipped).
-- [ ] PR #13: validar proteção de notificações de responsáveis desligados ou atribuídos a outro cliente (8 cenários; CI pendente).
+- [x] PR #13: notificação de responsáveis revogados/outro workspace corrigida e aprovada (CI #37787128260; 2.413 passed / 1 skipped, 8 novos testes).
 - [ ] Cobrir depois Redis multiworker, demais tarefas, webhooks, relatórios, downloads e storage privado de evidências.
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
@@ -30,7 +29,8 @@
 
 ## Fase 3 — Inteligência e evidências
 - [ ] Validar Obsei em pt-BR com revisão humana.
-- [ ] Avaliar Auto Archiver, armazenamento privado, hashes e proveniência.
+- [ ] PR #14: revisar a ADR-0004 de storage privado de evidências (PROPOSTA, não implementada; CI documental pendente).
+- [ ] Avaliar Auto Archiver, implementar armazenamento privado após aceitação das ADRs, hashes e proveniência.
 - [ ] Alertas, severidade, histórico e relatórios isolados por cliente.
 
 ## Fase 4 — Descoberta externa
