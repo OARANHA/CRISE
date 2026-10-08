@@ -42,3 +42,9 @@ Este arquivo é um **snapshot atual**, não um diário cumulativo. Atualize o qu
 ## Regras imutáveis
 
 Não usar dados reais antes de concluir os gates, não executar deploy nem operações em outros sistemas sem autorização. Nunca armazenar tokens, posts, nomes, evidências ou relatórios reais dos clientes no Git público. Não declarar um teste como aprovado sem log/commit verificável.
+
+## PR #8 — primeira CI vermelha por importação (2026-10-08)
+- [Run #37766160766](https://github.com/OARANHA/CRISE/actions/runs/37766160766): falha apenas em `ruff check`, regra `I001` (import block un-sorted) no novo arquivo `apps/api/tests/test_post_media_client_boundaries.py`. O `ruff format --check` não chegou a executar; build Docker skipped.
+- **Pytest aprovou 2.380 casos, 1 skipped e 838 warnings**, incluindo **16/16 cenários novos** de segurança para posts, mídia e mídia organizacional compartilhada. Mypy e Gitleaks passaram.
+- O workflow temporário `format-post-media-once.yml` aplica `ruff check --fix --select I` e `ruff format` usando a **mesma versão 0.15.9** da CI, verifica o resultado e remove a si próprio no commit bot. Nenhuma alteração em código de produção.
+- **A execução e o commit automático ainda não estão confirmados.** O GitHub pode deixar a CI sobre um commit criado por `github-actions[bot]` como `action_required`; nesse caso uma alteração por conector GitHub precisará disparar nova validação. Não afirmar green antes de evidências. Sem polling, merge ou deploy.
