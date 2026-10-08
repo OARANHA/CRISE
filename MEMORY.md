@@ -8,14 +8,14 @@
 - BrightBean Studio integral (Django, PostgreSQL, Python), AGPL-3.0. Preservar autenticação, editor, calendário, portal, inbox, analytics, API/MCP e recursos preexistentes.
 - Não confundir contas sociais conectadas com descoberta pública de terceiros. Obsei e Bellingcat Auto Archiver **não integrados**. Dados sensíveis e evidências privados fora de `media_library/`; revisão humana em análise jurídica/reputacional.
 
-## Fotografia pontual de 08/10/2026 — confirmar novamente
+## Fotografia de 08/10/2026 — confirmar ao retomar
 
-- `main`: `f6883b7`. Branch de importação após PR #20: `fba74835fb00e14bcaf80e5bf4ef535f9b0d6069`. PR #19 e #20 integradas; PR #2 ainda draft para `main`.
-- CI #37814988489 da PR #20 concluída com sucesso no head `d2e9eb0`; **não usar para atestar CI da PR #21**.
-- A [matriz documental da PR #21](docs/audits/2026-10-08-authorization-actor-resource-matrix.md) inventaria papéis e exposição por classe de dado; **testes T01–T10 são planejados, não executados nesta entrega**.
-- Riscos prioritários: org MEMBER vê diretório de membros de toda O1; EDITOR externo herda acesso a dados INTERNAL; mídia org-shared; fanout Meta em contas duplicadas; portal/sessão pós-mudança de papel; contexto multi-org.
-- ADR-0003/0004 permanecem **PROPOSTAS, NÃO ACEITAS**. Nenhuma homologação de isolamento integral, armazenamento privado de evidências ou deploy.
+- `main` `f6883b7`; importação `f39f053e136f30acc456fa70a4b6b001990c63ba` (PRs #19–#21 integradas); PR #2 continua draft para `main`.
+- CI PR #21 run `37819894602`: `completed/success` no head `1c45f4a6d32a010361d9a38511918286138dd2a9`. **Não prova T01–T10.**
+- PR #22 em teste: `apps/members/tests/test_client_directory_boundaries.py` adiciona negativas HTTP sintéticas para `/members/`, HTMX, A/B em O1, C em O2, CLIENT/EDITOR, revogação e controles positivos de equipe. **Primeira CI #37824566462:** 2447 pass, 4 fail, 1 skip; Ruff format falhou, mypy/gitleaks passaram. No head `6468bbc2`, CI #37827220652: Pytest, mypy, gitleaks e Ruff lint passaram; Ruff format reprovou `apps/members/views.py` e `apps/members/tests/test_client_directory_boundaries.py`. A CI #37830781888 no head `36b67be9` passou Pytest, mypy, gitleaks e Ruff lint, e falhou Ruff format somente no teste. Ajuste pontual da chamada sem trailing comma enviado; aguardando nova CI. Ver [auditoria](docs/audits/2026-10-08-org-directory-http-reproduction.md).
+- Riscos adicionais de classes INTERNAL, mídia org-shared, fanout Meta e portal revogado permanecem no [inventário PR #21](docs/audits/2026-10-08-authorization-actor-resource-matrix.md).
+- ADR-0003 e ADR-0004 **PROPOSTAS/NÃO ACEITAS**; sem tenancy aprovado, evidências privadas ou deploy.
 
 ## Próximo gate
 
-Aguardar operador informar `green` ou `red` da PR #21 no SHA exato; **não fazer polling**. Depois realizar testes negativos sintéticos da matriz e priorizar correções **em PRs próprias**, mantendo tenancy pendente de decisão humana. Nenhuma mudança na `main`.
+Aguardar operador comunicar `green` ou `red` do novo head da PR #22; conferir CI no SHA exato, sem polling. A reprodução HTTP já demonstrou o problema; validar regressões da correção mínima backend, preservando BrightBean e papéis internos. Nunca modificar `main`.
