@@ -12,7 +12,7 @@ from apps.approvals.models import ApprovalAction, PostComment
 from apps.common.htmx import toast_response
 from apps.composer.models import Post
 
-from .decorators import portal_auth_required
+from .decorators import portal_approval_required, portal_auth_required
 from .services import consume_magic_link, create_portal_session, peek_magic_link
 
 
@@ -183,7 +183,7 @@ def portal_approval_queue(request):
     )
 
 
-@portal_auth_required
+@portal_approval_required
 @require_POST
 def portal_approve(request, post_id):
     """Approve a post from the client portal."""
@@ -205,7 +205,7 @@ def portal_approve(request, post_id):
     return redirect("client_portal:approval_queue")
 
 
-@portal_auth_required
+@portal_approval_required
 @require_POST
 def portal_request_changes(request, post_id):
     """Request changes on a post from the client portal."""
@@ -227,7 +227,7 @@ def portal_request_changes(request, post_id):
     return redirect("client_portal:approval_queue")
 
 
-@portal_auth_required
+@portal_approval_required
 @require_POST
 def portal_reject(request, post_id):
     """Reject a post from the client portal."""
@@ -247,7 +247,7 @@ def portal_reject(request, post_id):
     return redirect("client_portal:approval_queue")
 
 
-@portal_auth_required
+@portal_approval_required
 @require_POST
 def portal_request_hold(request, post_id):
     """Client requests a hold on an already-approved post (before it publishes)."""

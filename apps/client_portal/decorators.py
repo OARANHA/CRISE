@@ -2,6 +2,7 @@
 
 import functools
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 
 from apps.members.models import WorkspaceMembership
@@ -48,6 +49,19 @@ def portal_auth_required(view_func):
         request.portal_workspace = workspace
         request.portal_membership = membership
 
+        return view_func(request, *args, **kwargs)
+
+    return _wrapped
+
+
+def portal_approval_required(view_func):
+    """Keep portal approval actions scoped to a live approval permission."""
+
+    @portal_auth_required
+    @functools.wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        if not request.portal_membership.effective_permissions.get("approve_posts", False):
+            raise PermissionDenied("Approval permission was revoked.")
         return view_func(request, *args, **kwargs)
 
     return _wrapped

@@ -7,12 +7,14 @@
 | Referência | Estado confirmado |
 | --- | --- |
 | `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; BrightBean ainda não integrado |
-| `feat/brightbean-upstream-import` | `9beba79939d90242c3f6c7cee508f35f5ecafd77` (merge PR #22) |
+| `feat/brightbean-upstream-import` | `e142acdaf0902a53040498c43abeb02c9fcbe936` (merge PR #23) |
 | [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, Draft, base `main`; head atualizado com a branch de importação, **não integrar** nesta fase |
 | PRs #19, #20 e #21 | Integradas anteriormente na branch de importação; PR #21 merge `f39f053e136f30acc456fa70a4b6b001990c63ba` |
 | [PR #22](https://github.com/OARANHA/CRISE/pull/22) | **Integrada** em `feat/brightbean-upstream-import`; head `5545b297c80b7cbeecb0c0d2331d8b2e10843acf`; merge `9beba79939d90242c3f6c7cee508f35f5ecafd77` |
 | [CI PR #22](https://github.com/OARANHA/CRISE/actions/runs/37831790876) | `completed/success` no head `5545b297c80b7cbeecb0c0d2331d8b2e10843acf` |
-| [CI pós-merge](https://github.com/OARANHA/CRISE/actions/runs/37833488194) | `completed/success` no merge `9beba79939d90242c3f6c7cee508f35f5ecafd77` |
+| [CI pós-merge da PR #22](https://github.com/OARANHA/CRISE/actions/runs/37833488194) | `completed/success` no merge `9beba79939d90242c3f6c7cee508f35f5ecafd77` |
+| [PR #23](https://github.com/OARANHA/CRISE/pull/23) | Integrada na branch de importação; merge `e142acdaf0902a53040498c43abeb02c9fcbe936` |
+| [CI após PR #23](https://github.com/OARANHA/CRISE/actions/runs/37835321028) | `completed/success` no SHA `e142acdaf0902a53040498c43abeb02c9fcbe936` (cinco jobs) |
 | Testes da CI pós-merge | Pytest, Ruff, Mypy, Gitleaks e Docker build: **todos sucesso** |
 | Deploy | Nenhum autorizado/comprovado; **sem homologação com clientes reais** |
 
@@ -32,4 +34,4 @@
 4. **Próxima decisão:** selecionar um único risco não coberto da [matriz PR #21](audits/2026-10-08-authorization-actor-resource-matrix.md), reproduzir por testes sintéticos e propor uma PR pequena reutilizando BrightBean. Não presumir que aceitar ADRs ou ampliar permissões decorra da CI verde da PR #22.
 5. **Operação:** não realizar deploy, coleta real de terceiros, homologação de clientes, integração da PR #2 à `main`, alterações em VPS ou operações destrutivas sem autorização específica. O operador informa CI `green`/`red`; **não fazer polling**.
 
-**Decisão deste slice:** sincronização **somente documental** com resultados comprovados da PR #22; nenhum código, permissão, ADR ou arquitetura alterado. Histórico detalhado de falhas intermediárias permanece na [auditoria](audits/2026-10-08-org-directory-http-reproduction.md) e no GitHub.
+**Slice atual em revisão, não integrado:** [permissão de aprovação em sessões de portal](audits/2026-10-08-portal-approval-live-permissions.md). Leitura estática demonstrou que quatro ações POST só exigiam sessão e membership, sem verificar a permissão atual `approve_posts`. Branch isolada propõe reutilizar `WorkspaceMembership.effective_permissions`, com novos testes sintéticos para downgrade, papéis customizados, A/B/C e revogação. **Testes novos ainda não executados/CI da PR pendente**; nenhuma homologação ou mudança na branch de importação é reivindicada para esse slice.
