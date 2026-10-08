@@ -1,16 +1,17 @@
 # PR #22 — Reprodução HTTP sintética do diretório organizacional
 
 **Data:** 2026-10-08. **Base:** `feat/brightbean-upstream-import` @ `f39f053e136f30acc456fa70a4b6b001990c63ba`.
-**Status:** reprodução HTTP sintética confirmada na primeira CI; correção de escopo do diretório proposta nesta mesma PR, Pytest da correção aprovado na CI #37827220652; Ruff format falhou em dois arquivos, ajustes de formato aguardam validação. Nenhuma execução em produção.
+**Status final verificado:** falha reproduzida com cenários sintéticos; correção backend e regressões integradas pela PR #22 na branch de importação em `9beba79939d90242c3f6c7cee508f35f5ecafd77`, após CI verde no head e CI verde pós-merge. Nenhuma execução em produção.
 
 ## REAL NOW → PROVEN EVIDENCE → GAPS → REUSE GATE → DECISION
 
-- **REAL NOW:** PRs #19, #20, #21 integradas na branch de importação; PR #2 ainda draft para `main`; `main` permanece sem BrightBean.
+- **REAL NOW:** PRs #19–#22 integradas na branch de importação; PR #22 merge `9beba79939d90242c3f6c7cee508f35f5ecafd77`. PR #2 continua Draft para `main`; `main` permanece sem BrightBean.
 - **PROVEN EVIDENCE (estática):** `apps/client_portal/views_admin.py::invite_client` solicita `OrgMembership.MEMBER`; `apps/members/views.py::member_list` usa `@require_org_role("member")` e lê todo `OrgMembership` da organização, com vínculos de todos os workspaces não arquivados; `templates/members/partials/member_row.html` renderiza nomes, e-mails e nomes de workspaces.
 - **PROVEN EVIDENCE (CI):** workflow [#37824566462](https://github.com/OARANHA/CRISE/actions/runs/37824566462), head `cf2fab265135d20af294f0388bf0c2fa2c73e58c`: pytest 4 falhas, 2447 aprovações, 1 skip; Ruff formatação reprovou arquivo de testes, lint aprovado; mypy/gitleaks aprovados. Falhas de confidencialidade foram esperadas no comportamento anterior.
 - **PROVEN EVIDENCE (CI pós-correção):** [#37827220652](https://github.com/OARANHA/CRISE/actions/runs/37827220652), head `6468bbc2cf955324d93565e1b0ab262f484fbec5`: Pytest, mypy, gitleaks e Ruff lint concluídos com sucesso; Ruff format reprovou os dois arquivos Python alterados; Docker skipped. A lógica passou os testes, mas a CI total **não** passou.
 - **PROVEN EVIDENCE (CI formato):** [#37830781888](https://github.com/OARANHA/CRISE/actions/runs/37830781888), head `36b67be9b0a1b43db378f67932c037f362d3f7ee`: Pytest, mypy, gitleaks e Ruff lint aprovados; Ruff format reprovou **somente** `apps/members/tests/test_client_directory_boundaries.py`; Docker skipped. Corrigida disposição de chamada `_member` em `test_member_without_workspace_sees_only_own_identity`, não alterando asserções.
-- **GAP:** ajustes de formatação precisam de nova CI; identidade persistente distinguindo funcionário interno e cliente externo continua pendente na ADR-0003, e ADR-0004 continua proposta.
+- **PROVEN EVIDENCE (CI final):** [#37831790876](https://github.com/OARANHA/CRISE/actions/runs/37831790876), no head `5545b297c80b7cbeecb0c0d2331d8b2e10843acf`, e [CI pós-merge #37833488194](https://github.com/OARANHA/CRISE/actions/runs/37833488194), no merge `9beba79939d90242c3f6c7cee508f35f5ecafd77`: `completed/success`, com Pytest, Ruff, Mypy, Gitleaks e Docker build aprovados.
+- **GAP:** identidade persistente de funcionário interno versus cliente externo, outras superfícies de autorização e ADR-0003/ADR-0004 seguem pendentes; CI verde não prova isolamento global.
 - **REUSE GATE:** `OrgMembership`, `WorkspaceMembership`, `require_org_role` e testes HTTP Django já existem. Não criar novo RBAC, tenancy ou migração.
 - **DECISION:** aplicar escopo já existente de `WorkspaceMembership` apenas para `OrgMembership.MEMBER`, preservando diretório integral para `OWNER/ADMIN`. Permitir que membro veja sua identidade e usuários com workspace explícito em comum, sem exibir vínculos a outros workspaces. Não criar identidade interna nova nem selecionar tenancy.
 
@@ -38,6 +39,6 @@ A regra é de **escopo de recurso** reaproveitando memberships BrightBean, não 
 
 A rota `/members/` é um endpoint Django HTML; caminhos administrativos de HTMX estão sob `apps/members/urls.py` e `require_org_role("admin")`. Inspeção dirigida dos módulos REST `apps/api/routers/me.py`, `accounts.py` e MCP `handlers.py`, `tools.py` não identificou endpoint de listagem de membros organizacionais equivalente. **Isso não substitui inventário completo das superfícies de autorização.**
 
-**Testes locais:** não executados (repositório completo não disponível no executor local). **Primeira CI:** executada, com quatro falhas de segurança previstas e formatação reprovada; ver link e SHA acima. **CI pós-correção:** Pytest passou, mas a execução geral permaneceu vermelha devido à formatação. **Próxima CI:** aguardar comunicação `green`/`red` do operador e conferir head SHA pontualmente, sem polling. Não atribuir CI verde ao novo commit antes de sua execução.
+**Testes locais do executor:** não executados. **CI inicial:** quatro testes negativos falharam, reproduzindo exposição; ver SHA acima. **CI final do head e pós-merge:** todos os cinco jobs aprovados nos SHAs documentados; não afirmar homologação de toda a plataforma. Execução de testes em produção: nenhuma.
 
-**Próximo gate:** verificar Ruff, Pytest e demais jobs no novo SHA; revisar compatibilidade com papéis internos e decidir sobre integração incremental, sem aprovar tenancy. Não realizar deploy, integração em `main` ou uso de dados reais.
+**Próximo gate:** revisar compatibilidade da regra com papéis internos e escolher novo cenário adversarial da matriz PR #21, por PR separada; **não aprovar tenancy** por consequência da PR #22. Não realizar deploy, integração em `main` ou uso de dados reais.
