@@ -65,3 +65,6 @@ Essa defesa **não caracteriza isolamento completo dos usuários externos com pa
 
 ## PR #17 — tentativa de exclusão de comentário de outro cliente
 Identificado por inspeção: `apps/approvals/comments.py::delete_comment` filtrava apenas UUID e estado; calculava a permissão do solicitante no workspace passado, sem validar que o objeto também pertencia a ele. A view ignorava a relação entre `post_id` da URL e o comentário antes da exclusão. A PR #17 propõe checagem dupla em serviço e view com testes adversariais A/B/C. **CI pendente**, sem homologação de toda a área de comentários.
+
+## PR #18 — privacidade de respostas a comentários (proposta)
+Mesmo quando comentários raiz internos estão ocultos do papel CLIENT, respostas internas pré-carregadas sob um comentário externo podem aparecer em partials HTMX. O filtro proposto em `get_comments_for_post` restringe também as replies quando o papel atual é CLIENT; preserva o fluxo da equipe. Quatro regressões sintéticas propostas. **CI pendente; isolamento geral de funcionários externos com editor/custom role continua em análise na ADR-0003**.

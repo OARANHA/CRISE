@@ -106,3 +106,7 @@ O patch proposto filtra sempre comentários/replies externos na experiência de 
 ## PR #17 — isolamento da exclusão de comentários (proposta)
 `PostComment` guarda o vínculo ao workspace por `post__workspace`. O serviço de exclusão original usava somente `id=comment_id` e verificava autorização do usuário em um `workspace` informado externamente; isso não garante que o objeto pertence ao mesmo workspace. A view também recebia `post_id` sem validar associação do comentário à postagem da URL.
 A PR #17 propõe exigir `post__workspace` no serviço e `post=post` na view antes de excluir. Regressões com clientes sintéticos A/B na mesma organização e C em outra, mais casos permitidos para autor/gestor. **CI ainda não verificada**, não considerar implementado em staging. Não decide o modelo completo de tenants.
+
+## PR #18 — replies internas de comentários em rotas de equipe (proposta)
+`get_comments_for_post` do BrightBean filtrava apenas os comentários raiz INTERNAL para papel CLIENT, mas `Prefetch("replies")` ainda carregava respostas INTERNAL. A correção proposta aplica o mesmo filtro às respostas antes de renderizar a partial HTMX e mantém visibilidade total para equipe editora/gestora. **CI da PR #18 pendente**.
+Um usuário externo com papel EDITOR continua sendo tratado como editor comum nas superfícies internas: a distinção entre identidade de cliente e papel deve ser resolvida por autorização de produto na ADR-0003, não por suposição de que editor equivale a funcionário interno.
