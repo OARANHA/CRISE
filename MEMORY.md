@@ -1,20 +1,20 @@
 # VIGIAFAST — memória operacional resumida
 
-**Não é fonte de verdade.** Consultar `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → esta memória → ADRs → código/testes/CI.
+**Não é fonte de verdade.** Ordem de leitura: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → esta memória → ADRs → código/testes/CI.
 
-## Produto
-- CRISEDIGITAL / VIGIAFAST: inicialmente nove clientes com crescimento possível, funcionários internos e usuários de clientes; interface pt-BR.
-- Preservar integralmente BrightBean Studio Django/Python/PostgreSQL (AGPL-3.0); não reconstruir editor, portal, aprovações, inbox, analytics, API/MCP, RBAC etc.
-- Obsei e Bellingcat Auto Archiver são candidatos; não há coleta social real ou armazenamento privado de evidências implementado/homologado.
+## Produto e reuso
+- CRISEDIGITAL / VIGIAFAST: equipe interna e operadores de clientes, inicialmente nove, escalável; interface pt-BR.
+- Reusar integralmente BrightBean Studio Django/Python/PostgreSQL (AGPL-3.0): editor, calendário, aprovações, portal, inbox, analytics, API/MCP, RBAC.
+- Obsei e Bellingcat Auto Archiver são candidatos. Coleta pública de terceiros, armazenamento de evidências privadas e relatórios reputacionais completos **não estão homologados/implementados**.
 
-## Estado verificado em 08/10/2026
+## Estado observado em 2026-10-08
 - `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, preservada.
-- Branch de importação: `feat/brightbean-upstream-import` @ `84139275e16efcd2201191275b24cc9ea3513fa6`.
-- PRs #19–#25 integradas na branch de importação. PR #2 **aberta e Draft** para main, não integrada.
-- PR #25: merge confirmado; CI pós-merge #37848566089 no SHA exato, 5/5 jobs success. Nenhum deploy conhecido ou autorizado.
-- ADR-0001/0002 aceitas; ADR-0003/0004 propostas e não aceitas.
+- `feat/brightbean-upstream-import`: `e5f9ec7c6568729bc26220f1ab44b156bc7d6477`; PR #26 integrada somente nessa branch.
+- [CI pós-merge PR #26](https://github.com/OARANHA/CRISE/actions/runs/37858665680): GREEN no SHA acima, cinco jobs success. Dez testes de **caracterização** M10 aprovados; **não corrigem M10**.
+- PR #2 aberta e Draft para `main`. ADR-0001/0002 aceitas; ADR-0003/0004 propostas e **não aceitas**. Nenhum deploy autorizado.
 
-## Slice M10 — primeira CI RED, correção apenas de teste
-- [Auditoria M10](docs/audits/2026-10-08-m10-editor-internal-visibility.md): filtros de comentários/replies/anexos INTERNAL protegem CLIENT, mas não distinguem EDITOR interno versus EDITOR operador do cliente.
-- Testes sintéticos de caracterização em branch separada, **sem alteração das permissões de produção**. Primeira CI [#37856628216](https://github.com/OARANHA/CRISE/actions/runs/37856628216) no SHA `efe127c0ccf85db549a633fde5bfd14df941bfb5`: **RED**, 2 testes falharam por conexão PostgreSQL fechada após encerramento de streaming, e Ruff pediu formatação. Correção pontual da suíte na mesma PR #26, nova CI pendente de aviso do operador. O desvio M10 continua **NÃO CORRIGIDO**.
-- Não conceder papel EDITOR a usuário de cliente real até política decidida e implementada. Sem dados reais, deploy, polling de CI ou merge sem autorização.
+## Próximo gate: identidade, permissão e classe de dado (M10)
+- `WorkspaceMembership` registra papel e permissões; não registra afiliação confiável entre funcionário VIGIAFAST e operador do cliente. `EDITOR` de ambos acessa comentários, replies e anexos `INTERNAL` nas rotas caracterizadas.
+- Auditoria de alternativas e proposta de menor impacto: [docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md](docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md). Afiliação independente, não inferida de `is_staff` nem do role, e predicado por ator, ação, recurso, cliente e confidencialidade; **somente PROPOSTO**.
+- Próximo trabalho de runtime depende de decisão explícita sobre ADR-0003, autoridade para classificar usuários legados e política de acesso INTERNAL. A ADR-0004 continua necessária para storage privado. M09 (`Post.internal_notes`) separado.
+- Sem dados reais, deploy, merge sem autorização ou polling de CI. Operador comunica `green`/`red` para verificar uma única execução no SHA da nova PR.

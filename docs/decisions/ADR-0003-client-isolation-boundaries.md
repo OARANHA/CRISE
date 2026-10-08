@@ -113,3 +113,11 @@ Um usuário externo com papel EDITOR continua sendo tratado como editor comum na
 
 ## PR #19 — controle sobre links mágicos de cliente (proposta)
 Revisão de serviços do BrightBean: o link mágico de aprovação foi emitido para papel CLIENT, mas o consumo não validava papel/associação atual. A PR #19 propõe impedir autenticação por link após desligamento, mudança de papel, desativação, arquivamento de workspace e remoção com nova associação. **CI pendente.** O acesso de cliente como editor/colaborador continua sujeito a fluxo próprio e à decisão de identidade/permissões da ADR-0003, ainda não aceita.
+
+## Atualização de evidência M10 — 2026-10-08 (não é aceitação da ADR)
+
+A [PR #26](https://github.com/OARANHA/CRISE/pull/26) foi integrada somente à branch `feat/brightbean-upstream-import` no SHA `e5f9ec7c6568729bc26220f1ab44b156bc7d6477`. A [CI pós-merge #37858665680](https://github.com/OARANHA/CRISE/actions/runs/37858665680) terminou com cinco jobs aprovados no mesmo SHA. Os dez testes sintéticos **caracterizaram** o acesso atual; **não corrigiram** o M10. As menções anteriores a PRs/CI "pendentes" nesta ADR são registros de suas etapas históricas, não o snapshot operacional; consultar `docs/CANONICAL_STATE.md`.
+
+A [auditoria de alternativas de afiliação](../audits/2026-10-08-m10-actor-affiliation-architecture-gate.md) confronta `User.is_staff`, `OrgMembership`, extensão de `WorkspaceMembership` e entidade dedicada. Sua preferência **proposta, ainda não aprovada**, é adicionar afiliação verificada `internal/external/unclassified` independente do papel funcional em `WorkspaceMembership`, reusando o RBAC e exigindo autorização por classe de dado em todos os endpoints. A migração de membros existentes não pode promover automaticamente EDITOR a funcionário interno.
+
+**Status inalterado: PROPOSTA — NÃO ACEITA.** Antes de implementação ou rollout é obrigatória decisão explícita sobre topologia dos clientes, autoridade de classificação, tratamento de contas existentes, política de dados INTERNAL, testes adversariais e compatibilidade com o BrightBean. A ADR-0004 permanece proposta.
