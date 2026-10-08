@@ -58,3 +58,41 @@ Exigir teste negativo demonstrando que usuário sem permissão de B não acessa 
 
 ## Interface com ADR-0004 (proposta de evidências)
 A definição de um workspace por cliente permanece **pendente**. Qualquer módulo de evidências deverá ter vínculo por cliente, não compartilhar por organização e usar storage dedicado **fora** de `media_library/`. A ADR-0004 detalha o contrato proposto; sua existência não aceita esta ADR nem autoriza ingestão real.
+
+## Escopo confirmado pelo produto — portal do cliente e operação pelo próprio cliente (PR #15 proposta)
+
+**Necessidade de produto confirmada:** o VIGIAFAST precisa preservar **todas as funcionalidades do clone BrightBean** e atender, em uma interface integrada, (a) funcionários internos que operam vários clientes; (b) clientes que consultam conteúdo, acompanham monitoramento e aprovam materiais; e (c) funcionários autorizados do próprio cliente que **trabalham** em edição, calendário, inbox e recursos habilitados. Nove clientes são apenas o início; cadastros de novos clientes e usuários não devem ter limite fixo na aplicação.
+
+**Direção a avaliar — NÃO ACEITA:** usar provisoriamente uma organização operacional VIGIAFAST com workspace específico por cliente, compartilhando as implementações originais do BrightBean. Essa organização única **não é uma fronteira de isolamento comprovada**; mídias organizacionais compartilhadas e contas Meta nativas duplicadas continuam riscos abertos. Avaliar novamente alternativa de organizações separadas antes da aceitação.
+
+### Reutilização comprovada por inspeção do código (não equivale a homologação)
+
+- `apps/client_portal/urls.py` e `apps/client_portal/views.py`: dashboard, fila de aprovação, ações de aprovar/solicitar ajustes/rejeitar/suspender, postagens publicadas, histórico e rota de relatórios. `portal_reports` **apenas renderiza template**: não há relatório reputacional completo nessa view.
+- `apps/client_portal/views_admin.py`: convite de clientes, geração/envio de link e remoção de participação. `apps/client_portal/services.py::generate_magic_link` exige papel `CLIENT` no workspace para emitir o link.
+- `apps/members/models.py`: `OrgMembership`, `WorkspaceMembership` e `CustomRole.permissions` já dão base a permissões por workspace. Papéis incluem owner, manager, editor, contributor, client e viewer; **papel "cliente" não implica autorização para editor ou todas as funções**.
+- `apps/client_portal/decorators.py::portal_auth_required` exige autenticação, sessão de portal e **alguma** `WorkspaceMembership`, mas não verifica diretamente `workspace_role=CLIENT`. A rota de aprovação consulta workspace; controles detalhados por ação/permissão, papel e visibilidade devem ser testados, não presumidos.
+- `apps/client_portal/views.py::portal_approval_queue` aplica filtro `visibility=EXTERNAL` aos comentários quando `workspace_role=CLIENT`; o comportamento após transformar cliente em editor ou papel customizado precisa de revisão para impedir exposição de comentários internos.
+- `apps/members/middleware.py::RBACMiddleware` resolve `OrgMembership` com `.first()` e documenta **uma organização por usuário na v1**; não pressupor operação multi-organização já suportada.
+
+### Experiências desejadas (sem implementações novas nesta PR)
+
+| Público | Experiência | Acesso de referência | Restrição obrigatória |
+| --- | --- | --- | --- |
+| Administrador interno VIGIAFAST | Gestão de clientes, funcionários, permissões e configurações | Org owner/admin conforme autorização | Registrar ações e restringir dados privados por cliente; papel global não libera evidências automaticamente |
+| Analista/gestor interno | Trabalhar nos workspaces explicitamente atribuídos | `WorkspaceMembership` | Sem acesso implícito a outros clientes, mesmo na mesma organização |
+| Cliente observador | Painel do próprio cliente, aprovações, publicações, atividade e futuros relatórios autorizados | Portal BrightBean com papel `CLIENT` e sessão válida | Não exibir notas internas, evidências não liberadas ou dados de terceiros |
+| Cliente operador | Trabalhar nas ferramentas BrightBean expressamente habilitadas no seu workspace | Papéis editor/contributor ou `CustomRole` **após validação de fluxo** | Permissões por ação e por dado; não assumir que link mágico de `CLIENT` fornece acesso de editor |
+| Consultor externo | Acesso temporário a ações específicas | Associação e permissões explícitas | Revogação e validade verificadas, sem privilégios organizacionais gerais |
+
+**Separar identidade do ator (funcionário interno versus usuário de cliente) de sua função em um workspace.** Um cliente pode precisar editar conteúdo e também ver o portal, mas o modelo atual tem um `workspace_role` por par usuário/workspace. Antes de atribuir editor a usuários de cliente, decidir como manter restrições de informação interna, aprovações, autenticação e visualização do portal sem confiar somente na aparência da interface. Não conceder permissões ao trocar de tela; validar sempre no backend.
+
+### Gate obrigatório antes de aceitar ADR-0003 e liberar o portal para clientes reais
+
+1. Criar matriz formal de **quem pode ver/fazer o quê** nos módulos herdados: publicações, calendário, inbox, analytics, aprovações, relatórios, mídias, gestão de contas sociais, configurações, API, MCP, downloads e futuros casos/evidências.
+2. Simular usuários internos e clientes observador/operador A/B (mesma organização) e C (outra organização). Testar navegação direta por UUID, troca de workspace, sessão de portal, papéis editor/client/custom, identidade de cliente e fontes de dados compartilhadas.
+3. Garantir que comentários/notas internas, mensagem privada, relatórios, arquivos e evidências não sejam mostrados a clientes só porque têm permissão de editar publicações. Não reutilizar `MediaAsset` público para evidências (ver ADR-0004).
+4. Testar convite, login, link mágico expirado/usado, revogação de associação, downgrade de papel, offboarding, sessão já iniciada e API-key/OAuth associados ao workspace. Certificar que a área de trabalho do cliente não se torne uma forma de acessar outros clientes.
+5. Preservar integralmente as funcionalidades editoriais originais e os avisos/licença BrightBean; interface em pt-BR de acordo com papéis e sem publicar dados reais de clientes.
+6. Não declarar o portal de relatórios de crise como implementado; planejar a camada própria de monitoramento de terceiros e relatórios com dados permitidos, respeitando limitações de Instagram, TikTok e Facebook.
+
+**Estado:** apenas definição de requisitos e investigação de reuso. ADR-0003 e ADR-0004 permanecem **PROPOSTAS/NÃO ACEITAS**. Não houve alteração de autenticação, portal, dados, infraestrutura ou deploy.

@@ -48,3 +48,11 @@ Não fazer deploy nem ingerir dados reais enquanto não houver configuração se
 A inspeção estática confirmou que `MediaAsset.file` ocupa `media_library/`, divulgado anonimamente em `Caddyfile` e `config/urls.py::PUBLIC_MEDIA_PREFIXES` para consumo das redes sociais. O controle de acesso em `asset_download` não revoga acesso direto ao endereço público. Mesmo contas privadas por workspace usam esse prefixo de publicação, portanto **não colocar evidências ou relatórios confidenciais ali**.
 
 A ADR-0004 detalha proposta de armazenamento dedicado privado, autorização em cada ação, hashes, proveniência, auditoria e retenção. **Status: PROPOSTA, ainda sem implementação, testes operacionais ou escolha definitiva de tenancy**. Preservar a mídia pública original BrightBean e as regras de publicação. CI documental, se aprovada, não homologa segurança de evidências.
+
+## Portal e acesso operacional de clientes — gate proposto na PR #15
+
+O clone possui `apps/client_portal` com convites, link mágico, aprovações, posts publicados e histórico. O relatório nessa área ainda é um template sem relatório reputacional completo. Usuários externos que trabalharão como editor/contributor exigem **permissões explícitas para cada função** e manutenção das restrições de informação interna.
+
+A emissão de link mágico exige `WorkspaceRole.CLIENT`, mas `portal_auth_required` confirma apenas associação ao workspace após a sessão de portal; além disso, `portal_approval_queue` filtra comentários externos quando o papel atual é literalmente `CLIENT`. O efeito de migrar um usuário externo para EDITOR ou custom role deve ser testado em cenário adversarial antes de habilitá-lo. Não assumir vazamento explorável sem testes; tratar como risco de autorização a avaliar.
+
+Validar casos A/B/C, acesso direto, mudanças/revogação de permissão durante sessão ativa, preservação de comentários internos, relatórios, imagens públicas editoriais versus evidências privadas, e escopo de APIs/MCP. Um mesmo workspace contém pessoas com diferentes responsabilidades, mas **estar associado a ele não autoriza consultar todo dado**. ADR-0003/ADR-0004 pendentes, sem dados reais.

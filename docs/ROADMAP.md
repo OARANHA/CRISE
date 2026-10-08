@@ -20,16 +20,19 @@
 - [x] PR #12: cinco regressões de inbox em tarefas de fundo aprovadas (CI #37784489968; 2.405 passed / 1 skipped).
 - [x] PR #13: notificação de responsáveis revogados/outro workspace corrigida e aprovada (CI #37787128260; 2.413 passed / 1 skipped, 8 novos testes).
 - [ ] Cobrir depois Redis multiworker, demais tarefas, webhooks, relatórios, downloads e storage privado de evidências.
+- [ ] PR #15: documentar portal do cliente observador e operador com requisitos e matriz de permissões (somente documentação; CI pendente).
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
 ## Fase 2 — Interface operacional
 - [ ] Evoluir o BrightBean com branding **VIGIAFAST**, totalmente em pt-BR, sem remover autenticação, publicação, inbox e analytics existentes.
 - [ ] Cadastro/gestão multi-cliente, termos e variantes, ocorrências, responsáveis, alertas e relatórios por cliente.
+- [ ] Reutilizar portal BrightBean para clientes observadores; validar cliente operador com editor/contributor/custom roles e preservar ocultação de comentários internos (sem prometer relatórios já prontos).
+- [ ] Testes de autorização e desligamento na navegação cliente/operador antes de conceder trabalho dentro do workspace.
 
 ## Fase 3 — Inteligência e evidências
 - [ ] Validar Obsei em pt-BR com revisão humana.
-- [ ] PR #14: revisar a ADR-0004 de storage privado de evidências (PROPOSTA, não implementada; CI documental pendente).
+- [x] PR #14: proposta documental ADR-0004 integrada à branch de importação (CI #37789363791 aprovada); ADR ainda NÃO ACEITA, storage NÃO implementado.
 - [ ] Avaliar Auto Archiver, implementar armazenamento privado após aceitação das ADRs, hashes e proveniência.
 - [ ] Alertas, severidade, histórico e relatórios isolados por cliente.
 
