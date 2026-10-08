@@ -4,14 +4,14 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 
 ## Fase 0 — Fundamentos documentais
 - [x] Criar README público sem dados sensíveis.
-- [ ] Integrar/mesclar documentação canônica e memória no main por PR.
+- [x] Integrar documentação canônica e memória na main pela PR #1 (`f6883b747ce1a6ae6a6968948da5225332ed4f2f`).
 - [ ] Estabelecer critérios objetivos de aceite e matriz de risco.
 
 ## Fase 1 — Importar e preservar BrightBean
 - [x] Copiar snapshot integral para a branch de importação com upstream fixado e avisos de licença; **merge pendente**.
 - [ ] Executar testes, lint, migrations e checks de segurança; registrar evidências.
 - [ ] Validar comportamento real de RBAC, workspaces, inbox e API/MCP.
-- [ ] Definir CI para evitar regressões antes da reformulação visual.
+- [ ] Validar CI baseline da PR #3 (lint, mypy, pytest, migrações, Docker sem publicação e gitleaks); status depende do workflow.
 
 ## Fase 2 — Operação simples para equipe
 - [ ] Rebrand total da interface para VIGIAFAST em pt-BR, sem remover funcionalidade original.

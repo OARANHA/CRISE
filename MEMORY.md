@@ -23,10 +23,16 @@
 
 ## Registro de continuidade
 - **2026-10-08** — Repositório OARANHA/CRISE verificado inicialmente público e vazio; iniciada fundação documental. Ainda sem importação de software, testes executados ou deploy do VIGIAFAST.
-- Próximo marco: revisar a base e licença do BrightBean; importá-la com histórico verificável em branch separada, executar testes originais e registrar diagnóstico.
+- Próximo marco: executar e revisar a CI de base do BrightBean em branch independente, corrigir bloqueios críticos de segurança e validar isolamento dos nove clientes antes de quaisquer dados reais.
 
 ## Regras de manutenção
 Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante mudar; manter curto, datado e com links de commits/PRs. Registrar fatos comprovados; questões abertas em `docs/CANONICAL_STATE.md`.
 
 ## Atualização após importação (branch em revisão)
 - Snapshot integral do BrightBean copiado na branch de importação, com SHA `96ccc1e88fefa171c4e5ca981dc9f289bdf60d39` e verificação byte a byte de todos os arquivos versionados. Sem execução de testes da aplicação, sem deploy e sem aprovação de merge.
+
+## Validação de importação e revisão estática (2026-10-08)
+- Importação integral confirmada em [Actions #37728568048](https://github.com/OARANHA/CRISE/actions/runs/37728568048): 874 arquivos versionados idênticos ao upstream (`96ccc1e88fefa171c4e5ca981dc9f289bdf60d39`); snapshot no commit `b80322fd0d1386b0c13ef7891f98817b6d38d5d3` da PR #2.
+- A importação por snapshot não incorporou o histórico Git completo do upstream; a origem e SHA estão documentados.
+- Validação Django, CI e build sem resultados ainda; PR separada para habilitar checks originais.
+- Revisão estática detectou Compose com porta/senha PostgreSQL demonstrativas e Caddy com possível exposição de mídia privada; bloqueiam qualquer deploy até correção.

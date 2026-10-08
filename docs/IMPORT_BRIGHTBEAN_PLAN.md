@@ -1,6 +1,6 @@
 # Importação integral BrightBean — plano e limites
 
-**Estado:** fluxo de importação preparado; execução depende da aprovação e do resultado do workflow. Não pressupor sucesso antes de verificar o commit remoto e os arquivos.
+**Estado:** importação executada e integridade confirmada em [Actions #37728568048](https://github.com/OARANHA/CRISE/actions/runs/37728568048). 874 arquivos conferidos; snapshot no commit `b80322fd0d1386b0c13ef7891f98817b6d38d5d3` da PR #2, **sem merge nem testes funcionais**.
 
 ## Por que um workflow isolado?
 O conector GitHub acessa arquivos de texto, mas não consegue transferir os binários originais. Uma cópia parcial perderia logos, imagens e ícones e não poderia ser declarada íntegra. O workflow executa **somente no GitHub Actions** para baixar um snapshot da fonte pública, copiar arquivos e conferir todos por comparação byte a byte.
@@ -22,7 +22,7 @@ O conector GitHub acessa arquivos de texto, mas não consegue transferir os bin�
 ## Próxima fase obrigatória
 1. Confirmar o resultado do workflow **uma vez**, sem polling.
 2. Verificar quantidade e conteúdo dos arquivos transferidos e revisar `LICENSE`, `docs/upstream`, `Dockerfile`, `docker-compose.yml`, `.env.example` e permissões de APIs.
-3. Em PR separada, ativar CI upstream revisada (lint, mypy, pytest, migrações, build sem push) e registrar resultados.
+3. PR separada #3 criada para ativar CI upstream revisada (lint, mypy, pytest, migrações, build sem push, gitleaks); resultados ainda precisam ser conferidos.
 4. Testar isolamento por cliente e autenticação antes de qualquer uso de dados reais.
 
 ## Plano alternativo

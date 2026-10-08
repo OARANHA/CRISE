@@ -31,4 +31,4 @@
 Não realizar deploy, mexer em outras aplicações/VPS, apagar dados ou executar operações destrutivas sem autorização específica. Nunca publicar dados de clientes ou credenciais neste repositório público.
 
 ## Documentação de origens
-BrightBean Studio: https://github.com/brightbeanxyz/brightbean-studio — referência de código, licença AGPL-3.0; SHA de base sob avaliação: `96ccc1e88fefa171c4e5ca981dc9f289bdf60d39` (main observado em 2026-10-08). **Ainda não importado.** Ver `docs/INTEGRATIONS.md`.
+BrightBean Studio: https://github.com/brightbeanxyz/brightbean-studio — referência de código, licença AGPL-3.0; SHA de base sob avaliação: `96ccc1e88fefa171c4e5ca981dc9f289bdf60d39` (main observado em 2026-10-08). **Importado somente na branch da PR #2, não integrado à main nem homologado.** Ver `docs/INTEGRATIONS.md`.
