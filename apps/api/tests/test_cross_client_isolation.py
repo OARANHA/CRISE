@@ -45,9 +45,7 @@ def clients(db):
     ws_b = Workspace.objects.create(name="Client B", organization=agency)
     ws_c = Workspace.objects.create(name="Client C", organization=other_org)
 
-    OrgMembership.objects.create(
-        user=user, organization=agency, org_role=OrgMembership.OrgRole.OWNER
-    )
+    OrgMembership.objects.create(user=user, organization=agency, org_role=OrgMembership.OrgRole.OWNER)
     WorkspaceMembership.objects.create(
         user=user,
         workspace=ws_a,
@@ -143,9 +141,7 @@ class TestThreeClientIsolation:
     @pytest.mark.parametrize("other_idx", [1, 2])
     def test_rest_cannot_edit_or_discard_foreign_reply(self, clients, other_idx):
         context = clients
-        foreign_reply = InboxReply.objects.create(
-            inbox_message=context.messages[other_idx], body="confidential draft"
-        )
+        foreign_reply = InboxReply.objects.create(inbox_message=context.messages[other_idx], body="confidential draft")
         patch_response = context.rest.patch(
             f"/api/v1/inbox/replies/{foreign_reply.id}",
             data=json.dumps({"body": "unauthorized edit"}),
@@ -161,9 +157,7 @@ class TestThreeClientIsolation:
     @pytest.mark.parametrize("other_idx", [1, 2])
     def test_rest_cannot_send_foreign_draft(self, clients, other_idx):
         context = clients
-        reply = InboxReply.objects.create(
-            inbox_message=context.messages[other_idx], body="do not send"
-        )
+        reply = InboxReply.objects.create(inbox_message=context.messages[other_idx], body="do not send")
         with patch("apps.inbox.services._dispatch_to_platform") as dispatch:
             response = context.rest.post(f"/api/v1/inbox/replies/{reply.id}/send")
         assert response.status_code == 404
