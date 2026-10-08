@@ -36,3 +36,9 @@ Leia `docs/PROJECT_SOURCE.md` → `AGENTS.md` → estado canônico → memória 
 - **Pytest aprovou 2.380 casos, 1 skipped e 838 warnings**, incluindo **16/16 cenários novos** de segurança para posts, mídia e mídia organizacional compartilhada. Mypy e Gitleaks passaram.
 - O workflow temporário `format-post-media-once.yml` aplica `ruff check --fix --select I` e `ruff format` usando a **mesma versão 0.15.9** da CI, verifica o resultado e remove a si próprio no commit bot. Nenhuma alteração em código de produção.
 - **A execução e o commit automático ainda não estão confirmados.** O GitHub pode deixar a CI sobre um commit criado por `github-actions[bot]` como `action_required`; nesse caso uma alteração por conector GitHub precisará disparar nova validação. Não afirmar green antes de evidências. Sem polling, merge ou deploy.
+
+## CI PR #8 — ação pendente após formatação concluída (2026-10-08)
+- Formatador real aprovado: [Actions #37767396264](https://github.com/OARANHA/CRISE/actions/runs/37767396264), bot commit `a057fba3ff508423d479f5838859a326aeb5db7e`.
+- CI red [#37767401425](https://github.com/OARANHA/CRISE/actions/runs/37767401425) rodou o commit **anterior**, não é regressão comprovada.
+- [#37767422744](https://github.com/OARANHA/CRISE/actions/runs/37767422744) no bot commit foi `action_required` sem jobs.
+- Atualizar PR #8 pelo conector GitHub apenas em docs para pedir CI normal. Esperar resultado real, sem polling/merge/deploy.
