@@ -135,6 +135,29 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
 
+      - name: Validate Compose without running any service
+        env:
+          VIGIAFAST_DB_PASSWORD: ci-placeholder-only
+        run: |
+          cp .env.example .env
+          trap 'rm -f .env' EXIT
+          docker compose -f docker-compose.yml config --quiet
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml config --quiet
+
+      - name: Validate Caddy and verify private media cannot be served
+        run: |
+          set -euo pipefail
+          docker run --rm -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+          mkdir -p "$RUNNER_TEMP/vigiafast-media/media_library" "$RUNNER_TEMP/vigiafast-media/comment_attachments"
+          echo public > "$RUNNER_TEMP/vigiafast-media/media_library/public.txt"
+          echo internal > "$RUNNER_TEMP/vigiafast-media/comment_attachments/private.txt"
+          docker run -d --rm --name vigiafast-caddy-safety -p 127.0.0.1:19871:80 -e APP_DOMAIN=:80 -e CADDY_MEDIA_ROOT=/data/media -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" -v "$RUNNER_TEMP/vigiafast-media:/data/media:ro" caddy:2-alpine caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+          trap 'docker rm -f vigiafast-caddy-safety >/dev/null 2>&1 || true' EXIT
+          sleep 3
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:19871/media/media_library/public.txt)" = 200
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:19871/media/comment_attachments/private.txt)" = 404
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:19871/media/unlisted/example.txt)" = 404
+
       - name: Build image
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:

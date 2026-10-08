@@ -40,3 +40,9 @@ Registrar data, branch, SHA/PR, comando de teste e resultado, capacidades compro
 - O `Caddyfile` serve todo `/media/*` diretamente, enquanto `config/urls.py` protege `comment_attachments/` via lista de caminhos públicos; verificar potencial acesso anônimo à mídia privada antes de deploy.
 - Revisar cadeia de proxies e confiança em `HTTP_X_FORWARDED_FOR` no rate limit de login (`apps/accounts/middleware.py`).
 - Relatório detalhado: `docs/audits/2026-10-08-brightbean-baseline.md`.
+
+## Continuação comprovada 2026-10-08
+- PR #3 integrada em `feat/brightbean-upstream-import`, commit `a9d397bf34c699b50b4237142cc50b905e3b105f`.
+- CI [run 37728858063](https://github.com/OARANHA/CRISE/actions/runs/37728858063): cinco jobs aprovados; pytest 2.337 passed, 1 skipped, 808 warnings; Docker build sem publicação.
+- PR #4 é proposta de hardening de Compose e Caddy com testes HTTP sintéticos. **Ainda não considerar a correção aprovada até a CI e revisão.**
+- Próxima etapa: aguardar comunicação do operador (green/red), sem polling; depois revisar testes de isolamento entre clientes e confiança em `X-Forwarded-For`. Sem deploy.

@@ -36,3 +36,8 @@ Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante
 - A importação por snapshot não incorporou o histórico Git completo do upstream; a origem e SHA estão documentados.
 - Validação Django, CI e build sem resultados ainda; PR separada para habilitar checks originais.
 - Revisão estática detectou Compose com porta/senha PostgreSQL demonstrativas e Caddy com possível exposição de mídia privada; bloqueiam qualquer deploy até correção.
+
+## Baseline validada (2026-10-08)
+- PR #3 merged em branch de importação, commit `a9d397bf34c699b50b4237142cc50b905e3b105f`.
+- [CI baseline](https://github.com/OARANHA/CRISE/actions/runs/37728858063): 2.337 testes aprovados, 1 ignorado; lint, mypy, PostgreSQL, build sem publicação e Gitleaks verdes.
+- PR #4 em preparação: Caddy allowlist da mídia pública, Compose com segredo explícito e testes sintéticos. Sem CI confirmada, sem deploy.

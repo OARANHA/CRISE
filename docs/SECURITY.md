@@ -23,3 +23,10 @@ O README original menciona mídia de publicação servida em caminhos acessívei
 
 ## Gatilhos de parada
 Não fazer deploy nem ingerir dados reais enquanto não houver configuração segura, validação de isolamento, política de retenção e autorização específica.
+
+## Correções propostas na PR #4
+- PostgreSQL sem porta publicada e com senha obrigatória via `VIGIAFAST_DB_PASSWORD`; URL de conexão definida em `.env` protegido, usando mesma senha.
+- Django acessível apenas na loopback do host para o cenário Compose; proxy Caddy continuacomo entrada na produção.
+- Caddy publica só `media_library/`, `avatars/`, `workspaces/icons/`; anexos internos e outras rotas de mídia retornam 404 na borda.
+- CI fará validação sintática de Compose/Caddy e teste HTTP sintético de mídia pública/privada. Não considerar aprovado antes do workflow.
+- Continuam abertos gates de isolamento entre clientes, cabeçalho IP e storage privado de evidências.
