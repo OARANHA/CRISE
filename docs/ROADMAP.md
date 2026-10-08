@@ -20,7 +20,8 @@
 - [x] PR #12: cinco regressões de inbox em tarefas de fundo aprovadas (CI #37784489968; 2.405 passed / 1 skipped).
 - [x] PR #13: notificação de responsáveis revogados/outro workspace corrigida e aprovada (CI #37787128260; 2.413 passed / 1 skipped, 8 novos testes).
 - [ ] Cobrir depois Redis multiworker, demais tarefas, webhooks, relatórios, downloads e storage privado de evidências.
-- [ ] PR #15: documentar portal do cliente observador e operador com requisitos e matriz de permissões (somente documentação; CI pendente).
+- [x] PR #15: requisitos para cliente observador/operador no portal (CI #37799250321 verde, documentação integrada; ADR-0003 ainda proposta).
+- [ ] PR #16: proteção de comentários internos e anexos por URL no portal do cliente, seis casos sintéticos (CI pendente).
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
