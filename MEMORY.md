@@ -62,3 +62,9 @@ Leia `docs/PROJECT_SOURCE.md` → `AGENTS.md` → estado canônico → memória 
 - PR #9 integrada na branch de importação em `0c07b97047e92573553a1bd6f8fff1b3a44c2eb2`. [Run CI #37771059913](https://github.com/OARANHA/CRISE/actions/runs/37771059913): cinco jobs success, **2.390 passed, 1 skipped, 848 warnings**, **10/10** cenários OAuth/MCP aprovados.
 - **PR #10 proposta, CI pendente:** sete regressões com token API **previamente utilizado** e linha de credencial em cache; testar revogação, remoção/redução de permissões, modificações M2M allowlist nos dois sentidos, exclusão de membership e vencimento, em REST/MCP. Reutiliza o código de `apps/api_keys/services.py` e `apps/api_keys/signals.py`, sem alterar código de produção.
 - Cache de testes Django não equivale a uma validação real de Redis com múltiplos processos. Esse gate seguirá aberto. Sem merge na `main`, sem deploy, contas sociais reais ou dados de clientes. Aguardar green/red do operador sem polling.
+
+## PR #10 integrada — próximo gate webhook (2026-10-08)
+- `feat/brightbean-upstream-import` após PR #10: `78c18b4318147bab0472cf3fb7b798c9c71b05c2`; [CI #37773171776](https://github.com/OARANHA/CRISE/actions/runs/37773171776), cinco jobs aprovados, **2.397 passed / 1 skipped**, sete casos novos de credenciais em cache.
+- PR #11 de regressões Meta para páginas com IDs nativos distintos/repetidos: documentar roteamento por organização/workspace, sem mudar código original. **Pendente CI**.
+- Compartilhamento organizacional de mídia e compartilhamento de webhooks por mesma conta nativa são riscos a decidir, não capacidades aprovadas para evidências confidenciais. ADR-0003 segue PROPOSTA.
+- Sem deploy, sem merge na main. Operador informa green/red; não fazer polling.

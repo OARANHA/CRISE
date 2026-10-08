@@ -43,3 +43,9 @@ Exigir teste negativo demonstrando que usuário sem permissão de B não acessa 
 - Testes adversariais de leitura/edição de posts e mídia em REST e MCP, com clientes A/B/C fictícios.
 - Teste explícito confirma que o BrightBean **já compartilha** `MediaAsset.workspace_id=NULL` dentro de uma organização; isso **não valida** compartilhar evidências do VIGIAFAST.
 - Aguardar CI. Não aceitar ADR nem modificar política de mídia compartilhada automaticamente.
+
+## Nova evidência de risco — webhooks Meta, PR #11 proposta
+- Unicidade de `SocialAccount` é `(workspace, platform, account_platform_id)`, permitindo a mesma página de Facebook registrada em mais de um workspace.
+- `_process_meta_events` busca todos os registros correspondentes ao identificador nativo e valida o segredo de app da organização. Isso pode produzir **fanout do mesmo evento** para clientes diferentes da mesma organização que tenham conectado a mesma página.
+- Os testes propostos apenas documentam esse roteamento e o filtro entre organizações; **não estabelecem nem autorizam a política do VIGIAFAST**. Precisamos decidir se links duplicados à mesma conta são permitidos e, em caso positivo, como evitar exposição indevida de mensagens privadas.
+- Aguardar CI da PR #11 e análise de consequências para contas Meta já conectadas antes de qualquer restrição, migração ou bloqueio de duplicidade.

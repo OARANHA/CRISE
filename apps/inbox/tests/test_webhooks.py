@@ -966,3 +966,124 @@ class TestFacebookFeedItemFiltering:
         from apps.inbox.sentiment import analyze_sentiment
 
         assert message.sentiment == analyze_sentiment("this is great, thanks!")
+
+
+@pytest.mark.django_db
+class TestMetaWebhookNativeIdWorkspaceBoundary:
+    """Document routing for distinct and repeated native Page IDs."""
+
+    @staticmethod
+    def _create_accounts(name, platform_ids, secret):
+        from apps.credentials.models import PlatformCredential
+        from apps.organizations.models import Organization
+        from apps.workspaces.models import Workspace
+
+        org = Organization.objects.create(name=name)
+        PlatformCredential.objects.create(
+            organization=org,
+            platform="facebook",
+            credentials={
+                "client_id": f"{name}-app",
+                "client_secret": secret,
+            },
+        )
+        accounts = []
+        for index, platform_id in enumerate(platform_ids):
+            workspace = Workspace.objects.create(
+                organization=org,
+                name=f"{name} workspace {index}",
+            )
+            accounts.append(
+                SocialAccount.objects.create(
+                    workspace=workspace,
+                    platform="facebook",
+                    account_platform_id=platform_id,
+                    account_name=f"Synthetic page {index}",
+                )
+            )
+        return accounts
+
+    @staticmethod
+    def _post_message(client, platform_id, secret, message_id):
+        payload = {
+            "entry": [
+                {
+                    "id": platform_id,
+                    "messaging": [
+                        {
+                            "sender": {"id": "synthetic-sender"},
+                            "message": {
+                                "mid": message_id,
+                                "text": "synthetic message",
+                            },
+                        }
+                    ],
+                }
+            ]
+        }
+        body = json.dumps(payload).encode()
+        return client.post(
+            reverse("inbox_webhooks:webhook_facebook"),
+            data=body,
+            content_type="application/json",
+            HTTP_X_HUB_SIGNATURE_256=_sign_body(body, secret),
+        )
+
+    @override_settings(PLATFORM_CREDENTIALS_FROM_ENV={})
+    def test_distinct_pages_inside_org_route_to_matching_workspace(self, client):
+        account_a, account_b = self._create_accounts(
+            "SharedOrgDistinct", ["native-page-a", "native-page-b"], "secret-d"
+        )
+        response = self._post_message(
+            client, "native-page-a", "secret-d", "distinct-message"
+        )
+        assert response.status_code == 200
+        messages = InboxMessage.objects.filter(
+            platform_message_id="distinct-message"
+        )
+        assert list(messages.values_list("workspace_id", flat=True)) == [
+            account_a.workspace_id
+        ]
+        assert not messages.filter(workspace_id=account_b.workspace_id).exists()
+
+    @override_settings(PLATFORM_CREDENTIALS_FROM_ENV={})
+    def test_repeated_native_id_inside_org_fans_out_to_both_workspaces(
+        self, client
+    ):
+        """Observed BrightBean behavior, not an approved VIGIAFAST policy."""
+        account_a, account_b = self._create_accounts(
+            "SharedOrgRepeated", ["repeated-page", "repeated-page"], "secret-r"
+        )
+        response = self._post_message(
+            client, "repeated-page", "secret-r", "repeated-message"
+        )
+        assert response.status_code == 200
+        workspace_ids = set(
+            InboxMessage.objects.filter(
+                platform_message_id="repeated-message"
+            ).values_list("workspace_id", flat=True)
+        )
+        assert workspace_ids == {
+            account_a.workspace_id,
+            account_b.workspace_id,
+        }
+
+    @override_settings(PLATFORM_CREDENTIALS_FROM_ENV={})
+    def test_repeated_native_id_across_orgs_rejects_foreign_secret(self, client):
+        (account_a,) = self._create_accounts(
+            "SigningOrgA", ["same-page-id"], "secret-a"
+        )
+        (account_b,) = self._create_accounts(
+            "SigningOrgB", ["same-page-id"], "secret-b"
+        )
+        response = self._post_message(
+            client, "same-page-id", "secret-a", "signed-only-a"
+        )
+        assert response.status_code == 200
+        workspaces = set(
+            InboxMessage.objects.filter(
+                platform_message_id="signed-only-a"
+            ).values_list("workspace_id", flat=True)
+        )
+        assert workspaces == {account_a.workspace_id}
+        assert account_b.workspace_id not in workspaces
