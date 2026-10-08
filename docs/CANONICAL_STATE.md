@@ -1,37 +1,31 @@
 # VIGIAFAST — estado canônico verificável
 
-**Snapshot pontual:** 2026-10-08. Evidências verificadas no GitHub; este arquivo não se atualiza sozinho. Reconciliar o estado real antes de executar ações.
+**Snapshot:** 2026-10-08. O conteúdo é pontual e deve ser reconciliado com GitHub antes de qualquer ação.
 
-## REAL NOW — referências e CI
+## REAL NOW — repositório e integrações
 
-| Referência | Estado confirmado |
+| Referência | Estado observado |
 | --- | --- |
-| `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; BrightBean ainda não integrado |
-| `feat/brightbean-upstream-import` | `e142acdaf0902a53040498c43abeb02c9fcbe936` (merge PR #23) |
-| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, Draft, base `main`; head atualizado com a branch de importação, **não integrar** nesta fase |
-| PRs #19, #20 e #21 | Integradas anteriormente na branch de importação; PR #21 merge `f39f053e136f30acc456fa70a4b6b001990c63ba` |
-| [PR #22](https://github.com/OARANHA/CRISE/pull/22) | **Integrada** em `feat/brightbean-upstream-import`; head `5545b297c80b7cbeecb0c0d2331d8b2e10843acf`; merge `9beba79939d90242c3f6c7cee508f35f5ecafd77` |
-| [CI PR #22](https://github.com/OARANHA/CRISE/actions/runs/37831790876) | `completed/success` no head `5545b297c80b7cbeecb0c0d2331d8b2e10843acf` |
-| [CI pós-merge da PR #22](https://github.com/OARANHA/CRISE/actions/runs/37833488194) | `completed/success` no merge `9beba79939d90242c3f6c7cee508f35f5ecafd77` |
-| [PR #23](https://github.com/OARANHA/CRISE/pull/23) | Integrada na branch de importação; merge `e142acdaf0902a53040498c43abeb02c9fcbe936` |
-| [CI após PR #23](https://github.com/OARANHA/CRISE/actions/runs/37835321028) | `completed/success` no SHA `e142acdaf0902a53040498c43abeb02c9fcbe936` (cinco jobs) |
-| Testes da CI pós-merge | Pytest, Ruff, Mypy, Gitleaks e Docker build: **todos sucesso** |
-| Deploy | Nenhum autorizado/comprovado; **sem homologação com clientes reais** |
+| `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f` — BrightBean não integrado |
+| `feat/brightbean-upstream-import` | `da900ea4f6a65963538e5defe7c081122e78dece` — merge PR #24 |
+| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta em Draft; base `main`; não integrar automaticamente |
+| PRs #19–#24 | Integradas somente à branch de importação |
+| [PR #24](https://github.com/OARANHA/CRISE/pull/24) | Merge confirmado no SHA `da900ea4f6a65963538e5defe7c081122e78dece` |
+| CI da PR #24 | Pré-merge: registrada como aprovada no handoff anterior; CI **pós-merge não verificada** nesta retomada |
+| Branch de trabalho | `fix/client-comment-visibility-gate` — slice M24 proposto; CI ainda não verificada |
+| Deploy/homologação | Nenhum autorizado ou comprovado; sem clientes reais |
 
-## PROVEN EVIDENCE — implementação limitada
+## PROVEN EVIDENCE
 
-- BrightBean Studio preservado na branch de importação: aplicação Django/Python/PostgreSQL e recursos preexistentes de publicação, editor, calendário, aprovações, inbox, analytics, portal, autenticação/RBAC, mídia e API/MCP. O clone **não** foi integrado à `main`.
-- [Matriz de autorização PR #21](audits/2026-10-08-authorization-actor-resource-matrix.md) fornece análise estática para outras superfícies, não um selo de isolamento global.
-- [PR #22 / auditoria HTTP](audits/2026-10-08-org-directory-http-reproduction.md): quatro regressões sintéticas demonstraram exposição do diretório `/members/` entre clientes da mesma organização. Correção backend restringe `OrgMembership.MEMBER` aos usuários e vínculos dos workspaces ativos que compartilha, mais a própria identidade. `OWNER/ADMIN` mantêm visão organizacional.
-- O arquivo `apps/members/tests/test_client_directory_boundaries.py` cobre **14 testes HTTP sintéticos**, incluindo A/B na mesma organização, C em outra, CLIENT/EDITOR, HTMX, revogação e equipe. A CI completa passou no head e após o merge.
-- Os testes **não comprovam** isolamento multi-cliente de toda a aplicação, identidade permanente funcionário/cliente, nem segurança de evidências privadas.
+- Base BrightBean Studio (Django/Python/PostgreSQL, AGPL-3.0) preservada na branch de importação com editor, calendário, aprovação, inbox, analytics, portal, mídias, API/MCP e RBAC. Presença no código não equivale a homologação funcional completa.
+- [PR #22 / auditoria de diretório](audits/2026-10-08-org-directory-http-reproduction.md): defesa do diretório `/members/` por vínculo de workspace para org members; 14 regressões sintéticas documentadas e CI aprovada no respectivo SHA.
+- [PR #24 / aprovação em sessão ativa](audits/2026-10-08-portal-approval-live-permissions.md): `portal_approval_required` reutiliza `WorkspaceMembership.effective_permissions` nas quatro ações POST de aprovação, incluindo revogação/downgrade. Não refazer essa correção.
+- **Novo slice em revisão:** [auditoria M24](audits/2026-10-08-client-internal-comment-visibility.md) comprova por inspeção fluxo de `visibility=internal` não autorizado de `CLIENT` para `PostComment`; branch dedicada adiciona gate de escrita e oito testes HTTP sintéticos. **Testes ainda não executados/CI pendente de comunicação manual.** O risco foi identificado por leitura estática, não por exploração HTTP executada.
 
 ## GAPS → REUSE GATE → DECISION
 
-1. **Modelo de clientes:** [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) permanece **PROPOSTA / NÃO ACEITA**. `WorkspaceMembership` e `OrgMembership` são reutilizados; `EDITOR` não identifica de forma confiável funcionário interno versus operador do cliente.
-2. **Evidências:** [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) permanece **PROPOSTA / NÃO ACEITA**. Não colocar evidências confidenciais em `media_library/`; armazenamento privado ainda não implementado.
-3. **Riscos adicionais:** mídias compartilhadas no escopo organizacional, fanout Meta em contas duplicadas, portal após mudança de papel/revogação, APIs/MCP, workers, notificações e downloads exigem investigação e regressões sintéticas específicas. `portal_reports` não é relatório reputacional completo.
-4. **Próxima decisão:** selecionar um único risco não coberto da [matriz PR #21](audits/2026-10-08-authorization-actor-resource-matrix.md), reproduzir por testes sintéticos e propor uma PR pequena reutilizando BrightBean. Não presumir que aceitar ADRs ou ampliar permissões decorra da CI verde da PR #22.
-5. **Operação:** não realizar deploy, coleta real de terceiros, homologação de clientes, integração da PR #2 à `main`, alterações em VPS ou operações destrutivas sem autorização específica. O operador informa CI `green`/`red`; **não fazer polling**.
-
-**Slice atual em revisão, não integrado:** [permissão de aprovação em sessões de portal](audits/2026-10-08-portal-approval-live-permissions.md). Leitura estática demonstrou que quatro ações POST só exigiam sessão e membership, sem verificar a permissão atual `approve_posts`. Branch isolada propõe reutilizar `WorkspaceMembership.effective_permissions`, com novos testes sintéticos para downgrade, papéis customizados, A/B/C e revogação. **Testes novos ainda não executados/CI da PR pendente**; nenhuma homologação ou mudança na branch de importação é reivindicada para esse slice.
+1. [ADR-0001](decisions/ADR-0001-brightbean-foundation.md) e [ADR-0002](decisions/ADR-0002-canonical-documentation.md) são **aceitas**. [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) seguem **propostas/não aceitas**.
+2. Identidade funcionário interno × cliente operador ainda não é atributo confiável; `EDITOR` externo e classes internas requerem política aprovada e testes específicos. Não alterar tenancy ou interpretação de `EDITOR` no slice M24.
+3. Mídia org-shared, possível fanout Meta por conta duplicada, REST/MCP, notificações, downloads e armazenamento privado de evidências seguem sem homologação global. Proibido colocar evidências privadas em `media_library/`.
+4. A próxima ação é aguardar `green`/`red` informado pelo operador **para a branch M24**, validar uma única vez Pytest, Ruff, Mypy, Gitleaks e Docker no SHA exato, revisar resultados e pedir autorização explícita para qualquer merge.
+5. Não realizar deploy, uso de clientes reais, coleta social, alteração da VPS ou integração da PR #2 à `main` sem autorização específica.
