@@ -107,18 +107,14 @@ class TestCrossClientOAuthBoundaries:
         assert response.status_code == 401
 
     def test_api_key_issuer_offboarded_denied_in_rest_and_mcp(self, clients):
-        WorkspaceMembership.objects.filter(
-            user=clients.user, workspace=clients.workspaces[0]
-        ).delete()
+        WorkspaceMembership.objects.filter(user=clients.user, workspace=clients.workspaces[0]).delete()
         rest = clients.rest.get("/api/v1/accounts/")
         mcp = _call_mcp(clients.rest, "list_accounts", {})
         assert rest.status_code == 401
         assert mcp.status_code == 401
 
     def test_api_key_issuer_demoted_cannot_read_inbox(self, clients):
-        membership = WorkspaceMembership.objects.get(
-            user=clients.user, workspace=clients.workspaces[0]
-        )
+        membership = WorkspaceMembership.objects.get(user=clients.user, workspace=clients.workspaces[0])
         membership.workspace_role = WorkspaceMembership.WorkspaceRole.VIEWER
         membership.save(update_fields=["workspace_role"])
         response = clients.rest.get("/api/v1/inbox/")
