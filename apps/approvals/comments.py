@@ -130,9 +130,13 @@ def get_comments_for_post(post, user):
         workspace=workspace,
     ).first()
 
+    is_client = membership is not None and membership.workspace_role == WorkspaceMembership.WorkspaceRole.CLIENT
     active_replies = PostComment.objects.filter(
         deleted_at__isnull=True,
     ).select_related("author")
+    if is_client:
+        # Prefetched children must obey the same privacy rule as root comments.
+        active_replies = active_replies.filter(visibility=PostComment.Visibility.EXTERNAL)
 
     qs = (
         PostComment.objects.filter(
@@ -147,8 +151,8 @@ def get_comments_for_post(post, user):
         .order_by("created_at")
     )
 
-    # Clients only see external comments
-    if membership and membership.workspace_role == WorkspaceMembership.WorkspaceRole.CLIENT:
+    # Apply the same rule to the roots and their preloaded replies.
+    if is_client:
         qs = qs.filter(visibility=PostComment.Visibility.EXTERNAL)
 
     return qs

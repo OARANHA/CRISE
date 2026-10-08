@@ -22,8 +22,8 @@
 - [ ] Cobrir depois Redis multiworker, demais tarefas, webhooks, relatórios, downloads e storage privado de evidências.
 - [x] PR #15: requisitos para cliente observador/operador no portal (CI #37799250321 verde, documentação integrada; ADR-0003 ainda proposta).
 - [x] PR #16: privacidade no portal e anexos internos (CI #37803584176, 2.419 passed/1 skipped; 6 casos novos).
-- [ ] PR #17: corrigir exclusão de comentários entre workspaces/postagens; sete regressões sintéticas, CI pendente.
-- [ ] Revisar replies internas de comentário em rotas de equipe usadas por clientes (próximo slice).
+- [x] PR #17: exclusão de comentários isolada por workspace/post (CI #37805298794; 2.428 passed, 1 skipped; sete novos testes, mais dois herdados).
+- [ ] PR #18: filtrar respostas internas pré-carregadas em comentários para papel CLIENT, inclusive rota HTMX (4 testes; CI pendente).
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
