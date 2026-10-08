@@ -56,3 +56,9 @@ O clone possui `apps/client_portal` com convites, link mágico, aprovações, po
 A emissão de link mágico exige `WorkspaceRole.CLIENT`, mas `portal_auth_required` confirma apenas associação ao workspace após a sessão de portal; além disso, `portal_approval_queue` filtra comentários externos quando o papel atual é literalmente `CLIENT`. O efeito de migrar um usuário externo para EDITOR ou custom role deve ser testado em cenário adversarial antes de habilitá-lo. Não assumir vazamento explorável sem testes; tratar como risco de autorização a avaliar.
 
 Validar casos A/B/C, acesso direto, mudanças/revogação de permissão durante sessão ativa, preservação de comentários internos, relatórios, imagens públicas editoriais versus evidências privadas, e escopo de APIs/MCP. Um mesmo workspace contém pessoas com diferentes responsabilidades, mas **estar associado a ele não autoriza consultar todo dado**. ADR-0003/ADR-0004 pendentes, sem dados reais.
+
+## PR #16 — Controle de visibilidade em comentários e anexos do portal (proposta)
+
+O portal do cliente não deve revelar comentários internos quando uma associação `CLIENT` for promovida a outro papel mantendo uma sessão ativa. A filtragem EXTERNAL deve ser incondicional na superfície do portal e alcançar replies previamente carregadas. A view autenticada de download de anexo deve negar ao papel CLIENT a mídia marcada INTERNAL mesmo que tenha UUID e participação válida no workspace.
+
+Essa defesa **não caracteriza isolamento completo dos usuários externos com papel de editor**, porque o BrightBean não diferencia ainda identidade "funcionário da agência" versus "funcionário do cliente" independentemente do papel. Sujeito a testes e definição da ADR-0003. Nunca armazenar evidências privadas no prefixo de mídia pública.

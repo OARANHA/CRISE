@@ -72,6 +72,26 @@ class CommentAttachmentAccessTests(TestCase):
             },
         )
 
+    def test_client_role_cannot_download_internal_attachment_by_uuid(self):
+        client = _make_user("client-internal-attachment@example.test")
+        OrgMembership.objects.create(user=client, organization=self.org, org_role="member")
+        WorkspaceMembership.objects.create(user=client, workspace=self.workspace, workspace_role="client")
+        self.client.force_login(client)
+
+        self.assertEqual(self.client.get(self._url()).status_code, 404)
+
+    def test_client_role_can_download_external_attachment(self):
+        client = _make_user("client-external-attachment@example.test")
+        OrgMembership.objects.create(user=client, organization=self.org, org_role="member")
+        WorkspaceMembership.objects.create(user=client, workspace=self.workspace, workspace_role="client")
+        self.comment.visibility = PostComment.Visibility.EXTERNAL
+        self.comment.save(update_fields=["visibility"])
+        self.client.force_login(client)
+
+        response = self.client.get(self._url())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(b"".join(response.streaming_content), b"png-bytes")
+
     def test_workspace_member_gets_the_bytes(self):
         self.client.force_login(self.member)
 

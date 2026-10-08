@@ -96,3 +96,9 @@ A definição de um workspace por cliente permanece **pendente**. Qualquer módu
 6. Não declarar o portal de relatórios de crise como implementado; planejar a camada própria de monitoramento de terceiros e relatórios com dados permitidos, respeitando limitações de Instagram, TikTok e Facebook.
 
 **Estado:** apenas definição de requisitos e investigação de reuso. ADR-0003 e ADR-0004 permanecem **PROPOSTAS/NÃO ACEITAS**. Não houve alteração de autenticação, portal, dados, infraestrutura ou deploy.
+
+## PR #16 — Proteção pontual do portal, proposta com CI pendente
+
+Revisão estática encontrou diferença entre sessão de portal e papel atual: no portal de aprovações, o filtro EXTERNAL dependia literalmente de `WorkspaceRole.CLIENT`. Ao tornar-se EDITOR, um usuário poderia manter a sessão anterior, que passaria a consultar comentários internos. O prefetch de replies não filtrava visibilidade. A rota de anexos `approvals.views.comment_attachment` não negava ao cliente básico um anexo interno por UUID conhecido, embora exija login e participação no workspace.
+
+O patch proposto filtra sempre comentários/replies externos na experiência de portal, e nega anexos internos ao papel CLIENT mesmo por URL direta, preservando as funções de edição internas. **Não cria identidade permanente de "usuário externo" separada do papel**: usuários do cliente com EDITOR/CONTRIBUTOR continuam precisando de autorização formal, testes abrangentes e políticas de dados internos em todas as rotas. ADR-0003 permanece NÃO ACEITA; não há implantação.

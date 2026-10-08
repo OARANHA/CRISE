@@ -11,7 +11,6 @@ from apps.approvals import services as approval_services
 from apps.approvals.models import ApprovalAction, PostComment
 from apps.common.htmx import toast_response
 from apps.composer.models import Post
-from apps.members.models import WorkspaceMembership
 
 from .decorators import portal_auth_required
 from .services import consume_magic_link, create_portal_session, peek_magic_link
@@ -141,22 +140,23 @@ def portal_approval_queue(request):
 
     all_posts = pending_posts + decided_posts
 
-    # Batch the external comments in one query instead of a per-post service call
-    # (N+1). Portal users are clients, so they see EXTERNAL comments only.
-    is_client = request.portal_membership.workspace_role == WorkspaceMembership.WorkspaceRole.CLIENT
-    active_replies = PostComment.objects.filter(deleted_at__isnull=True).select_related("author")
+    # A portal session is client-facing regardless of the user's current
+    # workspace role. Always exclude internal comments and internal replies.
+    active_replies = PostComment.objects.filter(
+        deleted_at__isnull=True,
+        visibility=PostComment.Visibility.EXTERNAL,
+    ).select_related("author")
     comment_qs = (
         PostComment.objects.filter(
             post_id__in=[p.id for p in all_posts],
             deleted_at__isnull=True,
             parent_comment__isnull=True,
+            visibility=PostComment.Visibility.EXTERNAL,
         )
         .select_related("author")
         .prefetch_related(Prefetch("replies", queryset=active_replies))
         .order_by("created_at")
     )
-    if is_client:
-        comment_qs = comment_qs.filter(visibility=PostComment.Visibility.EXTERNAL)
     comments_by_post = defaultdict(list)
     for comment in comment_qs:
         comments_by_post[comment.post_id].append(comment)

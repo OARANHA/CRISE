@@ -11,6 +11,7 @@ from django.views.decorators.http import require_GET, require_POST
 from apps.common.htmx import toast_response
 from apps.composer.models import Post, PostVersion
 from apps.members.decorators import require_permission, require_workspace_role
+from apps.members.models import WorkspaceMembership
 from apps.workspaces.models import Workspace
 
 from . import comments as comment_service
@@ -294,6 +295,14 @@ def comment_attachment(request, workspace_id, post_id, comment_id):
         post=post,
         deleted_at__isnull=True,
     )
+
+    # Access to the workspace does not grant a portal client access to the
+    # team's internal attachments, even when the direct UUID URL is known.
+    if (
+        comment.visibility == PostComment.Visibility.INTERNAL
+        and request.workspace_membership.workspace_role == WorkspaceMembership.WorkspaceRole.CLIENT
+    ):
+        raise Http404("Comment not found.")
 
     if not comment.attachment:
         raise Http404("This comment has no attachment.")
