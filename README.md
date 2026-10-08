@@ -10,6 +10,12 @@ Comece por [docs/PROJECT_SOURCE.md](docs/PROJECT_SOURCE.md). Para trabalho técn
 
 Este repositório é a fonte persistente da arquitetura, decisões, estado comprovado e próximos passos. Conversas com assistentes **não são fonte de verdade**.
 
+## Navegação de desenvolvimento
+
+- [Índice da documentação viva](docs/README.md) e [doutrina do Sistema Vivo](docs/doutrina/README.md).
+- [Skills para agentes de desenvolvimento](.agents/skills/README.md), carregáveis em ferramentas compatíveis.
+- [Estado canônico](docs/CANONICAL_STATE.md) contém snapshot datado: sempre reconciliar GitHub e CI antes de continuar.
+
 ## Direção técnica
 
 - Reutilizar integralmente a base aberta do [BrightBean Studio](https://github.com/brightbeanxyz/brightbean-studio), sujeito à AGPL-3.0 e à validação técnica.
