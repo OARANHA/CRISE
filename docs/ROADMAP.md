@@ -35,3 +35,8 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 - [ ] Treinamento da equipe e operação supervisionada.
 
 **Regra:** nenhuma fase avança por descrição em chat; anexar PR/commit, testes e evidências em `docs/CANONICAL_STATE.md`.
+
+## Checkpoints complementares — outubro/2026
+- [x] PR #4, hardening Caddy e Compose validado e integrado na branch de importação.
+- [ ] PR #5, resolver IP por proxy confiável e regressões — aguardar CI.
+- [ ] Gate: autorização e vazamento entre clientes via UI, API, MCP, workers, cache, arquivos e evidências.

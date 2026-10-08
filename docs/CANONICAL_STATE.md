@@ -46,3 +46,10 @@ Registrar data, branch, SHA/PR, comando de teste e resultado, capacidades compro
 - CI [run 37728858063](https://github.com/OARANHA/CRISE/actions/runs/37728858063): cinco jobs aprovados; pytest 2.337 passed, 1 skipped, 808 warnings; Docker build sem publicação.
 - PR #4 é proposta de hardening de Compose e Caddy com testes HTTP sintéticos. **Ainda não considerar a correção aprovada até a CI e revisão.**
 - Próxima etapa: aguardar comunicação do operador (green/red), sem polling; depois revisar testes de isolamento entre clientes e confiança em `X-Forwarded-For`. Sem deploy.
+
+## Atualização PR #4 e próxima verificação (2026-10-08)
+- [PR #4](https://github.com/OARANHA/CRISE/pull/4) integrada na branch `feat/brightbean-upstream-import` com commit `4d5f9d400eab88ae80ca58b3087fc6537249c41b`.
+- [Run #37729909304](https://github.com/OARANHA/CRISE/actions/runs/37729909304): cinco jobs verdes, incluindo Compose/Caddy e smoke tests 200 em mídia pública e 404 em mídia privada.
+- PR #5, ainda não testada, unifica o cálculo do IP do login e API e adiciona regressões contra XFF falso.
+- `main` não contém ainda o BrightBean; a PR #2 segue em rascunho, sem deploy.
+- Aguardar green/red da PR #5, sem polling. Após isso, auditar isolamento dos nove clientes.
