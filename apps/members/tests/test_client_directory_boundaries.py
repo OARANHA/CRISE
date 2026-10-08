@@ -25,9 +25,8 @@ def _synthetic_user(email, name):
     # User provisioning signals create a personal org/workspace by default.
     # Remove only this freshly created fixture data so global RBAC context
     # resolves deterministically to the organizations used in these tests.
-    auto_org_ids = list(
-        OrgMembership.objects.filter(user=user).values_list("organization_id", flat=True)
-    )
+    auto_org_memberships = OrgMembership.objects.filter(user=user)
+    auto_org_ids = list(auto_org_memberships.values_list("organization_id", flat=True))
     WorkspaceMembership.objects.filter(user=user).delete()
     OrgMembership.objects.filter(user=user).delete()
     Organization.objects.filter(id__in=auto_org_ids).delete()
@@ -43,7 +42,9 @@ class OrgDirectoryClientIsolationTests(TestCase):
     def setUpTestData(cls):
         cls.org_o1 = Organization.objects.create(name="SYNTHETIC_ORG_O1")
         cls.org_o2 = Organization.objects.create(name="SYNTHETIC_ORG_O2")
-        cls.ws_a = Workspace.objects.create(organization=cls.org_o1, name="SYNTHETIC_WS_A")
+        cls.ws_a = Workspace.objects.create(
+            organization=cls.org_o1, name="SYNTHETIC_WS_A"
+        )
         cls.ws_b = Workspace.objects.create(
             organization=cls.org_o1, name="SYNTHETIC_WS_B_PRIVATE"
         )
@@ -99,9 +100,7 @@ class OrgDirectoryClientIsolationTests(TestCase):
     @staticmethod
     def _member(email, name, org, org_role, assignments=()):
         user = _synthetic_user(email, name)
-        OrgMembership.objects.create(
-            organization=org, user=user, org_role=org_role
-        )
+        OrgMembership.objects.create(organization=org, user=user, org_role=org_role)
         for workspace, workspace_role in assignments:
             WorkspaceMembership.objects.create(
                 user=user, workspace=workspace, workspace_role=workspace_role
@@ -165,6 +164,29 @@ class OrgDirectoryClientIsolationTests(TestCase):
         self.assertContains(response, self.ws_b.name)
         self.assertNotContains(response, self.client_c.email)
 
+    def test_observer_a_does_not_see_b_via_shared_internal_member_badge(self):
+        response = self._get_directory(self.observer_a)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.internal_ab.email)
+        self.assertContains(response, self.ws_a.name)
+        self.assertNotContains(response, self.ws_b.name)
+        self.assertQuerySetEqual(
+            response.context["org_workspaces"],
+            [self.ws_a],
+        )
+
+    def test_member_without_workspace_sees_only_own_identity(self):
+        member = self._member(
+            "unassigned@example.invalid", "No Workspace", self.org_o1, "member"
+        )
+        response = self._get_directory(member)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, member.email)
+        self.assertNotContains(response, self.client_b.email)
+        self.assertNotContains(response, self.ws_b.name)
+        self.assertEqual(len(response.context["members_data"]), 1)
+        self.assertEqual(response.context["members_data"][0]["user"].pk, member.pk)
+
     def test_org_owner_can_manage_all_members(self):
         response = self._get_directory(self.owner)
         self.assertEqual(response.status_code, 200)
@@ -187,24 +209,20 @@ class OrgDirectoryClientIsolationTests(TestCase):
 
     def test_client_editor_cannot_open_other_member_workspace_form(self):
         self.client.force_login(self.operator_a)
+        membership = OrgMembership.objects.get(
+            user=self.client_b, organization=self.org_o1
+        )
         url = reverse(
-            "members:manage_workspaces",
-            kwargs={"membership_id": OrgMembership.objects.get(
-                user=self.client_b, organization=self.org_o1
-            ).id},
+            "members:manage_workspaces", kwargs={"membership_id": membership.pk}
         )
         response = self.client.get(url, HTTP_HX_REQUEST="true")
         self.assertEqual(response.status_code, 403)
 
     def test_client_observer_cannot_change_other_member_org_role(self):
         self.client.force_login(self.observer_a)
-        url = reverse(
-            "members:update_role",
-            kwargs={"membership_id": OrgMembership.objects.get(
-                user=self.client_b, organization=self.org_o1
-            ).id},
+        membership = OrgMembership.objects.get(
+            user=self.client_b, organization=self.org_o1
         )
-        response = self.client.post(
-            url, {"org_role": "admin"}, HTTP_HX_REQUEST="true"
-        )
+        url = reverse("members:update_role", kwargs={"membership_id": membership.pk})
+        response = self.client.post(url, {"org_role": "admin"}, HTTP_HX_REQUEST="true")
         self.assertEqual(response.status_code, 403)

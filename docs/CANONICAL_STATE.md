@@ -13,7 +13,7 @@
 | [PR #20](https://github.com/OARANHA/CRISE/pull/20) | Integrada na branch de importação |
 | [PR #21](https://github.com/OARANHA/CRISE/pull/21) | Integrada; head `1c45f4a6d32a010361d9a38511918286138dd2a9`; merge `f39f053e136f30acc456fa70a4b6b001990c63ba` |
 | [CI PR #21](https://github.com/OARANHA/CRISE/actions/runs/37819894602) | `completed/success` no head exato `1c45f4a6d32a010361d9a38511918286138dd2a9` |
-| Testes da PR #22 | `apps/members/tests/test_client_directory_boundaries.py`, red-first, **ainda não executados** neste snapshot |
+| [CI PR #22 anterior](https://github.com/OARANHA/CRISE/actions/runs/37824566462) | head `cf2fab265135d20af294f0388bf0c2fa2c73e58c`: 2447 pass, 4 fail, 1 skip; Ruff format falhou; mypy/gitleaks aprovados |
 | Deploy | Nenhum autorizado/comprovado; sem homologação para clientes reais |
 
 ## PROVEN EVIDENCE — capacidades e limites
@@ -28,14 +28,14 @@
 
 ## Reprodução HTTP em andamento — PR #22
 
-- [Diagnóstico e testes red-first de diretório](audits/2026-10-08-org-directory-http-reproduction.md): preparado com A/B (O1), C (O2), papéis CLIENT/EDITOR e controles internos, **sem resultado de CI ainda**.
-- Se testes confirmarem exposição, escolher correção restrita à rota e executar regressões antes de integrar. Não alterar RBAC/tenancy sem autoridade.
+- [Diagnóstico HTTP e correção por workspace](audits/2026-10-08-org-directory-http-reproduction.md): teste sintético confirmou falhas da política anterior; correção mínima `MEMBER` baseada em `WorkspaceMembership` proposta na PR #22, aguardando novo CI.
+- Confirmar correção no novo SHA antes de integrar; não alterar tenancy, autenticação ou modelo RBAC sem autoridade.
 
 ## GAPS → REUSE GATE → DECISION
 
 1. Primeiro executar cenários sintéticos A/B na mesma organização e C em outra (T01–T10 da matriz), sobretudo diretório organizacional, classes INTERNAL, papel de cliente editor, portal ativo/revogado, API/MCP, webhooks, mídia e notificações.
 2. Preservar o BrightBean e a AGPL-3.0; qualquer vulnerabilidade reproduzida pede PR funcional pequena **separada** da matriz.
 3. Sem aprovação de tenancy, sem evidências privadas em `media_library/`, sem clientes reais, coleta social, deploy ou integração da PR #2 à `main`.
-4. A PR #21 foi integrada e a CI de seu head concluiu com sucesso. A PR #22 introduz casos HTTP sintéticos T01/T10 ainda sem execução; CI documental anterior não prova esses casos. Sem polling.
+4. A PR #21 foi integrada e a CI de seu head concluiu com sucesso. A PR #22 introduziu casos HTTP sintéticos T01/T10: execução inicial reproduziu quatro falhas esperadas e revelou falha de Ruff format; correção proposta aguarda nova CI. Sem polling.
 
 **Histórico anterior:** Git/PR #19–#20 e [arquivo anterior](historico/2026-10-08-estado-canonico-anterior.md). Documentos históricos não são autoridade para estado atual.

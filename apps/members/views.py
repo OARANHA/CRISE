@@ -1,6 +1,7 @@
 """Views for team member management."""
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -50,6 +51,24 @@ def member_list(request):
     memberships = OrgMembership.objects.filter(organization=org).select_related("user").order_by("invited_at")
 
     org_workspaces = Workspace.objects.filter(organization=org, is_archived=False).order_by("name")
+
+    if not is_admin:
+        # Organization MEMBER is also assigned to client-portal users. Access
+        # to the organization alone must not reveal unrelated client workspaces
+        # or member identities. An explicit shared workspace is the boundary.
+        visible_workspace_ids = list(
+            WorkspaceMembership.objects.filter(
+                user=request.user,
+                workspace__organization=org,
+                workspace__is_archived=False,
+            ).values_list("workspace_id", flat=True)
+        )
+        org_workspaces = org_workspaces.filter(id__in=visible_workspace_ids)
+        memberships = memberships.filter(
+            Q(user=request.user)
+            | Q(user__workspace_memberships__workspace_id__in=visible_workspace_ids)
+        ).distinct()
+
     org_workspace_ids = [ws.id for ws in org_workspaces]
 
     # Prefetch workspace memberships for all org members
