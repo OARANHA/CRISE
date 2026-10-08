@@ -158,9 +158,7 @@ class OrgDirectoryClientIsolationTests(TestCase):
         )
 
     def test_member_without_workspace_sees_only_own_identity(self):
-        member = self._member(
-            "unassigned@example.invalid", "No Workspace", self.org_o1, "member"
-        )
+        member = self._member("unassigned@example.invalid", "No Workspace", self.org_o1, "member")
         response = self._get_directory(member)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, member.email)
