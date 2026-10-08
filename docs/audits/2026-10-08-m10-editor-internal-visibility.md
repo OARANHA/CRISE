@@ -1,7 +1,7 @@
 # M10 — comentários e anexos internos sob papel EDITOR (caracterização)
 
 **Data:** 2026-10-08. **Base inspecionada:** `feat/brightbean-upstream-import` @ `84139275e16efcd2201191275b24cc9ea3513fa6`.
-**Status:** divergência entre política-alvo VIGIAFAST e identidade efetivamente persistida; **NÃO CORRIGIDA**. Testes de caracterização propostos nesta branch; execução Pytest/CI ainda não verificada. Apenas dados sintéticos.
+**Status:** divergência entre política-alvo VIGIAFAST e identidade efetivamente persistida; **NÃO CORRIGIDA**. CI inicial da PR #26 [#37856628216](https://github.com/OARANHA/CRISE/actions/runs/37856628216), SHA `efe127c0ccf85db549a633fde5bfd14df941bfb5`: **RED** (2 testes falharam por conexão de banco fechada, Ruff formatação reprovada). Correção da suíte preparada na mesma PR; **nova CI ainda não verificada**. Apenas dados sintéticos.
 
 ## Ator × ação × recurso × escopo
 
@@ -38,7 +38,7 @@
 - Downgrade EDITOR→CLIENT na sessão atual, revogação da associação;
 - Escrita INTERNAL por EDITOR como caracterização explícita da lacuna.
 
-**Importante:** asserts intencionalmente descrevem o acesso atual de E_A a conteúdo interno para não produzir testes artificialmente verdes que pareçam provar confidencialidade. A lacuna permanece aberta mesmo se os testes de caracterização passarem. Não foram executadas operações HTTP fora de testes sintéticos; a execução real desses testes depende do CI/ambiente Django+PostgreSQL.
+**Importante:** asserts intencionalmente descrevem o acesso atual de E_A a conteúdo interno para não produzir testes artificialmente verdes que pareçam provar confidencialidade. A lacuna permanece aberta mesmo se os testes de caracterização passarem. Não foram executadas operações HTTP fora de testes sintéticos. Na primeira CI com Django+PostgreSQL: 2.475 testes aprovados, 2 falharam, 1 ignorado; oito dos dez novos testes M10 passaram, inclusive os que demonstram acesso EDITOR a conteúdo INTERNAL. As falhas ocorreram em `test_revoked_workspace_membership_blocks_direct_uuid_in_active_session` e, em cascata, `test_wrong_post_uuid_in_a_is_not_sufficient_to_download_comment`, com `OperationalError: the connection is closed` após `first.close()` na resposta de streaming. O job Ruff apontou falta de formatação do novo arquivo de testes. O ajuste não modifica runtime, RBAC ou a lacuna M10; aguarda CI sobre o novo SHA.
 
 ## REUSE GATE → DECISION
 

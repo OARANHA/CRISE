@@ -14,7 +14,7 @@
 - PR #25: merge confirmado; CI pós-merge #37848566089 no SHA exato, 5/5 jobs success. Nenhum deploy conhecido ou autorizado.
 - ADR-0001/0002 aceitas; ADR-0003/0004 propostas e não aceitas.
 
-## Slice M10 — aguardando execução de testes
+## Slice M10 — primeira CI RED, correção apenas de teste
 - [Auditoria M10](docs/audits/2026-10-08-m10-editor-internal-visibility.md): filtros de comentários/replies/anexos INTERNAL protegem CLIENT, mas não distinguem EDITOR interno versus EDITOR operador do cliente.
-- Testes sintéticos de caracterização em branch separada, **sem alteração das permissões de produção**. Resultado CI do novo SHA ainda não verificado; um teste verde não resolve o desvio da política VIGIAFAST.
+- Testes sintéticos de caracterização em branch separada, **sem alteração das permissões de produção**. Primeira CI [#37856628216](https://github.com/OARANHA/CRISE/actions/runs/37856628216) no SHA `efe127c0ccf85db549a633fde5bfd14df941bfb5`: **RED**, 2 testes falharam por conexão PostgreSQL fechada após encerramento de streaming, e Ruff pediu formatação. Correção pontual da suíte na mesma PR #26, nova CI pendente de aviso do operador. O desvio M10 continua **NÃO CORRIGIDO**.
 - Não conceder papel EDITOR a usuário de cliente real até política decidida e implementada. Sem dados reais, deploy, polling de CI ou merge sem autorização.
