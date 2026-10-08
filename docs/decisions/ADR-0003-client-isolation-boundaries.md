@@ -38,3 +38,8 @@ Exigir teste negativo demonstrando que usuário sem permissão de B não acessa 
 - `apps/api/routers/media.py`
 - `apps/members/middleware.py`
 - [PR #6](https://github.com/OARANHA/CRISE/pull/6)
+
+## Experimento previsto — PR #8 (sem decisão de produto)
+- Testes adversariais de leitura/edição de posts e mídia em REST e MCP, com clientes A/B/C fictícios.
+- Teste explícito confirma que o BrightBean **já compartilha** `MediaAsset.workspace_id=NULL` dentro de uma organização; isso **não valida** compartilhar evidências do VIGIAFAST.
+- Aguardar CI. Não aceitar ADR nem modificar política de mídia compartilhada automaticamente.

@@ -35,10 +35,22 @@ Este arquivo é um **snapshot atual**, não um diário cumulativo. Atualize o qu
 
 - **Reuse:** manter Django/Python/PostgreSQL e as capacidades do BrightBean já verificadas. Não reconstruir autorização ou inbox já existentes.
 - **Decisão atual:** PR #2 **permanece em rascunho**, sem deploy. A arquitetura exata de isolamento ainda não foi aceita.
-- **Próxima PR de desenvolvimento:** adicionar testes adversariais de **mídia e posts** comparando A/B/C e ativos organizacionais compartilhados. Se o comportamento atual contrariar a privacidade exigida, corrigir por uma PR própria após identificar dependências.
+- **PR #8 em revisão (CI ainda não confirmada):** testes sintéticos A/B/C para leitura e edição de posts, acesso REST/MCP à mídia privada e comprovação de mídia org-shared existente. Se a política atual contrariar a privacidade exigida, corrigir por uma PR própria após avaliar dependências.
 - **Esta revisão documental:** não alterar funcionalidade; aguardar CI da PR documental e comunicado do operador (green/red), sem polling.
 - **Depois:** validar OAuth/MCP, workers e demais caminhos, revisar ADR-0003, iniciar UX VIGIAFAST gradualmente sem eliminar os módulos BrightBean.
 
 ## Regras imutáveis
 
 Não usar dados reais antes de concluir os gates, não executar deploy nem operações em outros sistemas sem autorização. Nunca armazenar tokens, posts, nomes, evidências ou relatórios reais dos clientes no Git público. Não declarar um teste como aprovado sem log/commit verificável.
+
+## PR #8 — primeira CI vermelha por importação (2026-10-08)
+- [Run #37766160766](https://github.com/OARANHA/CRISE/actions/runs/37766160766): falha apenas em `ruff check`, regra `I001` (import block un-sorted) no novo arquivo `apps/api/tests/test_post_media_client_boundaries.py`. O `ruff format --check` não chegou a executar; build Docker skipped.
+- **Pytest aprovou 2.380 casos, 1 skipped e 838 warnings**, incluindo **16/16 cenários novos** de segurança para posts, mídia e mídia organizacional compartilhada. Mypy e Gitleaks passaram.
+- O workflow temporário `format-post-media-once.yml` aplica `ruff check --fix --select I` e `ruff format` usando a **mesma versão 0.15.9** da CI, verifica o resultado e remove a si próprio no commit bot. Nenhuma alteração em código de produção.
+- **A execução e o commit automático ainda não estão confirmados.** O GitHub pode deixar a CI sobre um commit criado por `github-actions[bot]` como `action_required`; nesse caso uma alteração por conector GitHub precisará disparar nova validação. Não afirmar green antes de evidências. Sem polling, merge ou deploy.
+
+## PR #8 — formatação corrigida; CI integral pendente (2026-10-08)
+- [Workflow de correção #37767396264](https://github.com/OARANHA/CRISE/actions/runs/37767396264) **success**: `ruff==0.15.9` executou `ruff check --fix --select I`, `ruff format`, `ruff check` e `ruff format --check`; todos aprovaram o arquivo novo. Commit gerado: `a057fba3ff508423d479f5838859a326aeb5db7e` (`github-actions[bot]`). O workflow temporário foi removido no mesmo commit.
+- [Run de CI #37767401425](https://github.com/OARANHA/CRISE/actions/runs/37767401425) foi iniciada no commit **anterior** `0521f8d487decd45c3acd77c4f81092101118242`: red por I001, enquanto Pytest, Mypy e Gitleaks passaram; Docker skipped. **Não representa o código corrigido**.
+- [Run #37767422744](https://github.com/OARANHA/CRISE/actions/runs/37767422744) no commit `a057fba3...` terminou `action_required`, sem jobs, disparada pelo bot. Portanto **não existe ainda CI integral comprovada do commit formatado**.
+- O próximo commit documental foi solicitado pelo conector GitHub, para disparar a CI no mesmo código formatado. Sem modificação de código, sem deploy, sem merge. Conferir o próximo resultado somente após comunicação `green`/`red`/`action_required`.
