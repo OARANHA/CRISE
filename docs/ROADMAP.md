@@ -9,9 +9,10 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 
 ## Fase 1 — Importar e preservar BrightBean
 - [x] Copiar snapshot integral para a branch de importação com upstream fixado e avisos de licença; **merge pendente**.
-- [ ] Executar testes, lint, migrations e checks de segurança; registrar evidências.
+- [x] Baseline em CI: 2.337 passed, 1 skipped; lint, tipos, migrações, Docker e Gitleaks verdes.
 - [ ] Validar comportamento real de RBAC, workspaces, inbox e API/MCP.
-- [ ] Validar CI baseline da PR #3 (lint, mypy, pytest, migrações, Docker sem publicação e gitleaks); status depende do workflow.
+- [x] CI baseline da PR #3 validada e integrada à branch de importação.
+- [ ] Validar PR #4: mídia privada no Caddy e segredos/portas no Compose.
 
 ## Fase 2 — Operação simples para equipe
 - [ ] Rebrand total da interface para VIGIAFAST em pt-BR, sem remover funcionalidade original.
