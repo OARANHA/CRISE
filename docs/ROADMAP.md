@@ -1,48 +1,39 @@
 # Roadmap — VIGIAFAST
 
-Roadmap é planejamento, **não comprovação de recursos entregues**. Manter status e PRs vinculados a cada fase.
+**Status atualizado em 2026-10-08.** Planejado ≠ entregue; o código BrightBean importado ainda está na PR #2, não na `main`.
 
-## Fase 0 — Fundamentos documentais
-- [x] Criar README público sem dados sensíveis.
-- [x] Integrar documentação canônica e memória na main pela PR #1 (`f6883b747ce1a6ae6a6968948da5225332ed4f2f`).
-- [ ] Estabelecer critérios objetivos de aceite e matriz de risco.
+## Fase 0 — Fundação canônica
+- [x] README e documentação de projeto na `main` (PR #1).
+- [x] AGENTS, MEMORY, fonte canônica e ADRs iniciais definidos.
+- [ ] Validar a atualização de estado/memória e política de isolamento (ADR-0003 proposta).
 
-## Fase 1 — Importar e preservar BrightBean
-- [x] Copiar snapshot integral para a branch de importação com upstream fixado e avisos de licença; **merge pendente**.
-- [x] Baseline em CI: 2.337 passed, 1 skipped; lint, tipos, migrações, Docker e Gitleaks verdes.
-- [ ] Validar comportamento real de RBAC, workspaces, inbox e API/MCP.
-- [x] CI baseline da PR #3 validada e integrada à branch de importação.
-- [x] PR #4 validada com testes Caddy/Compose e integrada à branch de importação.
+## Fase 1 — Aproveitar o BrightBean
+- [x] Importar snapshot de 874 arquivos com SHA upstream, licença e comparação byte a byte (PR #2 **draft**).
+- [x] CI original: Ruff, Mypy, Pytest/PostgreSQL, Docker build sem push e Gitleaks (PR #3).
+- [x] Restringir mídia privada no Caddy e remover configurações demonstrativas do PostgreSQL em Compose (PR #4; smoke tests em CI).
+- [x] Unificar identificação de IP do login/API atrás de proxies confiáveis (PR #5).
+- [x] Executar 16 testes de isolamento da inbox REST/MCP/HTMX e API keys com clientes A/B/C (PR #6, 16/16 aprovados, 2.364 testes na suíte).
+- [ ] Cobrir isolamento de **posts, mídia, ativos org-shared**, papéis, OAuth/MCP, worker, cache, webhooks, relatórios e downloads.
+- [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
+- [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
-## Fase 2 — Operação simples para equipe
-- [ ] Rebrand total da interface para VIGIAFAST em pt-BR, sem remover funcionalidade original.
-- [ ] Cadastro multi-cliente, termos monitorados, prioridades e responsáveis.
-- [ ] Módulo de ocorrências, notas, atribuições e histórico auditável.
+## Fase 2 — Interface operacional
+- [ ] Evoluir o BrightBean com branding **VIGIAFAST**, totalmente em pt-BR, sem remover autenticação, publicação, inbox e analytics existentes.
+- [ ] Cadastro/gestão multi-cliente, termos e variantes, ocorrências, responsáveis, alertas e relatórios por cliente.
 
 ## Fase 3 — Inteligência e evidências
-- [ ] Prova de conceito Obsei com classificação contextual pt-BR e revisão humana.
-- [ ] Prova de conceito Auto Archiver com hashes e storage protegido.
-- [ ] Alertas e relatórios por cliente, sem vazamento inter-tenant.
+- [ ] Validar Obsei em pt-BR com revisão humana.
+- [ ] Avaliar Auto Archiver, armazenamento privado, hashes e proveniência.
+- [ ] Alertas, severidade, histórico e relatórios isolados por cliente.
 
-## Fase 4 — Descoberta pública validada
-- [ ] Pesquisa de menções por nome/variações em fontes públicas e APIs permitidas.
-- [ ] Monitoramento de URLs conhecidas e coleta documentada de comentários disponíveis.
-- [ ] Matriz por rede: cobertura, disponibilidade, limites, custo, LGPD e testes.
+## Fase 4 — Descoberta externa
+- [ ] Conectores de fontes públicas com matriz de acesso, comentários, custos e limites reais.
+- [ ] Distinção clara entre contas sociais conectadas e conteúdo de terceiros.
+- [ ] Ferramentas opcionais OpenMagpie, 4CAT, Zeeschuimer somente após avaliação técnica/legal.
 
-## Fase 5 — Homologação / produção
-- [ ] Auditoria, backups/restauração, retenção, observabilidade e testes com dados sintéticos.
-- [ ] Autorizações específicas para credenciais reais e deploy isolado.
-- [ ] Treinamento da equipe e operação supervisionada.
+## Fase 5 — Homologação
+- [ ] Revisão LGPD, permissões e credenciais, logs, retenção, backups e testes de restauração.
+- [ ] Testes de segurança com múltiplos clientes fictícios e revisão humana das classificações sensíveis.
+- [ ] Deploy **somente com autorização específica**. Nunca colocar evidências/clientes reais no GitHub público.
 
-**Regra:** nenhuma fase avança por descrição em chat; anexar PR/commit, testes e evidências em `docs/CANONICAL_STATE.md`.
-
-## Checkpoints complementares — outubro/2026
-- [x] PR #4, hardening Caddy e Compose validado e integrado na branch de importação.
-- [x] PR #5 integrada: resolução de IP e regressões aprovadas na CI.
-- [ ] Gate: autorização e vazamento entre clientes via UI, API, MCP, workers, cache, arquivos e evidências.
-
-## Gate de isolamento — PR #6 (a validar)
-- [x] PR #5 corrigida e aprovada na CI da branch de importação: 2.348 passed, 1 skipped.
-- [ ] PR #6: 16 casos adversariais já passaram no pytest (runs anteriores); **aguardar CI completa** no commit formatado.
-- [ ] Expandir testes para posts, mídia, workers, cache, notificações, OAuth e evidências.
-- [ ] Definir arquitetura oficial: nove clientes como workspaces distintos em uma organização; validar com ADR.
+Progresso se comprova por PR, SHA e CI; status atualizado em `docs/CANONICAL_STATE.md`, nunca só em conversas.
