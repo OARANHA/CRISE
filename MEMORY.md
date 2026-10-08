@@ -42,3 +42,7 @@ Leia `docs/PROJECT_SOURCE.md` → `AGENTS.md` → estado canônico → memória 
 - CI red [#37767401425](https://github.com/OARANHA/CRISE/actions/runs/37767401425) rodou o commit **anterior**, não é regressão comprovada.
 - [#37767422744](https://github.com/OARANHA/CRISE/actions/runs/37767422744) no bot commit foi `action_required` sem jobs.
 - Atualizar PR #8 pelo conector GitHub apenas em docs para pedir CI normal. Esperar resultado real, sem polling/merge/deploy.
+
+## PR #8 validada; novo gate OAuth/MCP (2026-10-08)
+- PR #8 integrada na branch de importação `46546e22ac4f1836de1fe7b1a0b4d3228a77ce4b`. [CI #37768145395](https://github.com/OARANHA/CRISE/actions/runs/37768145395) com 5 jobs verdes; 2.380 testes aprovados, 1 ignorado. Os 16 novos casos de posts/mídia passaram.
+- PR #9 proposta de testes da autenticação OAuth/MCP e revogação/permissões por workspace. Nenhum deploy, cliente real ou aprovação integral de isolamento. Aguardar CI (green/red), sem polling.

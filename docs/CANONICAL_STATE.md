@@ -54,3 +54,10 @@ Não usar dados reais antes de concluir os gates, não executar deploy nem opera
 - [Run de CI #37767401425](https://github.com/OARANHA/CRISE/actions/runs/37767401425) foi iniciada no commit **anterior** `0521f8d487decd45c3acd77c4f81092101118242`: red por I001, enquanto Pytest, Mypy e Gitleaks passaram; Docker skipped. **Não representa o código corrigido**.
 - [Run #37767422744](https://github.com/OARANHA/CRISE/actions/runs/37767422744) no commit `a057fba3...` terminou `action_required`, sem jobs, disparada pelo bot. Portanto **não existe ainda CI integral comprovada do commit formatado**.
 - O próximo commit documental foi solicitado pelo conector GitHub, para disparar a CI no mesmo código formatado. Sem modificação de código, sem deploy, sem merge. Conferir o próximo resultado somente após comunicação `green`/`red`/`action_required`.
+
+## Próximo gate OAuth/MCP — PR #9 pendente de validação
+- [PR #8](https://github.com/OARANHA/CRISE/pull/8) **integrada** em `feat/brightbean-upstream-import`, commit `46546e22ac4f1836de1fe7b1a0b4d3228a77ce4b`.
+- [Run CI #37768145395](https://github.com/OARANHA/CRISE/actions/runs/37768145395): Ruff, Mypy, Pytest/PostgreSQL, Docker build sem push e Gitleaks **success**. Pytest: 2.380 passed, 1 skipped, 838 warnings, 16 novos casos de posts/mídia aprovados.
+- PR #9 **proposta**: regressões adicionais com OAuth e API keys: troca de workspace, cliente com perfil Viewer, tentativa de acessar mensagens de B/C, remoção de participação e redução de permissões. `apps/api/auth.py` possui resolvedor e interseção de permissões próprios do BrightBean; **não reconstruir**.
+- **Ainda não existe CI validada para a PR #9**. CI verde da #8 não comprova isolamento OAuth em todas as situações.
+- ADR-0003 continua proposta; a visibilidade de `MediaAsset.workspace_id = NULL` entre workspaces da mesma organização está demonstrada e não deve ser usada para evidências confidenciais.
