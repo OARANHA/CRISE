@@ -56,3 +56,9 @@ Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante
 - [Run #37748699607](https://github.com/OARANHA/CRISE/actions/runs/37748699607): 16 testes novos aprovados; 2.364 passed, 1 skipped. Apenas `ruff format --check` reprovou por apresentação do arquivo novo; Docker não rodou.
 - Revisão na mesma PR limita-se a formatação da suíte e memória/estado canônico. Nenhum deploy e nenhuma integração à main.
 - Aguardar confirmação green/red do operador na nova execução, sem polling.
+
+## Segunda tentativa CI PR #6 — formatter automatizado (2026-10-08)
+- [Run #37761066519](https://github.com/OARANHA/CRISE/actions/runs/37761066519) red pelo mesmo `ruff format --check` em `apps/api/tests/test_cross_client_isolation.py`; `ruff check`, mypy, pytest e gitleaks verdes, build Docker skipped por dependência.
+- A revisão manual anterior NÃO produziu o formato exato do Ruff. Foi introduzido um workflow **temporário, limitado à branch de teste**, que executa `ruff format` com a mesma versão 0.15.9 da CI, verifica lint/check e grava somente o arquivo de testes. O próprio workflow será removido no commit automático.
+- **Importante:** não considerar a correção concluída antes de verificar o commit do bot e uma execução completa da CI. GitHub Actions pode suprimir workflows disparados por pushes com `GITHUB_TOKEN`; se isso ocorrer, uma alteração posterior via conector GitHub ou disparo manual deverá iniciar a validação.
+- Nenhum deploy, dado real ou merge. Aguardar comunicado do operador; não fazer polling.

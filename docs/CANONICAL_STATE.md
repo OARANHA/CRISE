@@ -66,3 +66,9 @@ Registrar data, branch, SHA/PR, comando de teste e resultado, capacidades compro
 - `ruff check`, Mypy, Pytest e Gitleaks passaram. Docker build `skipped` por dependência do lint.
 - Pytest: **2.364 passed, 1 skipped, 822 warnings**, incluindo **16/16** casos novos de isolamento REST/MCP/HTMX/chave API.
 - A formatação foi ajustada nesta branch; resultado da nova CI **ainda pendente**, não declarar PR #6 aprovada antes de green.
+
+## Segunda tentativa CI PR #6 — formatter automatizado (2026-10-08)
+- [Run #37761066519](https://github.com/OARANHA/CRISE/actions/runs/37761066519) red pelo mesmo `ruff format --check` em `apps/api/tests/test_cross_client_isolation.py`; `ruff check`, mypy, pytest e gitleaks verdes, build Docker skipped por dependência.
+- A revisão manual anterior NÃO produziu o formato exato do Ruff. Foi introduzido um workflow **temporário, limitado à branch de teste**, que executa `ruff format` com a mesma versão 0.15.9 da CI, verifica lint/check e grava somente o arquivo de testes. O próprio workflow será removido no commit automático.
+- **Importante:** não considerar a correção concluída antes de verificar o commit do bot e uma execução completa da CI. GitHub Actions pode suprimir workflows disparados por pushes com `GITHUB_TOKEN`; se isso ocorrer, uma alteração posterior via conector GitHub ou disparo manual deverá iniciar a validação.
+- Nenhum deploy, dado real ou merge. Aguardar comunicado do operador; não fazer polling.
