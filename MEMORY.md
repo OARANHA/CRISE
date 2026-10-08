@@ -1,24 +1,21 @@
 # VIGIAFAST — memória operacional resumida
 
-**Memória de continuidade; NÃO é fonte autônoma de verdade.** Ver sempre [docs/PROJECT_SOURCE.md](docs/PROJECT_SOURCE.md) e [docs/CANONICAL_STATE.md](docs/CANONICAL_STATE.md). O estado do GitHub pode avançar depois deste arquivo.
+**Não é fonte autônoma de verdade.** Ler [docs/PROJECT_SOURCE.md](docs/PROJECT_SOURCE.md) → [AGENTS.md](AGENTS.md) → [estado canônico](docs/CANONICAL_STATE.md) → ADRs → código/testes/PRs. Revalidar GitHub em toda retomada.
 
-## Produto
-- **CRISEDIGITAL / VIGIAFAST:** plataforma reputacional para nove clientes iniciais, expansível, equipe interna e usuários de clientes (observadores e futuros operadores).
-- **Base:** BrightBean Studio integral, Django/Python/PostgreSQL, AGPL-3.0 e notices preservados. Interface pretendida em português brasileiro.
-- **Fontes:** contas conectadas são diferentes de descoberta de menções de terceiros. Integrações Obsei/Auto Archiver e coleta pública ainda não operacionais. Não prometer cobertura ilimitada.
-- **Segurança:** dados por cliente, LGPD, revisão humana para classificações sensíveis, evidências fora da mídia editorial pública.
+## Produto e limites
 
-## Como continuar
-1. Ler fonte e regras: `docs/PROJECT_SOURCE.md` → `AGENTS.md`.
-2. Reconciliar `main`, branch de importação, PRs, SHAs e CI **pontualmente**.
-3. Consultar [snapshot canônico](docs/CANONICAL_STATE.md), [ADRs](docs/decisions/), documentação temática e código/testes relevantes.
-4. Reutilizar BrightBean antes de criar recursos. Trabalhar em branch, PR e testes; atualizar snapshot e memória.
-5. Não fazer polling contínuo de CI: operador informa `green`/`red`. Não mesclar `main`, implantar ou usar dados reais sem autorização específica.
+- CRISEDIGITAL/VIGIAFAST: inicialmente nove clientes, sem limite rígido; equipe interna, clientes observadores e clientes operadores. Interface pretendida pt-BR.
+- BrightBean Studio integral (Django, PostgreSQL, Python), AGPL-3.0. Preservar autenticação, editor, calendário, portal, inbox, analytics, API/MCP e recursos preexistentes.
+- Não confundir contas sociais conectadas com descoberta pública de terceiros. Obsei e Bellingcat Auto Archiver **não integrados**. Dados sensíveis e evidências privados fora de `media_library/`; revisão humana em análise jurídica/reputacional.
 
-## Última situação verificada nesta organização documental (2026-10-08)
-- `main`: `f6883b7`; branch de importação: `0bf37c5` após a PR #19, antes da integração desta PR documental.
-- PR #2 segue draft para `main`; PR #19 integrada (merge `0bf37c5`) com [CI #37809392150](https://github.com/OARANHA/CRISE/actions/runs/37809392150) verde: **2.439 passed / 1 skipped**, sete testes novos. A PR #20 teve CI anterior verde em `3367e10`, mas exige CI no commit reconciliado.
-- PRs #18 e #19 integradas; somente cenários sintéticos cobertos foram comprovados. Nenhuma homologação de isolamento total.
-- ADR-0003 e ADR-0004 são **propostas, não aceitas**.
+## Fotografia pontual de 08/10/2026 — confirmar novamente
 
-[Histórico detalhado anterior](docs/historico/2026-10-08-memoria-anterior.md). Referências atuais devem ser verificadas em GitHub, não inferidas da memória.
+- `main`: `f6883b7`. Branch de importação após PR #20: `fba74835fb00e14bcaf80e5bf4ef535f9b0d6069`. PR #19 e #20 integradas; PR #2 ainda draft para `main`.
+- CI #37814988489 da PR #20 concluída com sucesso no head `d2e9eb0`; **não usar para atestar CI da PR #21**.
+- A [matriz documental da PR #21](docs/audits/2026-10-08-authorization-actor-resource-matrix.md) inventaria papéis e exposição por classe de dado; **testes T01–T10 são planejados, não executados nesta entrega**.
+- Riscos prioritários: org MEMBER vê diretório de membros de toda O1; EDITOR externo herda acesso a dados INTERNAL; mídia org-shared; fanout Meta em contas duplicadas; portal/sessão pós-mudança de papel; contexto multi-org.
+- ADR-0003/0004 permanecem **PROPOSTAS, NÃO ACEITAS**. Nenhuma homologação de isolamento integral, armazenamento privado de evidências ou deploy.
+
+## Próximo gate
+
+Aguardar operador informar `green` ou `red` da PR #21 no SHA exato; **não fazer polling**. Depois realizar testes negativos sintéticos da matriz e priorizar correções **em PRs próprias**, mantendo tenancy pendente de decisão humana. Nenhuma mudança na `main`.
