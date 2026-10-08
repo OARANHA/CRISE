@@ -49,3 +49,9 @@ Exigir teste negativo demonstrando que usuário sem permissão de B não acessa 
 - `_process_meta_events` busca todos os registros correspondentes ao identificador nativo e valida o segredo de app da organização. Isso pode produzir **fanout do mesmo evento** para clientes diferentes da mesma organização que tenham conectado a mesma página.
 - Os testes propostos apenas documentam esse roteamento e o filtro entre organizações; **não estabelecem nem autorizam a política do VIGIAFAST**. Precisamos decidir se links duplicados à mesma conta são permitidos e, em caso positivo, como evitar exposição indevida de mensagens privadas.
 - Aguardar CI da PR #11 e análise de consequências para contas Meta já conectadas antes de qualquer restrição, migração ou bloqueio de duplicidade.
+
+## Controle defensivo proposto — destinatários de alertas em tarefas assíncronas (PR #13)
+- As views BrightBean verificam `WorkspaceMembership` quando atribuem uma mensagem; a associação FK pode permanecer depois de revogação ou ser alterada por importação/manutenção.
+- A validação **no momento do envio** deve confirmar a associação do destinatário ao `message.workspace_id`. Caso não exista, retornar ao comportamento já existente de notificar os owners/managers atuais desse workspace, **sem** alcançar o usuário desligado.
+- Regressões propostas cobrem mesmo workspace, outro workspace da mesma organização e outro de organização distinta, para alertas de nova mensagem e SLA. A **CI da PR #13 ainda está pendente**.
+- Isso é endurecimento localizado do limite de autorização, não a aceitação do modelo multi-cliente da ADR-0003.

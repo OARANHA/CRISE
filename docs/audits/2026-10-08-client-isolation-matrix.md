@@ -42,3 +42,8 @@ Nenhuma informação de B/C aparece quando a chave ou sessão só está autoriza
 - PR #10: cache Django aquecido, revogação e alterações de escopo; 7 casos aprovados.
 - PR #11: Meta webhook com mesmo ID de página entre workspaces; três casos aprovados; duplicação de mensagens entre clientes da mesma organização é comportamento observado e **risco não aceito para produção**.
 - PR #12 **proposta, CI pendente:** `InboxSyncEngine` com duplicação de ID remoto e notificações selecionadas por workspace. Não substituir homologação de filas reais nem aceitar a ADR-0003.
+
+## PR #12 comprovada; PR #13 proposta
+- PR #12: `InboxSyncEngine` separa mensagens com ID remoto igual por conta e mantém notificações comuns por workspace. [CI #37784489968](https://github.com/OARANHA/CRISE/actions/runs/37784489968): cinco jobs verdes, 2.405 passed/1 skipped.
+- Lacuna detectada: `InboxMessage.assigned_to` continua apontando para funcionário após remoção da participação, e notificações de evento/SLA não revalidavam sua associação ao workspace antes de enviar detalhes.
+- PR #13 (CI pendente): validar destinatário por `WorkspaceMembership` no despacho e aplicar fallback para owners/managers atuais do workspace. Oito cenários parametrizados, sem dados reais ou rede externa.
