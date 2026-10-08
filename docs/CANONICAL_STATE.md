@@ -72,3 +72,10 @@ Registrar data, branch, SHA/PR, comando de teste e resultado, capacidades compro
 - A revisão manual anterior NÃO produziu o formato exato do Ruff. Foi introduzido um workflow **temporário, limitado à branch de teste**, que executa `ruff format` com a mesma versão 0.15.9 da CI, verifica lint/check e grava somente o arquivo de testes. O próprio workflow será removido no commit automático.
 - **Importante:** não considerar a correção concluída antes de verificar o commit do bot e uma execução completa da CI. GitHub Actions pode suprimir workflows disparados por pushes com `GITHUB_TOKEN`; se isso ocorrer, uma alteração posterior via conector GitHub ou disparo manual deverá iniciar a validação.
 - Nenhum deploy, dado real ou merge. Aguardar comunicado do operador; não fazer polling.
+
+## Terceira avaliação PR #6 — formatter aplicado, CI do bot não executada (2026-10-08)
+- [Run de formatação #37762104589](https://github.com/OARANHA/CRISE/actions/runs/37762104589): **success**. O job executou `ruff==0.15.9`, formatou 1 arquivo, confirmou `ruff format --check`, gerou commit `3dfe72dcdcb205291830dd84c1ba99db9fb3e098` e removeu o workflow temporário no mesmo commit.
+- [Run #37762107597](https://github.com/OARANHA/CRISE/actions/runs/37762107597): **failure** no Ruff porque foi iniciado no commit **anterior** `d36bc18b3db99526be071e921a2cf4c4abbe70a8`; não avalia a versão formatada. Pytest, Mypy e Gitleaks passaram no commit antigo; Docker foi skipped.
+- [Run #37762136149](https://github.com/OARANHA/CRISE/actions/runs/37762136149): **action_required**, sem jobs, autor `github-actions[bot]`. Não há CI completa do commit formatado.
+- Este commit documental é enviado pelo conector GitHub, não pelo workflow automático, para produzir uma atualização normal da PR #6 e solicitar CI completa. **Aguardar execução e resultado reais; não inferir green**.
+- A PR #6 segue aberta, ainda sem merge. A PR #2 continua em rascunho fora da main. Sem deploy ou dados reais.

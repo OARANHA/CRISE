@@ -12,7 +12,7 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 - [x] Baseline em CI: 2.337 passed, 1 skipped; lint, tipos, migrações, Docker e Gitleaks verdes.
 - [ ] Validar comportamento real de RBAC, workspaces, inbox e API/MCP.
 - [x] CI baseline da PR #3 validada e integrada à branch de importação.
-- [ ] Validar PR #4: mídia privada no Caddy e segredos/portas no Compose.
+- [x] PR #4 validada com testes Caddy/Compose e integrada à branch de importação.
 
 ## Fase 2 — Operação simples para equipe
 - [ ] Rebrand total da interface para VIGIAFAST em pt-BR, sem remover funcionalidade original.
@@ -38,11 +38,11 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 
 ## Checkpoints complementares — outubro/2026
 - [x] PR #4, hardening Caddy e Compose validado e integrado na branch de importação.
-- [ ] PR #5, resolver IP por proxy confiável e regressões — aguardar CI.
+- [x] PR #5 integrada: resolução de IP e regressões aprovadas na CI.
 - [ ] Gate: autorização e vazamento entre clientes via UI, API, MCP, workers, cache, arquivos e evidências.
 
 ## Gate de isolamento — PR #6 (a validar)
 - [x] PR #5 corrigida e aprovada na CI da branch de importação: 2.348 passed, 1 skipped.
-- [ ] Executar testes adversariais da PR #6 (clientes sintéticos A/B/C, REST/MCP/HTMX).
+- [ ] PR #6: 16 casos adversariais já passaram no pytest (runs anteriores); **aguardar CI completa** no commit formatado.
 - [ ] Expandir testes para posts, mídia, workers, cache, notificações, OAuth e evidências.
 - [ ] Definir arquitetura oficial: nove clientes como workspaces distintos em uma organização; validar com ADR.

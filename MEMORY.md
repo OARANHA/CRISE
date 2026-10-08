@@ -62,3 +62,8 @@ Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante
 - A revisão manual anterior NÃO produziu o formato exato do Ruff. Foi introduzido um workflow **temporário, limitado à branch de teste**, que executa `ruff format` com a mesma versão 0.15.9 da CI, verifica lint/check e grava somente o arquivo de testes. O próprio workflow será removido no commit automático.
 - **Importante:** não considerar a correção concluída antes de verificar o commit do bot e uma execução completa da CI. GitHub Actions pode suprimir workflows disparados por pushes com `GITHUB_TOKEN`; se isso ocorrer, uma alteração posterior via conector GitHub ou disparo manual deverá iniciar a validação.
 - Nenhum deploy, dado real ou merge. Aguardar comunicado do operador; não fazer polling.
+
+## Situação atual PR #6 — workflow de formatação verde, CI do bot bloqueada (2026-10-08)
+- `ruff==0.15.9` formatou e verificou a suíte no workflow [#37762104589](https://github.com/OARANHA/CRISE/actions/runs/37762104589). Commit bot `3dfe72dcdcb205291830dd84c1ba99db9fb3e098`; workflow temporário foi removido.
+- O resultado `failure` da [run #37762107597](https://github.com/OARANHA/CRISE/actions/runs/37762107597) é do commit anterior `d36bc18`; a tentativa nova [#37762136149](https://github.com/OARANHA/CRISE/actions/runs/37762136149) ficou em `action_required`, sem jobs (autor github-actions[bot]).
+- Próxima ação: submeter commit de documentação normal para provocar CI real e então esperar aviso green/red; não fazer polling nem merge antes da validação.
