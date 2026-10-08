@@ -190,6 +190,14 @@ def add_comment(request, workspace_id, post_id):
         return HttpResponse("Comment body is required.", status=400)
 
     visibility = request.POST.get("visibility", PostComment.Visibility.EXTERNAL)
+    # Portal clients may comment externally, but cannot forge team-only notes.
+    # Re-check the live membership instead of trusting a form field or session role.
+    if (
+        request.workspace_membership.workspace_role == WorkspaceMembership.WorkspaceRole.CLIENT
+        and visibility != PostComment.Visibility.EXTERNAL
+    ):
+        return HttpResponse("Client comments must be external.", status=403)
+
     parent_id = request.POST.get("parent_id") or None
     attachment = request.FILES.get("attachment")
 
