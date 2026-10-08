@@ -522,16 +522,32 @@ class InboxSyncEngine:
             if notify:
                 self._notify_new_message(obj)
 
+    @staticmethod
+    def _notification_users(message):
+        """Resolve current workspace members before sending potentially private details."""
+        if message.assigned_to_id:
+            membership = (
+                WorkspaceMembership.objects.filter(
+                    workspace_id=message.workspace_id,
+                    user_id=message.assigned_to_id,
+                )
+                .select_related("user")
+                .first()
+            )
+            if membership is not None:
+                return [membership.user]
+
+        # No assignee, or the previous assignee was offboarded/misassigned:
+        # notify only current owners/managers of the message's own workspace.
+        memberships = WorkspaceMembership.objects.filter(
+            workspace_id=message.workspace_id,
+            workspace_role__in=["owner", "manager"],
+        ).select_related("user")
+        return [membership.user for membership in memberships]
+
     def _notify_new_message(self, message):
         """Send notification for a new inbox message."""
-        if message.assigned_to:
-            users = [message.assigned_to]
-        else:
-            memberships = WorkspaceMembership.objects.filter(
-                workspace=message.workspace,
-                workspace_role__in=["owner", "manager"],
-            ).select_related("user")
-            users = [m.user for m in memberships]
+        users = self._notification_users(message)
 
         for user in users:
             notify(
@@ -566,14 +582,7 @@ class InboxSyncEngine:
 
     def _notify_sla_overdue(self, message, config):
         """Notify about an SLA-overdue message."""
-        if message.assigned_to:
-            users = [message.assigned_to]
-        else:
-            memberships = WorkspaceMembership.objects.filter(
-                workspace=message.workspace,
-                workspace_role__in=["owner", "manager"],
-            ).select_related("user")
-            users = [m.user for m in memberships]
+        users = self._notification_users(message)
 
         for user in users:
             notify(
