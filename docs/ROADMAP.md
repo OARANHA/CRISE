@@ -23,7 +23,8 @@
 - [x] PR #15: requisitos para cliente observador/operador no portal (CI #37799250321 verde, documentação integrada; ADR-0003 ainda proposta).
 - [x] PR #16: privacidade no portal e anexos internos (CI #37803584176, 2.419 passed/1 skipped; 6 casos novos).
 - [x] PR #17: exclusão de comentários isolada por workspace/post (CI #37805298794; 2.428 passed, 1 skipped; sete novos testes, mais dois herdados).
-- [ ] PR #18: filtrar respostas internas pré-carregadas em comentários para papel CLIENT, inclusive rota HTMX (4 testes; CI pendente).
+- [x] PR #18: replies internas filtradas para CLIENT (CI #37807764663, 2.432 passed/1 skipped; quatro testes).
+- [ ] PR #19: validar papel e participação atual de cliente antes de usar link mágico, incluindo revogação/readmissão (sete testes; CI pendente).
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
