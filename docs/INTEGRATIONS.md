@@ -1,10 +1,10 @@
 # Matriz de integrações e capacidades — VIGIAFAST
 
-**Estados válidos:** referência avaliada; planejado; em desenvolvimento; testado; operacional; suspenso. Nenhum componente abaixo está integrado ao repositório nesta data.
+**Estados válidos:** referência avaliada; planejado; em desenvolvimento; testado; operacional; suspenso. Apenas o snapshot BrightBean foi copiado em branch para revisão. Nenhuma integração complementar foi ligada ou testada.
 
 | Componente | Papel | Estado | Restrições e próximos testes |
 | --- | --- | --- | --- |
-| [BrightBean Studio](https://github.com/brightbeanxyz/brightbean-studio) | Base integral multiempresa, inbox, publicação, API/MCP | Planejado | Importar e executar testes; AGPL-3.0; conexão social exige OAuth/autorização |
+| [BrightBean Studio](https://github.com/brightbeanxyz/brightbean-studio) | Base integral multiempresa, inbox, publicação, API/MCP | Código em revisão | Executar testes; AGPL-3.0; conexão social exige OAuth/autorização |
 | [Obsei](https://github.com/obsei/obsei) | Classificação e alertas; modelos locais/externos | Referência avaliada | 1.0 em release candidate; validar contrato API e pt-BR; Apache-2.0 |
 | [Bellingcat Auto Archiver](https://github.com/bellingcat/auto-archiver) | Arquivamento de URLs de evidências | Referência avaliada | Testar por plataforma, proveniência, armazenamento e taxa de falhas; MIT |
 | [OpenMagpie](https://github.com/obris-dev/openmagpie) | Descoberta e alerta semântico em feeds sociais | Referência avaliada | Instagram/Facebook/TikTok não cobertos agora; examinar `ee/` e licença aplicável |

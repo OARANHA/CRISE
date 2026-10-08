@@ -8,7 +8,7 @@ Roadmap é planejamento, **não comprovação de recursos entregues**. Manter st
 - [ ] Estabelecer critérios objetivos de aceite e matriz de risco.
 
 ## Fase 1 — Importar e preservar BrightBean
-- [ ] Importar base integral com upstream fixado e avisos de licença.
+- [x] Copiar snapshot integral para a branch de importação com upstream fixado e avisos de licença; **merge pendente**.
 - [ ] Executar testes, lint, migrations e checks de segurança; registrar evidências.
 - [ ] Validar comportamento real de RBAC, workspaces, inbox e API/MCP.
 - [ ] Definir CI para evitar regressões antes da reformulação visual.

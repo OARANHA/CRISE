@@ -2,7 +2,7 @@
 
 Plataforma interna de monitoramento e gestão de crises reputacionais, inicialmente planejada para nove clientes.
 
-**Estado:** preparação arquitetural e documental. Não existe aplicação implementada neste repositório ainda.
+**Estado:** base BrightBean importada em branch para revisão e testes, ainda não homologada nem implantada.
 
 ## Fonte oficial do projeto
 
@@ -21,3 +21,7 @@ Este repositório é a fonte persistente da arquitetura, decisões, estado compr
 **Importante:** não publicar neste repositório credenciais, tokens, dados pessoais ou conteúdo de ocorrências de clientes.
 
 O projeto permanece independente de outros sistemas e serviços.
+
+## Código original BrightBean
+
+Origem e SHA fixado em [docs/upstream/BRIGHTBEAN_SOURCE.md](docs/upstream/BRIGHTBEAN_SOURCE.md). O aplicativo está em avaliação, não homologado; não implantar com dados reais antes dos testes.

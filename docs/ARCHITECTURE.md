@@ -1,6 +1,6 @@
 # Arquitetura-alvo — VIGIAFAST
 
-> **Alvo proposto; não é um retrato de implementação.** O código-fonte original ainda precisa ser importado e testado.
+> **Alvo proposto; não é um retrato de implementação.** O código-fonte original foi copiado na branch de importação; **ainda não foi testado**.
 
 ## Objetivo
 Uma plataforma web interna, acessível em português brasileiro, para investigação, monitoramento e gestão de crise reputacional de múltiplos clientes com uma interface única.

@@ -1,7 +1,7 @@
 # VIGIAFAST — fonte canônica do projeto
 
 **Projeto:** CRISEDIGITAL. **Produto:** VIGIAFAST. **Repositório:** https://github.com/OARANHA/CRISE
-**Idioma:** português brasileiro. **Situação:** documentação/fundação; aplicação ainda não importada.
+**Idioma:** português brasileiro. **Situação:** código-base em branch de importação; ainda não testado ou homologado.
 
 ## Leitura obrigatória ao iniciar qualquer trabalho
 1. Este arquivo: `docs/PROJECT_SOURCE.md`.

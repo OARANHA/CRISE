@@ -27,3 +27,6 @@
 
 ## Regras de manutenção
 Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante mudar; manter curto, datado e com links de commits/PRs. Registrar fatos comprovados; questões abertas em `docs/CANONICAL_STATE.md`.
+
+## Atualização após importação (branch em revisão)
+- Snapshot integral do BrightBean copiado na branch de importação, com SHA `96ccc1e88fefa171c4e5ca981dc9f289bdf60d39` e verificação byte a byte de todos os arquivos versionados. Sem execução de testes da aplicação, sem deploy e sem aprovação de merge.
