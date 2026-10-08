@@ -35,7 +35,7 @@ Este arquivo é um **snapshot atual**, não um diário cumulativo. Atualize o qu
 
 - **Reuse:** manter Django/Python/PostgreSQL e as capacidades do BrightBean já verificadas. Não reconstruir autorização ou inbox já existentes.
 - **Decisão atual:** PR #2 **permanece em rascunho**, sem deploy. A arquitetura exata de isolamento ainda não foi aceita.
-- **Próxima PR de desenvolvimento:** adicionar testes adversariais de **mídia e posts** comparando A/B/C e ativos organizacionais compartilhados. Se o comportamento atual contrariar a privacidade exigida, corrigir por uma PR própria após identificar dependências.
+- **PR #8 em revisão (CI ainda não confirmada):** testes sintéticos A/B/C para leitura e edição de posts, acesso REST/MCP à mídia privada e comprovação de mídia org-shared existente. Se a política atual contrariar a privacidade exigida, corrigir por uma PR própria após avaliar dependências.
 - **Esta revisão documental:** não alterar funcionalidade; aguardar CI da PR documental e comunicado do operador (green/red), sem polling.
 - **Depois:** validar OAuth/MCP, workers e demais caminhos, revisar ADR-0003, iniciar UX VIGIAFAST gradualmente sem eliminar os módulos BrightBean.
 

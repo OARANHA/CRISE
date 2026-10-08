@@ -25,7 +25,7 @@
 
 ## Próximo trabalho
 - Revisar e testar a proposta da PR documental de reconciliação; **não tratar CI nova como verde até verificar**.
-- Criar PR pequena de testes A/B/C em **posts e mídia**, incluindo comportamento dos assets de organização compartilhados. Corrigir isolamentos falhos somente depois de evidência e análise de dependências.
+- PR #8 de testes A/B/C em **posts e mídia** criada, aguardando CI. A suíte descreve o acesso organizacional compartilhado existente sem autorizar evidências privadas nesse espaço. Corrigir isolamentos falhos somente após evidências e análise de dependências.
 - Não mesclar a PR #2 na `main` nem implantar com dados reais antes de encerrar gates essenciais e obter autorização.
 
 ## Operação de agentes
