@@ -68,3 +68,6 @@ Identificado por inspeção: `apps/approvals/comments.py::delete_comment` filtra
 
 ## PR #18 — privacidade de respostas a comentários (proposta)
 Mesmo quando comentários raiz internos estão ocultos do papel CLIENT, respostas internas pré-carregadas sob um comentário externo podem aparecer em partials HTMX. O filtro proposto em `get_comments_for_post` restringe também as replies quando o papel atual é CLIENT; preserva o fluxo da equipe. Quatro regressões sintéticas propostas. **CI pendente; isolamento geral de funcionários externos com editor/custom role continua em análise na ADR-0003**.
+
+## PR #19 — vínculo de link mágico ao acesso CLIENT (proposta)
+`peek_magic_link` e `consume_magic_link` não conferiam se o usuário ainda era CLIENT nem se estava ativo; a remoção pelo painel invalida o link, mas outros caminhos de desligamento não asseguram esse efeito. A PR #19 propõe validar associação CLIENT atual, usuário ativo, workspace não arquivado e `membership.added_at <= token.created_at` antes de consumir o link, evitando reuso após remoção/readmissão. Testes sintéticos; CI pendente. Não revoga sessões já autenticadas nem resolve a política de cliente operador com perfil EDITOR.

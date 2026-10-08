@@ -110,6 +110,20 @@ def generate_magic_link(workspace, client_user, created_by):
     return token
 
 
+def _client_can_use_magic_link(token):
+    """Confirm client role and account are still valid for this issued link."""
+    if not token.user.is_active or token.workspace.is_archived:
+        return False
+
+    # An old link must not resurrect after removal and a fresh invitation.
+    return WorkspaceMembership.objects.filter(
+        user_id=token.user_id,
+        workspace_id=token.workspace_id,
+        workspace_role=WorkspaceMembership.WorkspaceRole.CLIENT,
+        added_at__lte=token.created_at,
+    ).exists()
+
+
 def peek_magic_link(token_string):
     """Validate a magic link token *without* consuming it.
 
@@ -122,7 +136,7 @@ def peek_magic_link(token_string):
     except MagicLinkToken.DoesNotExist:
         return None
 
-    if token.is_expired or token.is_consumed:
+    if token.is_expired or token.is_consumed or not _client_can_use_magic_link(token):
         return None
 
     return token
@@ -140,7 +154,7 @@ def consume_magic_link(token_string):
     except MagicLinkToken.DoesNotExist:
         return None, None, False
 
-    if token.is_expired:
+    if token.is_expired or not _client_can_use_magic_link(token):
         return None, None, False
 
     # Atomic single-use: only the request that flips is_consumed False->True wins.
