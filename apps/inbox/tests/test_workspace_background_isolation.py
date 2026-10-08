@@ -80,7 +80,9 @@ class TestBackgroundInboxWorkspaceIsolation:
         )
         with patch("apps.inbox.tasks.notify") as send:
             InboxSyncEngine()._upsert_message(
-                clients.accounts[1], _incoming("notify-only-b", "private-b"), notify=True
+                clients.accounts[1],
+                _incoming("notify-only-b", "private-b"),
+                notify=True,
             )
         send.assert_called_once()
         assert send.call_args.kwargs["user"] == user_b
@@ -93,7 +95,8 @@ class TestBackgroundInboxWorkspaceIsolation:
             engine._upsert_message(clients.accounts[0], _incoming("updated-once", "second"), notify=True)
         send.assert_called_once()
         message = InboxMessage.objects.get(
-            social_account=clients.accounts[0], platform_message_id="updated-once"
+            social_account=clients.accounts[0],
+            platform_message_id="updated-once",
         )
         assert message.workspace_id == clients.workspaces[0].id
         assert message.body == "second"
