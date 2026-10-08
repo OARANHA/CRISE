@@ -1,0 +1,44 @@
+name: One-time Ruff formatter for Meta webhook tests
+on:
+  push:
+    branches:
+      - test/meta-webhook-native-id-boundary
+    paths:
+      - .github/workflows/format-meta-webhook-once.yml
+permissions:
+  contents: write
+jobs:
+  format-once:
+    if: github.repository == 'OARANHA/CRISE' && github.ref == 'refs/heads/test/meta-webhook-native-id-boundary'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+      - name: Format and validate one test file with pinned Ruff
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          readonly TARGET="apps/inbox/tests/test_webhooks.py"
+          readonly WORKFLOW=".github/workflows/format-meta-webhook-once.yml"
+          test "$(git branch --show-current)" = "test/meta-webhook-native-id-boundary"
+          python -m pip install --disable-pip-version-check "ruff==0.15.9"
+          ruff check "$TARGET"
+          ruff format "$TARGET"
+          ruff check "$TARGET"
+          ruff format --check "$TARGET"
+          test "$(grep -c '^    def test_' "$TARGET")" -eq 37
+          git diff --check -- "$TARGET"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "$TARGET"
+          git rm -f -- "$WORKFLOW"
+          git diff --cached --check
+          git diff --cached --stat
+          git commit -m "style: apply Ruff 0.15.9 to Meta webhook regression tests"
+          git push origin HEAD:refs/heads/test/meta-webhook-native-id-boundary

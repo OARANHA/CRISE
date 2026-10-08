@@ -68,3 +68,9 @@ Leia `docs/PROJECT_SOURCE.md` → `AGENTS.md` → estado canônico → memória 
 - PR #11 de regressões Meta para páginas com IDs nativos distintos/repetidos: documentar roteamento por organização/workspace, sem mudar código original. **Pendente CI**.
 - Compartilhamento organizacional de mídia e compartilhamento de webhooks por mesma conta nativa são riscos a decidir, não capacidades aprovadas para evidências confidenciais. ADR-0003 segue PROPOSTA.
 - Sem deploy, sem merge na main. Operador informa green/red; não fazer polling.
+
+## PR #11 — CI vermelha somente em Ruff format (2026-10-08)
+- [Run #37775101149](https://github.com/OARANHA/CRISE/actions/runs/37775101149) no SHA `d6c587156edb7b4e4f80b1824d8d3deb552dd1ef`: Pytest **2.400 passed / 1 skipped / 858 warnings**, incluindo **3/3 casos novos Meta webhook**. Ruff `check`, Mypy, Gitleaks aprovados. Ruff `format --check` acusou 1 arquivo (`apps/inbox/tests/test_webhooks.py`); Docker build skipped.
+- Criado workflow **temporário de execução única** `format-meta-webhook-once.yml`, que usa Ruff **0.15.9**, formata/testa apenas o arquivo afetado e remove o próprio workflow no commit automático. Os testes demonstram que ID nativo repetido na mesma organização gera mensagens nos dois workspaces: risco da arquitetura, **não** autorização para compartilhar mensagens privadas.
+- **Ainda não confirmado:** execução do formatador, CI completa do código formatado e eventual status `action_required` do commit `github-actions[bot]`. Não tratar PR #11 como verde, não mesclar. Após sinal green/red, conferir a execução do exato SHA. Se o commit bot ficar com `action_required`, um commit documental do conector precisará solicitar nova CI.
+- PR #2 continua draft sem merge na main; sem deploy ou dados reais.
