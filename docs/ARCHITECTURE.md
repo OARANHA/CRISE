@@ -1,6 +1,6 @@
 # Arquitetura-alvo — VIGIAFAST
 
-> **Alvo proposto; não é um retrato de implementação.** O código-fonte original foi copiado na branch de importação; **ainda não foi testado**.
+> **Arquitetura-alvo proposta; não é homologação.** O BrightBean foi importado para a branch de revisão e recebeu testes sintéticos por PR, mas o produto completo ainda não está integrado à `main` nem validado para dados reais.
 
 ## Objetivo
 Uma plataforma web interna, acessível em português brasileiro, para investigação, monitoramento e gestão de crise reputacional de múltiplos clientes com uma interface única.

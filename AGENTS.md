@@ -24,5 +24,10 @@ Você trabalha no produto VIGIAFAST, do projeto CRISEDIGITAL. Responda e impleme
 - Não aplicar mudanças destrutivas, deploys, rotação de segredos ou operações em outros sistemas sem autorização explícita.
 - Não incluir `.env` real, tokens, perfis pessoais, posts, comentários, capturas ou relatórios reais de clientes no Git público.
 
+## Documentação viva e skills
+- O índice em `docs/README.md` e a doutrina em `docs/doutrina/` complementam as regras existentes, **sem substituir ADRs aceitas ou evidências reais**.
+- Skills em `.agents/skills/` são guias opcionais para agentes compatíveis; a presença dos arquivos não prova carregamento automático.
+- `docs/CANONICAL_STATE.md` deve permanecer como snapshot atual e conciso; `MEMORY.md` como memória curta. Registro antigo vai para Git/PRs ou `docs/historico/`, nunca como status atual.
+
 ## Saída ao encerrar
 Registrar: branch e SHA, arquivos alterados, PR, testes executados, riscos conhecidos e próxima ação concreta. Atualizar os arquivos do repositório; não depender do chat para continuidade.
