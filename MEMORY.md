@@ -16,9 +16,9 @@
 5. Não fazer polling contínuo de CI: operador informa `green`/`red`. Não mesclar `main`, implantar ou usar dados reais sem autorização específica.
 
 ## Última situação verificada nesta organização documental (2026-10-08)
-- `main`: `f6883b7`; branch de importação: `2cd8878` antes desta PR documental.
-- PR #2 segue draft para `main`; PR #19 estava aberta, com CI **não consultada nesta tarefa**.
-- PR #18 integrada; sua [CI #37807764663](https://github.com/OARANHA/CRISE/actions/runs/37807764663) passou com **2.432 tests / 1 skipped**. Nenhuma homologação de isolamento total.
+- `main`: `f6883b7`; branch de importação: `0bf37c5` após a PR #19, antes da integração desta PR documental.
+- PR #2 segue draft para `main`; PR #19 integrada (merge `0bf37c5`) com [CI #37809392150](https://github.com/OARANHA/CRISE/actions/runs/37809392150) verde: **2.439 passed / 1 skipped**, sete testes novos. A PR #20 teve CI anterior verde em `3367e10`, mas exige CI no commit reconciliado.
+- PRs #18 e #19 integradas; somente cenários sintéticos cobertos foram comprovados. Nenhuma homologação de isolamento total.
 - ADR-0003 e ADR-0004 são **propostas, não aceitas**.
 
 [Histórico detalhado anterior](docs/historico/2026-10-08-memoria-anterior.md). Referências atuais devem ser verificadas em GitHub, não inferidas da memória.

@@ -110,3 +110,6 @@ A PR #17 propõe exigir `post__workspace` no serviço e `post=post` na view ante
 ## PR #18 — replies internas de comentários em rotas de equipe (proposta)
 `get_comments_for_post` do BrightBean filtrava apenas os comentários raiz INTERNAL para papel CLIENT, mas `Prefetch("replies")` ainda carregava respostas INTERNAL. A correção proposta aplica o mesmo filtro às respostas antes de renderizar a partial HTMX e mantém visibilidade total para equipe editora/gestora. **CI da PR #18 pendente**.
 Um usuário externo com papel EDITOR continua sendo tratado como editor comum nas superfícies internas: a distinção entre identidade de cliente e papel deve ser resolvida por autorização de produto na ADR-0003, não por suposição de que editor equivale a funcionário interno.
+
+## PR #19 — controle sobre links mágicos de cliente (proposta)
+Revisão de serviços do BrightBean: o link mágico de aprovação foi emitido para papel CLIENT, mas o consumo não validava papel/associação atual. A PR #19 propõe impedir autenticação por link após desligamento, mudança de papel, desativação, arquivamento de workspace e remoção com nova associação. **CI pendente.** O acesso de cliente como editor/colaborador continua sujeito a fluxo próprio e à decisão de identidade/permissões da ADR-0003, ainda não aceita.

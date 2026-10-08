@@ -24,8 +24,8 @@
 - [x] PR #16: privacidade no portal e anexos internos (CI #37803584176, 2.419 passed/1 skipped; 6 casos novos).
 - [x] PR #17: exclusão de comentários isolada por workspace/post (CI #37805298794; 2.428 passed, 1 skipped; sete novos testes, mais dois herdados).
 - [x] PR #18: filtros de replies internas em comentários para papel CLIENT, quatro regressões sintéticas; CI #37807764663 aprovada (2.432 passed/1 skipped), integrada à staging.
-- [ ] PR #19: validar links mágicos após revogação/readmissão e troca de papel; aberta e sem CI consultada neste slice.
-- [ ] Sistema Vivo: índice, doutrina, snapshots concisos e skills no repositório (PR documental; validar CI e revisão antes de integrar).
+- [x] PR #19: links mágicos após revogação/readmissão/troca de papel; CI #37809392150 verde (2.439 passed/1 skipped; sete novos testes), integrada na staging.
+- [ ] PR #20 — Sistema Vivo: índice, doutrina, snapshots e skills; CI verde no SHA original `3367e10`, mas **novo commit reconciliado com PR #19 precisa de CI antes do merge**.
 - [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
