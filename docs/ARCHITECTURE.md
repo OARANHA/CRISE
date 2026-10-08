@@ -33,3 +33,8 @@ Cadastro de termos por cliente → descoberta em fontes permitidas → coleta no
 
 ## Não objetivos do primeiro marco
 Não recriar editor de publicações, calendário, autenticação ou inbox que o BrightBean já possua; não cobrir toda a internet; não automatizar juízo jurídico; não operar coletores de fontes restritas sem base legal e viabilidade.
+
+## Fronteira pública/privada de arquivos — proposta ADR-0004
+A biblioteca BrightBean `MediaAsset` tem missão **editorial**: arquivos destinados à publicação podem ser buscados anonimamente no prefixo `/media/media_library/*`. A tela autenticada de download não torna esses bytes confidenciais. A mídia org-shared também pode ser visível em múltiplos workspaces da mesma organização.
+
+**Proposta, não implementada:** o futuro módulo `Evidências` utiliza entidade e storage próprios, privados por cliente, jamais o prefixo de publicação. O backend autoriza consulta, preview, download e emissão de URL temporária; guarda original, derivados, hash, origem, UTC, histórico de custódia, retenção e trilha de auditoria. Integrações de arquivamento só entram após validação de fonte/termos. Exige ADR-0003 (tenancy) e ADR-0004 aprovadas antes de desenvolver com dados reais.

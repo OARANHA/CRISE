@@ -43,3 +43,8 @@ Não fazer deploy nem ingerir dados reais enquanto não houver configuração se
 - **Risco de isolamento:** `MediaAssetManager.for_workspace_with_shared` torna assets de organização (`workspace_id = NULL`) visíveis a workspaces da mesma organização. O recurso é intencional na base BrightBean; para VIGIAFAST, essa capacidade precisa de política explícita e testes, jamais aplicá-la a dados de crise ou evidências privadas.
 - [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) é apenas proposta, sem autorização para ativar clientes reais.
 - Configurações de Caddy/DB/proxy foram validadas por CI em PRs #4 e #5; isso não substitui revisão de infraestrutura instalada, segredos únicos e cache de rate limit compartilhado.
+
+## PR #14 — proposta de contrato para storage privado (2026-10-08)
+A inspeção estática confirmou que `MediaAsset.file` ocupa `media_library/`, divulgado anonimamente em `Caddyfile` e `config/urls.py::PUBLIC_MEDIA_PREFIXES` para consumo das redes sociais. O controle de acesso em `asset_download` não revoga acesso direto ao endereço público. Mesmo contas privadas por workspace usam esse prefixo de publicação, portanto **não colocar evidências ou relatórios confidenciais ali**.
+
+A ADR-0004 detalha proposta de armazenamento dedicado privado, autorização em cada ação, hashes, proveniência, auditoria e retenção. **Status: PROPOSTA, ainda sem implementação, testes operacionais ou escolha definitiva de tenancy**. Preservar a mídia pública original BrightBean e as regras de publicação. CI documental, se aprovada, não homologa segurança de evidências.
