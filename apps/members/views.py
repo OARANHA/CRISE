@@ -64,10 +64,8 @@ def member_list(request):
             ).values_list("workspace_id", flat=True)
         )
         org_workspaces = org_workspaces.filter(id__in=visible_workspace_ids)
-        memberships = memberships.filter(
-            Q(user=request.user)
-            | Q(user__workspace_memberships__workspace_id__in=visible_workspace_ids)
-        ).distinct()
+        member_filter = Q(user=request.user) | Q(user__workspace_memberships__workspace_id__in=visible_workspace_ids)
+        memberships = memberships.filter(member_filter).distinct()
 
     org_workspace_ids = [ws.id for ws in org_workspaces]
 

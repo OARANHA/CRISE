@@ -42,22 +42,12 @@ class OrgDirectoryClientIsolationTests(TestCase):
     def setUpTestData(cls):
         cls.org_o1 = Organization.objects.create(name="SYNTHETIC_ORG_O1")
         cls.org_o2 = Organization.objects.create(name="SYNTHETIC_ORG_O2")
-        cls.ws_a = Workspace.objects.create(
-            organization=cls.org_o1, name="SYNTHETIC_WS_A"
-        )
-        cls.ws_b = Workspace.objects.create(
-            organization=cls.org_o1, name="SYNTHETIC_WS_B_PRIVATE"
-        )
-        cls.ws_c = Workspace.objects.create(
-            organization=cls.org_o2, name="SYNTHETIC_WS_C_PRIVATE"
-        )
+        cls.ws_a = Workspace.objects.create(organization=cls.org_o1, name="SYNTHETIC_WS_A")
+        cls.ws_b = Workspace.objects.create(organization=cls.org_o1, name="SYNTHETIC_WS_B_PRIVATE")
+        cls.ws_c = Workspace.objects.create(organization=cls.org_o2, name="SYNTHETIC_WS_C_PRIVATE")
 
-        cls.owner = cls._member(
-            "owner@example.invalid", "O1 Owner", cls.org_o1, "owner"
-        )
-        cls.admin = cls._member(
-            "admin@example.invalid", "O1 Administrator", cls.org_o1, "admin"
-        )
+        cls.owner = cls._member("owner@example.invalid", "O1 Owner", cls.org_o1, "owner")
+        cls.admin = cls._member("admin@example.invalid", "O1 Administrator", cls.org_o1, "admin")
         cls.observer_a = cls._member(
             "observer-a@example.invalid",
             "Observer A",
@@ -93,18 +83,14 @@ class OrgDirectoryClientIsolationTests(TestCase):
             "member",
             [(cls.ws_a, "editor"), (cls.ws_b, "editor")],
         )
-        cls.no_membership = _synthetic_user(
-            "unaffiliated@example.invalid", "Unaffiliated"
-        )
+        cls.no_membership = _synthetic_user("unaffiliated@example.invalid", "Unaffiliated")
 
     @staticmethod
     def _member(email, name, org, org_role, assignments=()):
         user = _synthetic_user(email, name)
         OrgMembership.objects.create(organization=org, user=user, org_role=org_role)
         for workspace, workspace_role in assignments:
-            WorkspaceMembership.objects.create(
-                user=user, workspace=workspace, workspace_role=workspace_role
-            )
+            WorkspaceMembership.objects.create(user=user, workspace=workspace, workspace_role=workspace_role)
         return user
 
     def setUp(self):
@@ -125,9 +111,7 @@ class OrgDirectoryClientIsolationTests(TestCase):
             self.assertNotContains(response, self.client_b.email)
             self.assertNotContains(response, self.client_b.display_name)
             self.assertNotContains(response, self.ws_b.name)
-            exposed_ids = [
-                member["user"].pk for member in response.context["members_data"]
-            ]
+            exposed_ids = [member["user"].pk for member in response.context["members_data"]]
             self.assertNotIn(self.client_b.pk, exposed_ids)
 
     def test_observer_a_must_not_see_b_name_email_or_workspace(self):
@@ -143,9 +127,7 @@ class OrgDirectoryClientIsolationTests(TestCase):
         self._assert_client_b_hidden(response)
 
     def test_revoked_workspace_access_must_not_expose_client_b(self):
-        WorkspaceMembership.objects.filter(
-            user=self.observer_a, workspace=self.ws_a
-        ).delete()
+        WorkspaceMembership.objects.filter(user=self.observer_a, workspace=self.ws_a).delete()
         # Keep the org membership, reproducing a partial offboarding path.
         response = self._get_directory(self.observer_a)
         self._assert_client_b_hidden(response)
@@ -209,20 +191,14 @@ class OrgDirectoryClientIsolationTests(TestCase):
 
     def test_client_editor_cannot_open_other_member_workspace_form(self):
         self.client.force_login(self.operator_a)
-        membership = OrgMembership.objects.get(
-            user=self.client_b, organization=self.org_o1
-        )
-        url = reverse(
-            "members:manage_workspaces", kwargs={"membership_id": membership.pk}
-        )
+        membership = OrgMembership.objects.get(user=self.client_b, organization=self.org_o1)
+        url = reverse("members:manage_workspaces", kwargs={"membership_id": membership.pk})
         response = self.client.get(url, HTTP_HX_REQUEST="true")
         self.assertEqual(response.status_code, 403)
 
     def test_client_observer_cannot_change_other_member_org_role(self):
         self.client.force_login(self.observer_a)
-        membership = OrgMembership.objects.get(
-            user=self.client_b, organization=self.org_o1
-        )
+        membership = OrgMembership.objects.get(user=self.client_b, organization=self.org_o1)
         url = reverse("members:update_role", kwargs={"membership_id": membership.pk})
         response = self.client.post(url, {"org_role": "admin"}, HTTP_HX_REQUEST="true")
         self.assertEqual(response.status_code, 403)
