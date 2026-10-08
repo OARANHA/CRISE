@@ -61,3 +61,9 @@ Não usar dados reais antes de concluir os gates, não executar deploy nem opera
 - PR #9 **proposta**: regressões adicionais com OAuth e API keys: troca de workspace, cliente com perfil Viewer, tentativa de acessar mensagens de B/C, remoção de participação e redução de permissões. `apps/api/auth.py` possui resolvedor e interseção de permissões próprios do BrightBean; **não reconstruir**.
 - **Ainda não existe CI validada para a PR #9**. CI verde da #8 não comprova isolamento OAuth em todas as situações.
 - ADR-0003 continua proposta; a visibilidade de `MediaAsset.workspace_id = NULL` entre workspaces da mesma organização está demonstrada e não deve ser usada para evidências confidenciais.
+
+## PR #9 — primeira CI falhou somente no Ruff format (2026-10-08)
+- [Run #37769541281](https://github.com/OARANHA/CRISE/actions/runs/37769541281), commit `b269dbf155b161514a6383405d3e0ddea53317e4`: Ruff lint, Mypy, Pytest/PostgreSQL e Gitleaks **aprovados**. Pytest: **2.390 passed, 1 skipped, 848 warnings**, incluindo **10/10 casos novos OAuth/MCP**. Docker build `skipped` devido a `ruff format --check` reprovar **um arquivo**: `apps/api/tests/test_oauth_workspace_isolation.py`.
+- Tentativa de executar Ruff localmente neste ambiente foi bloqueada por ausência de pacote e acesso ao índice de pacotes. Formatação deve ocorrer pelo workflow temporário `format-oauth-boundaries-once.yml`, fixado em `ruff==0.15.9`, que verifica e grava apenas o arquivo de testes e remove o próprio workflow no mesmo commit do bot.
+- **Este workflow ainda não foi validado**. Commits do `github-actions[bot]` podem produzir CI `action_required`; nesse caso um commit normal, sem alteração da lógica dos testes, terá de solicitar nova execução.
+- PR #9 **não mesclar** sem cinco jobs da CI real aprovados sobre commit corrigido. Nenhum deploy ou alteração na main. Aguardar green/red/action_required do operador, sem polling.
