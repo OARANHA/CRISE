@@ -1034,34 +1034,22 @@ class TestMetaWebhookNativeIdWorkspaceBoundary:
         account_a, account_b = self._create_accounts(
             "SharedOrgDistinct", ["native-page-a", "native-page-b"], "secret-d"
         )
-        response = self._post_message(
-            client, "native-page-a", "secret-d", "distinct-message"
-        )
+        response = self._post_message(client, "native-page-a", "secret-d", "distinct-message")
         assert response.status_code == 200
-        messages = InboxMessage.objects.filter(
-            platform_message_id="distinct-message"
-        )
-        assert list(messages.values_list("workspace_id", flat=True)) == [
-            account_a.workspace_id
-        ]
+        messages = InboxMessage.objects.filter(platform_message_id="distinct-message")
+        assert list(messages.values_list("workspace_id", flat=True)) == [account_a.workspace_id]
         assert not messages.filter(workspace_id=account_b.workspace_id).exists()
 
     @override_settings(PLATFORM_CREDENTIALS_FROM_ENV={})
-    def test_repeated_native_id_inside_org_fans_out_to_both_workspaces(
-        self, client
-    ):
+    def test_repeated_native_id_inside_org_fans_out_to_both_workspaces(self, client):
         """Observed BrightBean behavior, not an approved VIGIAFAST policy."""
         account_a, account_b = self._create_accounts(
             "SharedOrgRepeated", ["repeated-page", "repeated-page"], "secret-r"
         )
-        response = self._post_message(
-            client, "repeated-page", "secret-r", "repeated-message"
-        )
+        response = self._post_message(client, "repeated-page", "secret-r", "repeated-message")
         assert response.status_code == 200
         workspace_ids = set(
-            InboxMessage.objects.filter(
-                platform_message_id="repeated-message"
-            ).values_list("workspace_id", flat=True)
+            InboxMessage.objects.filter(platform_message_id="repeated-message").values_list("workspace_id", flat=True)
         )
         assert workspace_ids == {
             account_a.workspace_id,
@@ -1070,20 +1058,12 @@ class TestMetaWebhookNativeIdWorkspaceBoundary:
 
     @override_settings(PLATFORM_CREDENTIALS_FROM_ENV={})
     def test_repeated_native_id_across_orgs_rejects_foreign_secret(self, client):
-        (account_a,) = self._create_accounts(
-            "SigningOrgA", ["same-page-id"], "secret-a"
-        )
-        (account_b,) = self._create_accounts(
-            "SigningOrgB", ["same-page-id"], "secret-b"
-        )
-        response = self._post_message(
-            client, "same-page-id", "secret-a", "signed-only-a"
-        )
+        (account_a,) = self._create_accounts("SigningOrgA", ["same-page-id"], "secret-a")
+        (account_b,) = self._create_accounts("SigningOrgB", ["same-page-id"], "secret-b")
+        response = self._post_message(client, "same-page-id", "secret-a", "signed-only-a")
         assert response.status_code == 200
         workspaces = set(
-            InboxMessage.objects.filter(
-                platform_message_id="signed-only-a"
-            ).values_list("workspace_id", flat=True)
+            InboxMessage.objects.filter(platform_message_id="signed-only-a").values_list("workspace_id", flat=True)
         )
         assert workspaces == {account_a.workspace_id}
         assert account_b.workspace_id not in workspaces
