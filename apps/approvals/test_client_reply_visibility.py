@@ -78,8 +78,7 @@ class ClientCommentReplyVisibilityTests(TestCase):
 
     def _visible(self, user):
         return {
-            root.body: [reply.body for reply in root.replies.all()]
-            for root in get_comments_for_post(self.post, user)
+            root.body: [reply.body for reply in root.replies.all()] for root in get_comments_for_post(self.post, user)
         }
 
     def test_client_sees_only_external_root_and_external_reply(self):
