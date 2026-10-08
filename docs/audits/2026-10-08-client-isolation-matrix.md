@@ -1,7 +1,7 @@
 # VIGIAFAST — matriz inicial de isolamento entre clientes
 
 **Data:** 2026-10-08  
-**Status:** suíte proposta na PR #6, **não validada na CI**. Não constitui auditoria completa.
+**Status:** **16/16 casos aprovados** na [CI #37763047990](https://github.com/OARANHA/CRISE/actions/runs/37763047990), 2.364 passed / 1 skipped / 822 warnings, cinco jobs verdes; [PR #6](https://github.com/OARANHA/CRISE/pull/6) integrada à branch de importação no commit `1b0436980c618e9931b1dc78aa6c818bc4849abd`. **Não constitui auditoria completa.**
 
 ## Modelo alvo
 

@@ -37,3 +37,9 @@ Não fazer deploy nem ingerir dados reais enquanto não houver configuração se
 - Configurar somente IPs de proxies reais e estáveis, sem curingas. CIDR não é suportado.
 - Em instalações com múltiplas instâncias, usar cache compartilhado para rate limiting; o contador atual não é atômico sob alta concorrência.
 - PR #5 precisa passar na CI antes de integração. Validação inter-tenant permanece pendente.
+
+## Estado comprovado após a PR #6 — 2026-10-08
+- A CI de [PR #6](https://github.com/OARANHA/CRISE/pull/6) passou: [run #37763047990](https://github.com/OARANHA/CRISE/actions/runs/37763047990), 16/16 novos casos da inbox REST/MCP/HTMX/API-key; o teste de isolamento de todos os módulos **não está concluído**.
+- **Risco de isolamento:** `MediaAssetManager.for_workspace_with_shared` torna assets de organização (`workspace_id = NULL`) visíveis a workspaces da mesma organização. O recurso é intencional na base BrightBean; para VIGIAFAST, essa capacidade precisa de política explícita e testes, jamais aplicá-la a dados de crise ou evidências privadas.
+- [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) é apenas proposta, sem autorização para ativar clientes reais.
+- Configurações de Caddy/DB/proxy foram validadas por CI em PRs #4 e #5; isso não substitui revisão de infraestrutura instalada, segredos únicos e cache de rate limit compartilhado.
