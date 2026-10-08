@@ -35,3 +35,10 @@ Os testes usam exclusivamente organizações, usuários, contas e comentários *
 ## Critério de aceite
 
 Nenhuma informação de B/C aparece quando a chave ou sessão só está autorizada em A. Operações por identificadores UUID alheios são recusadas sem efeitos colaterais nem envio às redes sociais. Registrar resultado real da CI, sem inferir segurança total.
+
+## Regressões posteriores e limite dos processos assíncronos
+- PR #8: posts e mídia REST/MCP; 16 casos aprovados; mídia org-shared continua visível entre workspaces da mesma organização.
+- PR #9: OAuth/MCP, mudança de workspace e offboarding; 10 casos aprovados.
+- PR #10: cache Django aquecido, revogação e alterações de escopo; 7 casos aprovados.
+- PR #11: Meta webhook com mesmo ID de página entre workspaces; três casos aprovados; duplicação de mensagens entre clientes da mesma organização é comportamento observado e **risco não aceito para produção**.
+- PR #12 **proposta, CI pendente:** `InboxSyncEngine` com duplicação de ID remoto e notificações selecionadas por workspace. Não substituir homologação de filas reais nem aceitar a ADR-0003.
