@@ -88,9 +88,10 @@ def update_comment(comment_id, user, body, *, workspace=None):
 
 
 def delete_comment(comment_id, user, workspace):
-    """Soft-delete a comment. Authors and managers can delete."""
+    """Soft-delete only comments owned by this workspace; authors/managers can delete."""
     comment = PostComment.objects.filter(
         id=comment_id,
+        post__workspace=workspace,
         deleted_at__isnull=True,
     ).first()
 
