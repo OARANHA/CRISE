@@ -64,9 +64,7 @@ class RevokedMagicLinkTests(TestCase):
 
     def test_revoked_link_post_does_not_authenticate_user(self):
         self.membership.delete()
-        response = self.client.post(
-            reverse("client_portal:magic_link_entry", kwargs={"token": self.token.token})
-        )
+        response = self.client.post(reverse("client_portal:magic_link_entry", kwargs={"token": self.token.token}))
         self.assertRedirects(response, reverse("client_portal:magic_link_expired"))
         self.assertNotIn("_auth_user_id", self.client.session)
         self.assertNotIn("is_portal_session", self.client.session)
