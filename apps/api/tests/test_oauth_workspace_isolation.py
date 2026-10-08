@@ -175,10 +175,7 @@ class TestCachedKeyAuthorizationBoundaries:
 
     def test_cached_key_offboarding_denies_rest_and_mcp(self, clients):
         assert clients.rest.get("/api/v1/accounts/").status_code == 200
-        WorkspaceMembership.objects.filter(
-            user=clients.user,
-            workspace=clients.workspaces[0],
-        ).delete()
+        WorkspaceMembership.objects.filter(user=clients.user, workspace=clients.workspaces[0]).delete()
         assert clients.rest.get("/api/v1/accounts/").status_code == 401
         assert _call_mcp(clients.rest, "list_accounts", {}).status_code == 401
 
