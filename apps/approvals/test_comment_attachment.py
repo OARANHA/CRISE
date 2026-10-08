@@ -72,7 +72,6 @@ class CommentAttachmentAccessTests(TestCase):
             },
         )
 
-
     def test_client_role_cannot_download_internal_attachment_by_uuid(self):
         client = _make_user("client-internal-attachment@example.test")
         OrgMembership.objects.create(user=client, organization=self.org, org_role="member")

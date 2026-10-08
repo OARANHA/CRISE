@@ -119,7 +119,6 @@ class MagicLinkEntryViewTests(MagicLinkTestBase):
         self.assertIsNone(replay.session.get("is_portal_session"))
 
 
-
 class PortalInternalCommentVisibilityTests(MagicLinkTestBase):
     """Portal never reveals team-only comments, even after role changes."""
 
@@ -202,4 +201,3 @@ class PortalInternalCommentVisibilityTests(MagicLinkTestBase):
         session.save()
         response = self.client.get(reverse("client_portal:approval_queue"))
         self.assertRedirects(response, reverse("client_portal:magic_link_expired"))
-
