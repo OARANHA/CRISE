@@ -9,3 +9,9 @@
 - Preservar notices de copyright, licenças de terceiros e rastreabilidade.
 - O histórico upstream é recuperável pelo SHA e pela URL acima. A cópia é snapshot, não um fork Git com todo o histórico.
 - Nenhum teste de aplicação ou deploy é executado pelo bootstrap.
+
+## Confirmação da importação
+- GitHub Actions: https://github.com/OARANHA/CRISE/actions/runs/37728568048 (conclusion: success).
+- `IMPORT_VALIDATED_FILES=874`: verificação byte a byte de todos os arquivos versionados no commit de origem, com remapeamento do README e CI originais.
+- Commit de snapshot no OARANHA/CRISE: `b80322fd0d1386b0c13ef7891f98817b6d38d5d3`.
+- Status da aplicação: **não testada nem implantada**. Não houve migração de dados nem conexão social.
