@@ -11,7 +11,9 @@
 | [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, Draft, base `main`; sem autorização para merge |
 | [PR #26](https://github.com/OARANHA/CRISE/pull/26) | Integrada **somente** à branch de importação em 2026-10-08, merge commit `e5f9ec7...` |
 | [CI pós-merge PR #26](https://github.com/OARANHA/CRISE/actions/runs/37858665680) | `completed / success`, SHA `e5f9ec7...`; cinco jobs success: Pytest, Ruff, Mypy, Gitleaks e Docker |
-| Trabalho atual | [Auditoria de afiliação M10](audits/2026-10-08-m10-actor-affiliation-architecture-gate.md): **proposta documental, não política implementada** |
+| [PR #28](https://github.com/OARANHA/CRISE/pull/28) | Aberta para branch de importação; head `a98b35a0d73bb3247f48e049ee157e29283a9b7e`; quatro testes sintéticos M11 de contexto multi-organização |
+| [CI PR #28](https://github.com/OARANHA/CRISE/actions/runs/37863411779) | `completed / success`, 5/5 (Pytest, Ruff, Mypy, Gitleaks e Docker), validada no head `a98b35a...`; **sem merge** |
+| Trabalho de processo atual | Regra consultiva Wandora JEV.1 adicionada a `AGENTS.md`, `docs/PROJECT_SOURCE.md` e `MEMORY.md` em branch isolada; CI desta proposta não verificada |
 
 ## PROVEN EVIDENCE
 
@@ -20,6 +22,11 @@
 - [M10 — caracterização](audits/2026-10-08-m10-editor-internal-visibility.md): os dez testes sintéticos da PR #26 caracterizam o estado **ainda vulnerável** quando ator interno e operador externo usam EDITOR. A CI inicial [#37856628216](https://github.com/OARANHA/CRISE/actions/runs/37856628216) foi RED por duas falhas de conexão fechada em testes de streaming e formatação Ruff; correção dos testes, CI posterior e merge constam na PR #26. O acesso a comentários/replies/anexos INTERNAL por EDITOR **não foi corrigido**.
 - `apps/members/models.py::WorkspaceMembership` contém papel funcional e permissões, mas não afiliação verificável `interno/externo`; `get_comments_for_post` e `comment_attachment` usam role CLIENT para ocultar INTERNAL. O portal filtra EXTERNAL independentemente do papel na sessão própria.
 - `apps/api/routers/posts.py` usa `create_posts` para acesso a `Post.internal_notes` (**M09 separado**). `MediaAssetManager.for_workspace_with_shared` compartilha mídia editorial por organização; não usar esse caminho para evidências privadas.
+
+## JEV — apoio consultivo
+
+- Solicitação de 2026-10-08: consultar Wandora JEV.1 nas decisões técnicas/arquiteturais quando disponível; não delegar autorização, políticas ou avaliação de testes a julgamentos probabilísticos. Regra documentada nesta branch, **sem integração/CI própria confirmada**.
+- JEV consultado nesta etapa (`jev_route_task` → `split_task`, confiança 0,48; `jev_guard_action` → `allow`, confiança 0,49). Foi decidido separar validação da PR #28 e nova PR documental. Parecer consultivo, não aprovação para merge.
 
 ## GAPS → REUSE GATE → DECISION
 
