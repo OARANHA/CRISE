@@ -131,3 +131,17 @@ A [auditoria de alternativas de afiliação](../audits/2026-10-08-m10-actor-affi
 Essa evidência é relevante para a alternativa de **uma organização por cliente**: as associações do banco não provam que a interface, sessões, páginas globais, API/MCP e convites sustentem operação multi-organização. A alternativa de **uma organização compartilhada com workspaces** não resolve, por sua vez, compartilhamento de mídia org-shared e confidencialidade de dados entre clientes.
 
 **Status inalterado: PROPOSTA / NÃO ACEITA.** Escolher topologia, autoridade de afiliação, política para INTERNAL e compatibilidade BrightBean exige decisão humana explícita. Não transformar testes de caracterização em autorização de deploy ou correção M10.
+
+## Deliberação arquitetural atualizada — 2026-10-08 (PROPOSTA, SEM ACEITAÇÃO)
+
+**Evidência reconciliada:** [PR #28](https://github.com/OARANHA/CRISE/pull/28) integrada na importação em `63e0c854...`, CI [#37866908923](https://github.com/OARANHA/CRISE/actions/runs/37866908923) GREEN 5/5. [PR #30](https://github.com/OARANHA/CRISE/pull/30) integrada com autorização específica, **somente** na branch de importação, merge `1e02089d97b72bd5ac2dd8d626a83c6e34d8094c`; [CI pós-merge #37871185545](https://github.com/OARANHA/CRISE/actions/runs/37871185545) GREEN 5/5 no mesmo SHA. A [PR #31](https://github.com/OARANHA/CRISE/pull/31) continua **Draft/não integrada**. Essas CIs não corrigem M10/M11 nem aprovam esta ADR. Seções anteriores com CI pendente são registros históricos.
+
+**Parecer técnico condicional:** preferir **uma `Organization` por cliente** como limite lógico dos recursos já compartilhados por organização no BrightBean, mantendo os `Workspace` necessários dentro de cada cliente; funcionários internos recebem `OrgMembership` e `WorkspaceMembership` expressamente designados. Uma interface central VIGIAFAST pode coordenar esses vínculos, mas não conceder acesso transversal nem copiar dados confidenciais para organização compartilhada. Uma organização única com workspaces de clientes continua alternativa não selecionada, pois `MediaAsset` org-shared e rotas org-scoped exigiriam controles transversais adicionais.
+
+**Bloqueios:** `RBACMiddleware` global usa `.first()` e diverge de `last_workspace_id` para multi-org (M11); `EDITOR` externo ainda lê e pode escrever `INTERNAL` (M10); M09 e proteção de evidências (ADR-0004) permanecem abertos. O contrato proposto para M10 é `affiliation=internal|external|unclassified` por `WorkspaceMembership`, independente de `role`, conferida e auditada apenas por autoridade VIGIAFAST; legado inicia `unclassified`, sem inferência por papel. `INTERNAL` exige membership atual, ação, classe de dado e concessão específica — `internal` isolado não é superpermissão.
+
+**Gates de aprovação separados:** 1. aprovação humana explícita desta topologia e autoridade; 2. slice mínimo M11 de contexto multi-org com validação em backend e testes sintéticos; 3. slice M10 de classificação/autorização com migração conservadora e regressões; 4. revisão transversal REST/MCP/HTMX/portal/workers/mídia/API/UUID/revogação, compatibilidade BrightBean/AGPL, ADR-0004 e autorização operacional. Nenhum dos gates foi liberado aqui.
+
+**Rastreabilidade:** [deliberação técnica e parecer JEV.1](../audits/2026-10-08-adr0003-tenancy-deliberation.md). O JEV.1 retornou `deep_review` (confiança 0,76), de modo consultivo, sem selecionar tenant nem autorizar implementação.
+
+**Status preservado: PROPOSTA — NÃO ACEITA.**
