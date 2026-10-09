@@ -1,7 +1,7 @@
 # M11 — caracterização de contexto multi-organização do BrightBean
 
 **Data:** 2026-10-08. **Base inspecionada:** `feat/brightbean-upstream-import` @ `20fcb3aae63ffc2763939818f36b70841ce1ed0d`.
-**Status:** TESTES PROPOSTOS, NÃO EXECUTADOS NESTA INSPEÇÃO. **Não é correção de multi-organização, isolamento ou M10.**
+**Status:** testes M11 originais validados na CI da PR #28 ([run #37863411779](https://github.com/OARANHA/CRISE/actions/runs/37863411779), SHA `a98b35a...`, cinco jobs success). Reconciliação posterior com a PR #29: **nova CI pendente; não considerar o SHA antigo como validação do novo merge**. **Não é correção de multi-organização, isolamento ou M10.**
 **Escopo:** documentação e testes sintéticos em `apps/members/tests/test_m11_multi_org_context_characterization.py`; nenhum código de aplicação ou migração alterados.
 
 ## REAL NOW / PROVEN EVIDENCE
@@ -41,4 +41,4 @@ Preservar a autenticação Django, `OrgMembership`, `WorkspaceMembership`, `Cust
 
 **Gate de decisão humana:** escolher a topologia de clientes para ADR-0003; aprovar ou rejeitar afiliação `internal/external/unclassified` por membership; definir autoridade de classificação, migração supervisionada e autorização por classe de dados. Só depois implementar controle M10 no runtime, com regressões de preservação das funções BrightBean e A/B/C. 
 
-**Verificações ainda pendentes:** CI desta nova PR sobre SHA exato (Pytest, Ruff, Mypy, Gitleaks, Docker), testes HTTP completos de navegação multi-org, sessões/portal, API keys/MCP e classificação/negativa de INTERNAL. Não fazer polling; operador informa `green`/`red`.
+**Verificações ainda pendentes:** CI do SHA de reconciliação com a PR #29 (Pytest, Ruff, Mypy, Gitleaks, Docker), testes HTTP completos de navegação multi-org, sessões/portal, API keys/MCP e classificação/negativa de INTERNAL. Não fazer polling; operador informa `green`/`red`.
