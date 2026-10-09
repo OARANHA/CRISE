@@ -42,3 +42,14 @@ Preservar a autenticação Django, `OrgMembership`, `WorkspaceMembership`, `Cust
 **Gate de decisão humana:** escolher a topologia de clientes para ADR-0003; aprovar ou rejeitar afiliação `internal/external/unclassified` por membership; definir autoridade de classificação, migração supervisionada e autorização por classe de dados. Só depois implementar controle M10 no runtime, com regressões de preservação das funções BrightBean e A/B/C. 
 
 **Verificações ainda pendentes:** CI do SHA de reconciliação com a PR #29 (Pytest, Ruff, Mypy, Gitleaks, Docker), testes HTTP completos de navegação multi-org, sessões/portal, API keys/MCP e classificação/negativa de INTERNAL. Não fazer polling; operador informa `green`/`red`.
+
+## Fechamento verificado — PR #28 integrada somente à branch de importação
+
+**Verificação pontual em 2026-10-08:**
+
+- [PR #28](https://github.com/OARANHA/CRISE/pull/28): `merged=true`, encerrada; merge commit `63e0c854e199945435a9c42d5cfe2acfc62611b5` em `feat/brightbean-upstream-import`.
+- [CI pós-merge #37866908923](https://github.com/OARANHA/CRISE/actions/runs/37866908923): `completed/success` no SHA exato `63e0c854...`; cinco jobs `success`: Pytest, Ruff, Mypy, Gitleaks, Docker build.
+- A reconciliação anterior de conflitos da PR #28 preservou os quatro testes e a regra de consulta consultiva Wandora JEV.1 introduzida na PR #29. A nova CI validou esse estado integrado.
+- `main` permaneceu `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; [PR #2](https://github.com/OARANHA/CRISE/pull/2) permaneceu aberta e Draft.
+
+**Limite:** são testes **de caracterização** do middleware e verificações de baseline. Nenhuma migração, seleção global multi-org segura, autorização `INTERNAL` ou correção M10 foi implementada nesta PR. A ADR-0003 e ADR-0004 continuam **PROPOSTAS / NÃO ACEITAS**. A seção histórica acima descreve expectativas anteriores à CI; considerar esta seção o fechamento verificado do ciclo M11. Decisão futura de topologia e política depende de deliberação explícita.

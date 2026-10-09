@@ -1,21 +1,22 @@
 # VIGIAFAST — memória operacional resumida
 
-**Não é fonte de verdade.** Ordem: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → esta memória → ADRs → código/testes/CI.
+**Não é fonte de verdade.** Retomada obrigatória: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → `MEMORY.md` → ADRs → código, testes, Git e CI.
 
 ## Produto / reuso
-- CRISEDIGITAL / VIGIAFAST: nove clientes inicialmente, escalável, operação interna e operadores externos; interface pt-BR.
-- Preservar integralmente BrightBean Studio Django/Python/PostgreSQL, AGPL-3.0: editor, calendário, aprovações, portal, inbox, analytics, mídia editorial, API/MCP, RBAC.
-- Obsei e Bellingcat Auto Archiver são candidatos; dados privados, monitoramento de terceiros e evidências não estão homologados.
+- CRISEDIGITAL / VIGIAFAST: funcionários internos + operadores dos clientes; nove clientes iniciais, com crescimento; interface pt-BR.
+- Reusar integralmente BrightBean Studio Django/Python/PostgreSQL, AGPL-3.0: editor, calendário, aprovação, portal, inbox, analytics, mídia editorial, API/MCP e RBAC.
+- Obsei / Bellingcat Auto Archiver são candidatos. Sem deploy, dados reais, monitoramento público homologado ou evidências privadas implementadas.
 
-## Estado observado 2026-10-08
-- `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f` (preservada); PR #2 segue Draft.
-- `feat/brightbean-upstream-import`: `16be52b3ced02ce25881ce4dc3c98c1cff75a1d7`; PR #29 integrada, [CI pós-merge #37864930016](https://github.com/OARANHA/CRISE/actions/runs/37864930016) GREEN 5/5 nesse SHA.
-- PR #28 tem quatro testes sintéticos M11 e auditoria; CI original [#37863411779](https://github.com/OARANHA/CRISE/actions/runs/37863411779) GREEN no SHA `a98b35a...`, mas reconciliação com PR #29 **exige CI nova** antes de qualquer integração. Nenhum merge da PR #28 autorizado.
-- ADR-0001/0002 aceitas; ADR-0003/0004 propostas e **não aceitas**.
+## Estado observado em 2026-10-08
+- `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, intacta; PR #2 aberta/Draft para `main`.
+- `feat/brightbean-upstream-import` @ `63e0c854e199945435a9c42d5cfe2acfc62611b5`, após merge da PR #28. [CI pós-merge #37866908923](https://github.com/OARANHA/CRISE/actions/runs/37866908923) `completed/success`, **5/5** nesse SHA.
+- PR #26: 10 casos de caracterização M10; PR #27: estudo de afiliação; PR #29: regra consultiva JEV.1 integrada; PR #28: 4 casos sintéticos M11 e auditoria integrados somente à branch de importação.
+- ADR-0001 e 0002 **ACEITAS**; ADR-0003 e 0004 **PROPOSTAS/NÃO ACEITAS**.
+- Documentação pós-merge atualizada em branch/PR separada; não atribuir à nova documentação o GREEN anterior até CI no seu novo SHA.
 
-## Segurança e próximo gate
-- M10 **não corrigido**: EDITOR interno e externo indistinguíveis para `INTERNAL`. Afiliação verificada independente de role continua somente proposta; sem atribuir EDITOR a operadores reais enquanto não houver política testada.
-- M11 caracteriza que `RBACMiddleware` pode discordar entre `request.org` global e organização do `last_workspace_id` para operador multi-org. Não muda runtime nem valida toda interface. Topologia por cliente ainda depende da decisão ADR-0003.
-- M09 (`Post.internal_notes`) separado; ADR-0004 para evidências privadas pendente. Sem dados reais, deploy ou `main`.
-- **Wandora JEV.1**: consultar como camada consultiva para decisões técnicas/arquiteturais quando disponível (AGENTS.md e PROJECT_SOURCE.md); não substitui políticas, testes ou autorização. Indisponibilidade declarada; nunca inventar parecer.
-- Não fazer polling de CI: operador informa `green`/`red` e revisamos o SHA exato. Próximo passo: testar PR #28 reconciliada; merge requer autorização específica.
+## Riscos / próximo gate
+- **M10 aberto:** EDITOR externo continua indistinguível do interno para leitura de comentários, respostas e anexos `INTERNAL`. Afiliação `internal/external/unclassified` por `WorkspaceMembership` é uma **proposta condicional**, não implementada. Não liberar operadores reais como EDITOR.
+- **M11 caracterizado:** `OrgMembership` permite multi-org, mas `RBACMiddleware.__call__` usa `.first()` e `last_workspace_id` independentemente, podendo produzir contexto global divergente. A PR #28 confirmou casos sintéticos, **não a operação multi-org completa**.
+- M09 (`Post.internal_notes`) e mídia org-shared seguem riscos; evidências privadas dependem da ADR-0004.
+- **Próximo:** decidir explicitamente ADR-0003 — organização por cliente versus organização compartilhada, afiliação confiável, autoridade de classificação, backfill supervisionado, autorização `INTERNAL`, preservação do BrightBean e regressões A/B/C.
+- **JEV.1:** consultar em decisões técnicas/arquiteturais como camada consultiva quando disponível; nunca substitui testes, políticas, revisão ou autorização. Sem polling contínuo de CI; usuário comunica `green`/`red`. Sem merge não autorizado, `main` ou deploy.
