@@ -121,3 +121,13 @@ A [PR #26](https://github.com/OARANHA/CRISE/pull/26) foi integrada somente à br
 A [auditoria de alternativas de afiliação](../audits/2026-10-08-m10-actor-affiliation-architecture-gate.md) confronta `User.is_staff`, `OrgMembership`, extensão de `WorkspaceMembership` e entidade dedicada. Sua preferência **proposta, ainda não aprovada**, é adicionar afiliação verificada `internal/external/unclassified` independente do papel funcional em `WorkspaceMembership`, reusando o RBAC e exigindo autorização por classe de dado em todos os endpoints. A migração de membros existentes não pode promover automaticamente EDITOR a funcionário interno.
 
 **Status inalterado: PROPOSTA — NÃO ACEITA.** Antes de implementação ou rollout é obrigatória decisão explícita sobre topologia dos clientes, autoridade de classificação, tratamento de contas existentes, política de dados INTERNAL, testes adversariais e compatibilidade com o BrightBean. A ADR-0004 permanece proposta.
+
+## M11 — contexto multi-organização no middleware (caracterização, sem aceitação)
+
+**Base inspecionada:** `feat/brightbean-upstream-import` @ `20fcb3aae63ffc2763939818f36b70841ce1ed0d`. A [PR #27](https://github.com/OARANHA/CRISE/pull/27) foi integrada apenas nessa branch; [CI pós-merge #37862079868](https://github.com/OARANHA/CRISE/actions/runs/37862079868) ficou verde (5/5) no mesmo SHA.
+
+`OrgMembership` permite associações em organizações distintas para o mesmo usuário; entretanto, `apps/members/middleware.py::RBACMiddleware.__call__` escolhe uma organização com `.first()`, independentemente do `last_workspace_id` usado para resolver o workspace. Logo, com múltiplas organizações, a seleção global **pode divergir** da organização do workspace; `process_view` corrige o contexto somente quando a rota traz `workspace_id`. A [auditoria M11](../audits/2026-10-08-m11-multi-org-context-characterization.md) inclui quatro testes sintéticos para verificar esses comportamentos. **CI original da PR #28 GREEN no SHA `a98b35a...` (run #37863411779); a reconciliação posterior com a PR #29 precisa de nova CI antes de integração.**
+
+Essa evidência é relevante para a alternativa de **uma organização por cliente**: as associações do banco não provam que a interface, sessões, páginas globais, API/MCP e convites sustentem operação multi-organização. A alternativa de **uma organização compartilhada com workspaces** não resolve, por sua vez, compartilhamento de mídia org-shared e confidencialidade de dados entre clientes.
+
+**Status inalterado: PROPOSTA / NÃO ACEITA.** Escolher topologia, autoridade de afiliação, política para INTERNAL e compatibilidade BrightBean exige decisão humana explícita. Não transformar testes de caracterização em autorização de deploy ou correção M10.

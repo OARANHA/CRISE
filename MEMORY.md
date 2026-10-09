@@ -1,23 +1,21 @@
 # VIGIAFAST — memória operacional resumida
 
-**Não é fonte de verdade.** Ordem de leitura: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → esta memória → ADRs → código/testes/CI.
+**Não é fonte de verdade.** Ordem: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → esta memória → ADRs → código/testes/CI.
 
-## Produto e reuso
-- CRISEDIGITAL / VIGIAFAST: equipe interna e operadores de clientes, inicialmente nove, escalável; interface pt-BR.
-- Reusar integralmente BrightBean Studio Django/Python/PostgreSQL (AGPL-3.0): editor, calendário, aprovações, portal, inbox, analytics, API/MCP, RBAC.
-- Obsei e Bellingcat Auto Archiver são candidatos. Coleta pública de terceiros, armazenamento de evidências privadas e relatórios reputacionais completos **não estão homologados/implementados**.
+## Produto / reuso
+- CRISEDIGITAL / VIGIAFAST: nove clientes inicialmente, escalável, operação interna e operadores externos; interface pt-BR.
+- Preservar integralmente BrightBean Studio Django/Python/PostgreSQL, AGPL-3.0: editor, calendário, aprovações, portal, inbox, analytics, mídia editorial, API/MCP, RBAC.
+- Obsei e Bellingcat Auto Archiver são candidatos; dados privados, monitoramento de terceiros e evidências não estão homologados.
 
-## Estado observado em 2026-10-08
-- `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, preservada.
-- `feat/brightbean-upstream-import`: `e5f9ec7c6568729bc26220f1ab44b156bc7d6477`; PR #26 integrada somente nessa branch.
-- [CI pós-merge PR #26](https://github.com/OARANHA/CRISE/actions/runs/37858665680): GREEN no SHA acima, cinco jobs success. Dez testes de **caracterização** M10 aprovados; **não corrigem M10**.
-- PR #2 aberta e Draft para `main`. ADR-0001/0002 aceitas; ADR-0003/0004 propostas e **não aceitas**. Nenhum deploy autorizado.
+## Estado observado 2026-10-08
+- `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f` (preservada); PR #2 segue Draft.
+- `feat/brightbean-upstream-import`: `16be52b3ced02ce25881ce4dc3c98c1cff75a1d7`; PR #29 integrada, [CI pós-merge #37864930016](https://github.com/OARANHA/CRISE/actions/runs/37864930016) GREEN 5/5 nesse SHA.
+- PR #28 tem quatro testes sintéticos M11 e auditoria; CI original [#37863411779](https://github.com/OARANHA/CRISE/actions/runs/37863411779) GREEN no SHA `a98b35a...`, mas reconciliação com PR #29 **exige CI nova** antes de qualquer integração. Nenhum merge da PR #28 autorizado.
+- ADR-0001/0002 aceitas; ADR-0003/0004 propostas e **não aceitas**.
 
-## Próximo gate: identidade, permissão e classe de dado (M10)
-- `WorkspaceMembership` registra papel e permissões; não registra afiliação confiável entre funcionário VIGIAFAST e operador do cliente. `EDITOR` de ambos acessa comentários, replies e anexos `INTERNAL` nas rotas caracterizadas.
-- Auditoria de alternativas e proposta de menor impacto: [docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md](docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md). Afiliação independente, não inferida de `is_staff` nem do role, e predicado por ator, ação, recurso, cliente e confidencialidade; **somente PROPOSTO**.
-- Próximo trabalho de runtime depende de decisão explícita sobre ADR-0003, autoridade para classificar usuários legados e política de acesso INTERNAL. A ADR-0004 continua necessária para storage privado. M09 (`Post.internal_notes`) separado.
-- Sem dados reais, deploy, merge sem autorização ou polling de CI. Operador comunica `green`/`red` para verificar uma única execução no SHA da nova PR.
-
-## Camada consultiva de decisão
-- **Wandora JEV.1** deve ser consultado em decisões técnicas/arquiteturais do VIGIAFAST sempre que o conector estiver disponível, conforme `AGENTS.md` e `docs/PROJECT_SOURCE.md`. Retornos probabilísticos não aprovam ADRs, merges, deploys ou riscos; verificar evidências reais. Indisponibilidade deve ser declarada, nunca simulada.
+## Segurança e próximo gate
+- M10 **não corrigido**: EDITOR interno e externo indistinguíveis para `INTERNAL`. Afiliação verificada independente de role continua somente proposta; sem atribuir EDITOR a operadores reais enquanto não houver política testada.
+- M11 caracteriza que `RBACMiddleware` pode discordar entre `request.org` global e organização do `last_workspace_id` para operador multi-org. Não muda runtime nem valida toda interface. Topologia por cliente ainda depende da decisão ADR-0003.
+- M09 (`Post.internal_notes`) separado; ADR-0004 para evidências privadas pendente. Sem dados reais, deploy ou `main`.
+- **Wandora JEV.1**: consultar como camada consultiva para decisões técnicas/arquiteturais quando disponível (AGENTS.md e PROJECT_SOURCE.md); não substitui políticas, testes ou autorização. Indisponibilidade declarada; nunca inventar parecer.
+- Não fazer polling de CI: operador informa `green`/`red` e revisamos o SHA exato. Próximo passo: testar PR #28 reconciliada; merge requer autorização específica.
