@@ -9,10 +9,10 @@
 
 ## Estado observado em 2026-10-08
 - `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, intacta; PR #2 aberta/Draft para `main`.
-- `feat/brightbean-upstream-import` @ `63e0c854e199945435a9c42d5cfe2acfc62611b5`, após merge da PR #28. [CI pós-merge #37866908923](https://github.com/OARANHA/CRISE/actions/runs/37866908923) `completed/success`, **5/5** nesse SHA.
+- `feat/brightbean-upstream-import` @ `1e02089d97b72bd5ac2dd8d626a83c6e34d8094c`, após merge da PR #30. [CI pós-merge #37871185545](https://github.com/OARANHA/CRISE/actions/runs/37871185545) `completed/success`, **5/5** nesse SHA.
 - PR #26: 10 casos de caracterização M10; PR #27: estudo de afiliação; PR #29: regra consultiva JEV.1 integrada; PR #28: 4 casos sintéticos M11 e auditoria integrados somente à branch de importação.
 - ADR-0001 e 0002 **ACEITAS**; ADR-0003 e 0004 **PROPOSTAS/NÃO ACEITAS**.
-- [PR #30](https://github.com/OARANHA/CRISE/pull/30) aberta/não integrada, head `855b7765cf09589d04038fb3092300adfb6c2ae4` e [CI #37867551502](https://github.com/OARANHA/CRISE/actions/runs/37867551502) GREEN 5/5 nesse SHA. Este registro de ADR é trabalho documental **posterior, empilhado sobre PR #30**, não integrado nem validado por aquela CI.
+- [PR #30](https://github.com/OARANHA/CRISE/pull/30) integrada **somente à importação** em `1e02089...`; CI pós-merge GREEN 5/5 nesse SHA. [PR #31](https://github.com/OARANHA/CRISE/pull/31) segue **Draft, aberta e não integrada**, agora apontando diretamente à importação; sua CI no head documental atualizado depende de aviso `green`/`red` do operador.
 
 ## Riscos / próximo gate
 - **M10 aberto:** EDITOR externo continua indistinguível do interno para leitura de comentários, respostas e anexos `INTERNAL`. Afiliação `internal/external/unclassified` por `WorkspaceMembership` é uma **proposta condicional**, não implementada. Não liberar operadores reais como EDITOR.
