@@ -32,3 +32,8 @@ Não realizar deploy, mexer em outras aplicações/VPS, apagar dados ou executar
 
 ## Documentação de origens
 BrightBean Studio: https://github.com/brightbeanxyz/brightbean-studio — referência de código, licença AGPL-3.0; SHA de base sob avaliação: `96ccc1e88fefa171c4e5ca981dc9f289bdf60d39` (main observado em 2026-10-08). **Importado somente na branch da PR #2, não integrado à main nem homologado.** Ver `docs/INTEGRATIONS.md`.
+
+
+## Apoio de decisão obrigatório quando disponível
+
+A pedido do responsável pelo projeto (2026-10-08), usar **Wandora JEV.1** como camada de apoio em decisões de arquitetura, segurança e execução do VIGIAFAST. Aplicar a regra operacional descrita em `AGENTS.md`, mantendo rastreabilidade do resultado. O JEV fornece julgamentos probabilísticos, não autoridade: não substitui `REAL NOW → PROVEN EVIDENCE → GAPS → REUSE GATE → DECISION`, revisão de código, testes, ADR aceita nem autorização explícita. Quando indisponível, documentar o limite e não simular seu uso.
