@@ -12,6 +12,7 @@
 | Limites e riscos de segurança | [SECURITY.md](SECURITY.md) |
 | Integrações e alcance real das redes sociais | [INTEGRATIONS.md](INTEGRATIONS.md) |
 | Planejamento por fase | [ROADMAP.md](ROADMAP.md) |
+| **V1 operacional e frentes paralelas** | [Plano de execução V1](V1_EXECUTION_PLAN.md) · [Programa #32](https://github.com/OARANHA/CRISE/issues/32) · [Segurança #33](https://github.com/OARANHA/CRISE/issues/33) · [UX #34](https://github.com/OARANHA/CRISE/issues/34) · [Monitoramento #35](https://github.com/OARANHA/CRISE/issues/35) · [Infra #36](https://github.com/OARANHA/CRISE/issues/36) |
 | Evidências detalhadas e auditorias | [Auditorias](audits/) · [Matriz de autorização PR #21](audits/2026-10-08-authorization-actor-resource-matrix.md) · [Reprodução HTTP PR #22](audits/2026-10-08-org-directory-http-reproduction.md) · [Afiliação e gate de decisão M10](audits/2026-10-08-m10-actor-affiliation-architecture-gate.md) · [Contexto multi-organização M11](audits/2026-10-08-m11-multi-org-context-characterization.md) · [Deliberação ADR-0003 (proposta)](audits/2026-10-08-adr0003-tenancy-deliberation.md) |
 | Registros anteriores, inclusive PRs já concluídas | [Histórico](historico/README.md) |
 | Procedimentos para agentes | [Skills VIGIAFAST](../.agents/skills/README.md) |
