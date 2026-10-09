@@ -12,7 +12,7 @@
 - `feat/brightbean-upstream-import` @ `648050ab37525cd596e69b61a600ea09a1503886`, após merge documental da PR #31 somente na importação. CI pré-merge PR #31 [#37871818043](https://github.com/OARANHA/CRISE/actions/runs/37871818043) GREEN 5/5 em `7ce2acd...`; CI pós-merge nesse SHA ainda não validada neste slice.
 - PR #26: 10 casos de caracterização M10; PR #27: estudo de afiliação; PR #29: regra consultiva JEV.1 integrada; PR #28: 4 casos sintéticos M11 e auditoria integrados somente à branch de importação.
 - ADR-0001 e 0002 **ACEITAS**; ADR-0003 e 0004 **PROPOSTAS/NÃO ACEITAS**.
-- [PR #30](https://github.com/OARANHA/CRISE/pull/30) integrada **somente à importação** em `1e02089...`; CI pós-merge GREEN 5/5 nesse SHA. [PR #31](https://github.com/OARANHA/CRISE/pull/31) segue **Draft, aberta e não integrada**, agora apontando diretamente à importação; sua CI no head documental atualizado depende de aviso `green`/`red` do operador.
+- [PR #30](https://github.com/OARANHA/CRISE/pull/30) integrada somente à importação em `1e02089...`; CI pós-merge GREEN 5/5. [PR #31](https://github.com/OARANHA/CRISE/pull/31) **integrada somente à importação** em `648050ab...`; ADR-0003 preservada como proposta.
 
 ## Riscos / próximo gate
 - **M10 aberto:** EDITOR externo continua indistinguível do interno para leitura de comentários, respostas e anexos `INTERNAL`. Afiliação `internal/external/unclassified` por `WorkspaceMembership` é uma **proposta condicional**, não implementada. Não liberar operadores reais como EDITOR.
