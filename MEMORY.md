@@ -18,3 +18,6 @@
 - Auditoria de alternativas e proposta de menor impacto: [docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md](docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md). Afiliação independente, não inferida de `is_staff` nem do role, e predicado por ator, ação, recurso, cliente e confidencialidade; **somente PROPOSTO**.
 - Próximo trabalho de runtime depende de decisão explícita sobre ADR-0003, autoridade para classificar usuários legados e política de acesso INTERNAL. A ADR-0004 continua necessária para storage privado. M09 (`Post.internal_notes`) separado.
 - Sem dados reais, deploy, merge sem autorização ou polling de CI. Operador comunica `green`/`red` para verificar uma única execução no SHA da nova PR.
+
+## Camada consultiva de decisão
+- **Wandora JEV.1** deve ser consultado em decisões técnicas/arquiteturais do VIGIAFAST sempre que o conector estiver disponível, conforme `AGENTS.md` e `docs/PROJECT_SOURCE.md`. Retornos probabilísticos não aprovam ADRs, merges, deploys ou riscos; verificar evidências reais. Indisponibilidade deve ser declarada, nunca simulada.
