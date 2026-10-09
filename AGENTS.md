@@ -31,3 +31,11 @@ Você trabalha no produto VIGIAFAST, do projeto CRISEDIGITAL. Responda e impleme
 
 ## Saída ao encerrar
 Registrar: branch e SHA, arquivos alterados, PR, testes executados, riscos conhecidos e próxima ação concreta. Atualizar os arquivos do repositório; não depender do chat para continuidade.
+
+
+## Camada de apoio à decisão — Wandora JEV.1
+
+- Nas decisões técnicas e arquiteturais do VIGIAFAST (prioridade de slices, comparação de opções, riscos, mudanças com efeitos externos e revisão de conclusão), **consultar o conector Wandora JEV.1 quando disponível**. Selecionar a operação apropriada entre `jev_route_task`, `jev_decide`, `jev_guard_action`, `jev_review_completion` e `jev_select_context`. Evitar chamadas decorativas sem decisão efetiva.
+- Registrar no relato técnico ou PR a pergunta, o retorno relevante, limitações e a decisão humana/técnica adotada; uma probabilidade do JEV não é prova de segurança, testes ou correção.
+- **O JEV é apenas consultivo:** código, testes, documentação canônica, políticas determinísticas, allowlists, licenças e autorizações humanas continuam superiores. Nenhuma resposta do JEV autoriza merge, deploy, mudança de ADR, uso de dados reais ou ações destrutivas.
+- Se o conector não estiver acessível, registrar essa indisponibilidade e prosseguir somente com ações que a doutrina já autorize; **nunca inventar uma resposta do JEV**. Se uma decisão exigir autorização humana, manter o gate.
