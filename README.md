@@ -2,13 +2,19 @@
 
 Plataforma interna de monitoramento e gestão de crises reputacionais, inicialmente planejada para nove clientes.
 
-**Estado:** preparação arquitetural e documental. Não existe aplicação implementada neste repositório ainda.
+**Estado:** base BrightBean importada em branch para revisão e testes, ainda não homologada nem implantada.
 
 ## Fonte oficial do projeto
 
 Comece por [docs/PROJECT_SOURCE.md](docs/PROJECT_SOURCE.md). Para trabalho técnico, leia também [AGENTS.md](AGENTS.md), [MEMORY.md](MEMORY.md) e [docs/CANONICAL_STATE.md](docs/CANONICAL_STATE.md).
 
 Este repositório é a fonte persistente da arquitetura, decisões, estado comprovado e próximos passos. Conversas com assistentes **não são fonte de verdade**.
+
+## Navegação de desenvolvimento
+
+- [Índice da documentação viva](docs/README.md) e [doutrina do Sistema Vivo](docs/doutrina/README.md).
+- [Skills para agentes de desenvolvimento](.agents/skills/README.md), carregáveis em ferramentas compatíveis.
+- [Estado canônico](docs/CANONICAL_STATE.md) contém snapshot datado: sempre reconciliar GitHub e CI antes de continuar.
 
 ## Direção técnica
 
@@ -21,3 +27,7 @@ Este repositório é a fonte persistente da arquitetura, decisões, estado compr
 **Importante:** não publicar neste repositório credenciais, tokens, dados pessoais ou conteúdo de ocorrências de clientes.
 
 O projeto permanece independente de outros sistemas e serviços.
+
+## Código original BrightBean
+
+Origem e SHA fixado em [docs/upstream/BRIGHTBEAN_SOURCE.md](docs/upstream/BRIGHTBEAN_SOURCE.md). O aplicativo está em avaliação, não homologado; não implantar com dados reais antes dos testes.

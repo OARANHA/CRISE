@@ -24,5 +24,18 @@ Você trabalha no produto VIGIAFAST, do projeto CRISEDIGITAL. Responda e impleme
 - Não aplicar mudanças destrutivas, deploys, rotação de segredos ou operações em outros sistemas sem autorização explícita.
 - Não incluir `.env` real, tokens, perfis pessoais, posts, comentários, capturas ou relatórios reais de clientes no Git público.
 
+## Documentação viva e skills
+- O índice em `docs/README.md` e a doutrina em `docs/doutrina/` complementam as regras existentes, **sem substituir ADRs aceitas ou evidências reais**.
+- Skills em `.agents/skills/` são guias opcionais para agentes compatíveis; a presença dos arquivos não prova carregamento automático.
+- `docs/CANONICAL_STATE.md` deve permanecer como snapshot atual e conciso; `MEMORY.md` como memória curta. Registro antigo vai para Git/PRs ou `docs/historico/`, nunca como status atual.
+
 ## Saída ao encerrar
 Registrar: branch e SHA, arquivos alterados, PR, testes executados, riscos conhecidos e próxima ação concreta. Atualizar os arquivos do repositório; não depender do chat para continuidade.
+
+
+## Camada de apoio à decisão — Wandora JEV.1
+
+- Nas decisões técnicas e arquiteturais do VIGIAFAST (prioridade de slices, comparação de opções, riscos, mudanças com efeitos externos e revisão de conclusão), **consultar o conector Wandora JEV.1 quando disponível**. Selecionar a operação apropriada entre `jev_route_task`, `jev_decide`, `jev_guard_action`, `jev_review_completion` e `jev_select_context`. Evitar chamadas decorativas sem decisão efetiva.
+- Registrar no relato técnico ou PR a pergunta, o retorno relevante, limitações e a decisão humana/técnica adotada; uma probabilidade do JEV não é prova de segurança, testes ou correção.
+- **O JEV é apenas consultivo:** código, testes, documentação canônica, políticas determinísticas, allowlists, licenças e autorizações humanas continuam superiores. Nenhuma resposta do JEV autoriza merge, deploy, mudança de ADR, uso de dados reais ou ações destrutivas.
+- Se o conector não estiver acessível, registrar essa indisponibilidade e prosseguir somente com ações que a doutrina já autorize; **nunca inventar uma resposta do JEV**. Se uma decisão exigir autorização humana, manter o gate.

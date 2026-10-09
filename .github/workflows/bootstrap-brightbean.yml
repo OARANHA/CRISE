@@ -1,0 +1,45 @@
+name: Bootstrap BrightBean upstream snapshot
+on:
+  push:
+    branches:
+      - feat/brightbean-upstream-import
+    paths:
+      - .github/workflows/bootstrap-brightbean.yml
+      - scripts/bootstrap_brightbean.sh
+permissions:
+  contents: write
+jobs:
+  import-source:
+    if: github.repository == 'OARANHA/CRISE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Import source from pinned upstream commit (no build or deploy)
+        shell: bash
+        run: bash scripts/bootstrap_brightbean.sh
+      - name: Validate staged files and commit once
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --name-only | grep -E '(^|/)(\.env|.*\.pem$|.*\.p12$|.*\.sqlite3$|.*\.key$)' | grep -vE '^\.env\.example$'; then
+            echo 'ERRO: possível segredo ou arquivo confidencial no commit'
+            exit 1
+          fi
+          # Upstream contém whitespace preexistente; preservar código original byte a byte.
+          # Aplicar whitespace check somente nos arquivos de autoria do VIGIAFAST.
+          git diff --cached --check -- \
+            README.md AGENTS.md MEMORY.md \
+            docs/PROJECT_SOURCE.md docs/CANONICAL_STATE.md docs/ARCHITECTURE.md \
+            docs/ROADMAP.md docs/INTEGRATIONS.md docs/SECURITY.md \
+            docs/IMPORT_BRIGHTBEAN_PLAN.md docs/upstream/BRIGHTBEAN_SOURCE.md \
+            scripts/bootstrap_brightbean.sh .github/workflows/bootstrap-brightbean.yml
+          test -f LICENSE && test -f manage.py && test -f requirements.txt
+          git commit -m "chore: import verified BrightBean source snapshot [skip bootstrap]"
+          git push origin HEAD:refs/heads/feat/brightbean-upstream-import

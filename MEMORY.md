@@ -1,29 +1,22 @@
-# MEMORY.md — memória técnica persistente
+# VIGIAFAST — memória operacional resumida
 
-> Este arquivo contém **somente contexto técnico publicável** e deve ser atualizado em PRs. Não armazene nomes, dados, publicações, incidentes, evidências ou credenciais de clientes.
+**Não é fonte de verdade.** Retomada obrigatória: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → `MEMORY.md` → ADRs → código, testes, Git e CI.
 
-## Identidade e propósito
-- Projeto: **CRISEDIGITAL**; produto: **VIGIAFAST**.
-- Repositório canônico: https://github.com/OARANHA/CRISE (público nesta fase).
-- Operação pretendida: uso interno por equipe não técnica, inicialmente para **9 clientes**, com isolamento por cliente.
-- Redes prioritárias: Instagram, TikTok e Facebook; ampliar com fontes públicas viáveis.
-- Interface 100% em português brasileiro; uma aplicação única para o usuário.
+## Produto / reuso
+- CRISEDIGITAL / VIGIAFAST: funcionários internos + operadores dos clientes; nove clientes iniciais, com crescimento; interface pt-BR.
+- Reusar integralmente BrightBean Studio Django/Python/PostgreSQL, AGPL-3.0: editor, calendário, aprovação, portal, inbox, analytics, mídia editorial, API/MCP e RBAC.
+- Obsei / Bellingcat Auto Archiver são candidatos. Sem deploy, dados reais, monitoramento público homologado ou evidências privadas implementadas.
 
-## Decisões vigentes
-- Base pretendida: importar e evoluir **integralmente** BrightBean Studio (Django/Python/PostgreSQL); preservar os recursos existentes e a AGPL-3.0. Veja ADR-0001.
-- Documentação canônica reside no Git; chat não é memória de projeto. Veja ADR-0002.
-- Candidatos para complementar: Obsei (inteligência), Bellingcat Auto Archiver (preservação); avaliar OpenMagpie e 4CAT/Zeeschuimer de forma opcional.
-- Não implantar serviços nem importar coletores desconhecidos antes de revisar código, licenças, segurança e adequação real.
+## Estado observado em 2026-10-08
+- `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, intacta; PR #2 aberta/Draft para `main`.
+- `feat/brightbean-upstream-import` @ `1e02089d97b72bd5ac2dd8d626a83c6e34d8094c`, após merge da PR #30. [CI pós-merge #37871185545](https://github.com/OARANHA/CRISE/actions/runs/37871185545) `completed/success`, **5/5** nesse SHA.
+- PR #26: 10 casos de caracterização M10; PR #27: estudo de afiliação; PR #29: regra consultiva JEV.1 integrada; PR #28: 4 casos sintéticos M11 e auditoria integrados somente à branch de importação.
+- ADR-0001 e 0002 **ACEITAS**; ADR-0003 e 0004 **PROPOSTAS/NÃO ACEITAS**.
+- [PR #30](https://github.com/OARANHA/CRISE/pull/30) integrada **somente à importação** em `1e02089...`; CI pós-merge GREEN 5/5 nesse SHA. [PR #31](https://github.com/OARANHA/CRISE/pull/31) segue **Draft, aberta e não integrada**, agora apontando diretamente à importação; sua CI no head documental atualizado depende de aviso `green`/`red` do operador.
 
-## Lacunas conhecidas
-- BrightBean atende principalmente contas sociais autorizadas; não existe evidência de descoberta universal de publicações de terceiros.
-- Não prometer comentários de terceiros em toda a rede, em especial Instagram/TikTok/Facebook.
-- Análise atual do BrightBean é baseada em palavras-chave em inglês; demanda análise contextual em pt-BR.
-- Evidências exigem origem, horário, integridade verificável e armazenamento restrito; arquivamento simples não é certificação jurídica.
-
-## Registro de continuidade
-- **2026-10-08** — Repositório OARANHA/CRISE verificado inicialmente público e vazio; iniciada fundação documental. Ainda sem importação de software, testes executados ou deploy do VIGIAFAST.
-- Próximo marco: revisar a base e licença do BrightBean; importá-la com histórico verificável em branch separada, executar testes originais e registrar diagnóstico.
-
-## Regras de manutenção
-Alterar este arquivo quando uma decisão, marco, resultado ou bloqueio relevante mudar; manter curto, datado e com links de commits/PRs. Registrar fatos comprovados; questões abertas em `docs/CANONICAL_STATE.md`.
+## Riscos / próximo gate
+- **M10 aberto:** EDITOR externo continua indistinguível do interno para leitura de comentários, respostas e anexos `INTERNAL`. Afiliação `internal/external/unclassified` por `WorkspaceMembership` é uma **proposta condicional**, não implementada. Não liberar operadores reais como EDITOR.
+- **M11 caracterizado:** `OrgMembership` permite multi-org, mas `RBACMiddleware.__call__` usa `.first()` e `last_workspace_id` independentemente, podendo produzir contexto global divergente. A PR #28 confirmou casos sintéticos, **não a operação multi-org completa**.
+- M09 (`Post.internal_notes`) e mídia org-shared seguem riscos; evidências privadas dependem da ADR-0004.
+- **Deliberação técnica (NÃO ACEITA):** [nota ADR-0003](docs/audits/2026-10-08-adr0003-tenancy-deliberation.md) recomenda **uma organização por cliente** para conter compartilhamento org-wide existente; coordenação interna com memberships explícitas. Aprovação humana da topologia/autoridade e da afiliação `internal/external/unclassified` continua necessária. Depois, menor slice M11 (contexto multi-org); M10 em PR separada, sem política antes da decisão.
+- **JEV.1:** consultar em decisões técnicas/arquiteturais como camada consultiva quando disponível; nunca substitui testes, políticas, revisão ou autorização. Sem polling contínuo de CI; usuário comunica `green`/`red`. Sem merge não autorizado, `main` ou deploy.

@@ -1,0 +1,26 @@
+{$APP_DOMAIN:localhost} {
+    # Allowlist identical to config/urls.py PUBLIC_MEDIA_PREFIXES.
+    # Public assets are required by external social publication APIs.
+    @public_media {
+        path /media/media_library/* /media/avatars/* /media/workspaces/icons/*
+    }
+
+    route {
+        handle @public_media {
+            header {
+                X-Content-Type-Options nosniff
+                Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+            }
+            root * {$CADDY_MEDIA_ROOT:/app/media}
+            uri strip_prefix /media
+            file_server
+        }
+        handle /media/* {
+            respond "Not Found" 404
+        }
+        handle {
+            reverse_proxy app:8000
+        }
+    }
+    encode gzip
+}
