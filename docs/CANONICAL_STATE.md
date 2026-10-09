@@ -7,7 +7,7 @@
 | Referência | Estado comprovado |
 | --- | --- |
 | `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f` — BrightBean ainda não integrado |
-| `feat/brightbean-upstream-import` | `1e02089d97b72bd5ac2dd8d626a83c6e34d8094c` (pós-merge da PR #30) |
+| `feat/brightbean-upstream-import` | `648050ab37525cd596e69b61a600ea09a1503886` (merge PR #31) |
 | [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, Draft, destino `main`; sem autorização de merge |
 | [PR #26](https://github.com/OARANHA/CRISE/pull/26) | Integrada à importação; dez caracterizações sintéticas M10; **não corrige M10** |
 | [PR #27](https://github.com/OARANHA/CRISE/pull/27) | Integrada à importação; estudo de afiliação independente de role |
@@ -31,3 +31,7 @@
 3. **Reuso:** preservar `User`, `OrgMembership`, `WorkspaceMembership`, `CustomRole`, middleware, convites, sessões, editor, portal e filtros existentes; não reconstruir RBAC. Fazer inventário/experimentos de segurança com usuários sintéticos A/B/C antes de qualquer migração/política de runtime.
 4. **PR #31 (Draft, documental):** [nota de opções A/B/C](audits/2026-10-08-adr0003-tenancy-deliberation.md) recomenda **uma organização por cliente** como hipótese de decisão. A PR #31 aponta para a branch de importação, sem merge nem CI pós-atualização do seu head confirmada. ADR-0003 **não aceita**; após aprovação, slice M11 primeiro, depois M10, em PRs funcionais separadas.
 5. **Limites:** não dar `EDITOR` a operadores reais enquanto M10 não for resolvido e testado; não fazer merge de PR #2 na `main`, deploy, operações destrutivas, uso de dados reais ou coleta real de redes; merge incremental somente com autorização específica; sem polling contínuo de CI.
+
+## UX em revisão (não integrado)
+
+- [Issue #34](https://github.com/OARANHA/CRISE/issues/34): slice funcional de shell/login e dashboard inicial em pt-BR em branch `feat/vigiafast-ux-login-ptbr-v1-20261008`; [auditoria e limites](audits/2026-10-08-ux-vigiafast-access-first-slice.md). Dois testes sintéticos versionados; CI da branch ainda sem resultado confirmado. Não alegar idioma completo ou homologação.
