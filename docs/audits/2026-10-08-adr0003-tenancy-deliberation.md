@@ -1,7 +1,7 @@
 # ADR-0003 — Deliberação técnica de isolamento (não normativa)
 
 **Data da inspeção:** 2026-10-08 (America/Sao_Paulo). **Status:** PROPOSTA PARA DECISÃO, NÃO ACEITA. **Tipo:** revisão estática de código + síntese de testes sintéticos existentes; nenhuma alteração de runtime, nenhuma migração e nenhum novo teste executado.
-**Referência de runtime:** `feat/brightbean-upstream-import` @ `63e0c854e199945435a9c42d5cfe2acfc62611b5`. **Base documental desta proposta:** PR #30 @ `855b7765cf09589d04038fb3092300adfb6c2ae4` (CI #37867551502, 5/5 success, PR ABERTA/não integrada). `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; PR #2 Draft.
+**Código inspecionado:** `feat/brightbean-upstream-import` @ `63e0c854e199945435a9c42d5cfe2acfc62611b5` (PR #28). **Estado reconciliado:** a PR #30 foi integrada à importação em `1e02089d97b72bd5ac2dd8d626a83c6e34d8094c`; [CI pós-merge #37871185545](https://github.com/OARANHA/CRISE/actions/runs/37871185545) `completed/success`, 5/5 no SHA exato. A PR #31 segue Draft/não integrada. `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; PR #2 Draft.
 
 ## REAL NOW → PROVEN EVIDENCE
 
@@ -57,4 +57,4 @@
 
 - Leitura estática do repositório e consulta pontual à CI da PR #30; inspeção dos testes M10/M11 já versionados. **Não foram executados novos testes locais ou em ambiente runtime** nesta análise documental; green da PR #30 valida apenas o SHA daquela PR.
 - Nenhum cliente, segredo, token, URL de postagem real ou dado pessoal usado.
-- A integração da PR #30 e a aceitação ADR-0003 são gates distintos; esta nota não autoriza nenhum dos dois.
+- A PR #30 já foi integrada com autorização humana específica, somente na importação. A PR #31 **não** foi integrada; sua CI deve ser validada no novo head mediante aviso do operador. Esta nota **não** aceita ADR-0003 nem autoriza alteração de política, migração, merge da PR #31 ou deploy.
