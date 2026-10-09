@@ -9,7 +9,7 @@
 
 ## Estado observado em 2026-10-08
 - `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, intacta; PR #2 aberta/Draft para `main`.
-- `feat/brightbean-upstream-import` @ `1e02089d97b72bd5ac2dd8d626a83c6e34d8094c`, após merge da PR #30. [CI pós-merge #37871185545](https://github.com/OARANHA/CRISE/actions/runs/37871185545) `completed/success`, **5/5** nesse SHA.
+- `feat/brightbean-upstream-import` @ `648050ab37525cd596e69b61a600ea09a1503886`, após merge documental da PR #31 somente na importação. CI pré-merge PR #31 [#37871818043](https://github.com/OARANHA/CRISE/actions/runs/37871818043) GREEN 5/5 em `7ce2acd...`; CI pós-merge nesse SHA ainda não validada neste slice.
 - PR #26: 10 casos de caracterização M10; PR #27: estudo de afiliação; PR #29: regra consultiva JEV.1 integrada; PR #28: 4 casos sintéticos M11 e auditoria integrados somente à branch de importação.
 - ADR-0001 e 0002 **ACEITAS**; ADR-0003 e 0004 **PROPOSTAS/NÃO ACEITAS**.
 - [PR #30](https://github.com/OARANHA/CRISE/pull/30) integrada **somente à importação** em `1e02089...`; CI pós-merge GREEN 5/5 nesse SHA. [PR #31](https://github.com/OARANHA/CRISE/pull/31) segue **Draft, aberta e não integrada**, agora apontando diretamente à importação; sua CI no head documental atualizado depende de aviso `green`/`red` do operador.
@@ -20,3 +20,6 @@
 - M09 (`Post.internal_notes`) e mídia org-shared seguem riscos; evidências privadas dependem da ADR-0004.
 - **Deliberação técnica (NÃO ACEITA):** [nota ADR-0003](docs/audits/2026-10-08-adr0003-tenancy-deliberation.md) recomenda **uma organização por cliente** para conter compartilhamento org-wide existente; coordenação interna com memberships explícitas. Aprovação humana da topologia/autoridade e da afiliação `internal/external/unclassified` continua necessária. Depois, menor slice M11 (contexto multi-org); M10 em PR separada, sem política antes da decisão.
 - **JEV.1:** consultar em decisões técnicas/arquiteturais como camada consultiva quando disponível; nunca substitui testes, políticas, revisão ou autorização. Sem polling contínuo de CI; usuário comunica `green`/`red`. Sem merge não autorizado, `main` ou deploy.
+
+## UX em revisão (não integrada)
+- Issue [#34](https://github.com/OARANHA/CRISE/issues/34): primeiro slice shell/login e dashboard sem workspace em pt-BR, dois testes sintéticos e [nota](docs/audits/2026-10-08-ux-vigiafast-access-first-slice.md); revisão CI pendente. Não representa UX inteira.
