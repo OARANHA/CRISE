@@ -14,7 +14,7 @@
 | [PR #29](https://github.com/OARANHA/CRISE/pull/29) | Integrada à importação; regra Wandora JEV.1 consultiva em `AGENTS.md`, `PROJECT_SOURCE.md` e memória |
 | [PR #28](https://github.com/OARANHA/CRISE/pull/28) | Integrada **somente à importação**; merge SHA `63e0c854e199945435a9c42d5cfe2acfc62611b5`; quatro caracterizações sintéticas M11 |
 | [CI pós-merge #37866908923](https://github.com/OARANHA/CRISE/actions/runs/37866908923) | `completed / success` no SHA exato `63e0c854...`; **5/5:** Pytest, Ruff, Mypy, Gitleaks, Docker |
-| Documentação de continuidade | Atualização deste snapshot, de `MEMORY.md` e da auditoria M11 em PR separada; **não confundir CI verde do merge #28 com CI desta atualização documental** |
+| [PR #30](https://github.com/OARANHA/CRISE/pull/30) | **Aberta, não integrada**, head `855b7765cf09589d04038fb3092300adfb6c2ae4`; [CI #37867551502](https://github.com/OARANHA/CRISE/actions/runs/37867551502) `completed/success`, **5/5 no head** |
 
 ## PROVEN EVIDENCE
 
@@ -29,5 +29,5 @@
 1. **ADRs:** ADR-0001 e ADR-0002 ACEITAS; [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) **PROPOSTAS / NÃO ACEITAS**.
 2. **Gate prioritário:** deliberar topologia multi-cliente (organização por cliente vs. workspaces em organização compartilhada), afiliação verificada `internal/external/unclassified` separada do role, autoridade de classificação/auditoria, usuários legados e acesso a dados `INTERNAL`. **Não inferir aceitação da ADR por CI verde**.
 3. **Reuso:** preservar `User`, `OrgMembership`, `WorkspaceMembership`, `CustomRole`, middleware, convites, sessões, editor, portal e filtros existentes; não reconstruir RBAC. Fazer inventário/experimentos de segurança com usuários sintéticos A/B/C antes de qualquer migração/política de runtime.
-4. **Próxima entrega:** decisão humana sobre ADR-0003; em seguida um slice mínimo, separado, com testes adversariais por ação, recurso, workspace, classe de dado, portal, REST/MCP, links e revogação, preservando funções originais.
+4. **Deliberação ADR-0003 documentada, não aceita:** [nota de opções A/B/C](audits/2026-10-08-adr0003-tenancy-deliberation.md) recomenda **uma organização por cliente**, condicionada a decisão explícita; interface central opcional sem acesso implícito. Gate funcional inicial proposto após aprovação: corrigir contexto multi-org M11; depois M10 afiliação e política `INTERNAL`, com PRs/testes separados. Nenhum runtime alterado.
 5. **Limites:** não dar `EDITOR` a operadores reais enquanto M10 não for resolvido e testado; não fazer merge de PR #2 na `main`, deploy, operações destrutivas, uso de dados reais ou coleta real de redes; merge incremental somente com autorização específica; sem polling contínuo de CI.
