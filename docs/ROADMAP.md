@@ -1,6 +1,6 @@
 # Roadmap — VIGIAFAST
 
-**Status atualizado em 2026-10-08.** Planejado ≠ entregue; o código BrightBean importado ainda está na PR #2, não na `main`.
+**Estado revisto em 2026-10-08:** planejado ≠ entregue; BrightBean permanece na branch de importação/PR #2 Draft, não na `main`. Este roadmap histórico organiza fases; [plano executável V1](V1_EXECUTION_PLAN.md) explicita nove marcos até produção real, **sem fase de demonstração**, e links de issues/execução paralela.
 
 ## Fase 0 — Fundação canônica
 - [x] README e documentação de projeto na `main` (PR #1).
@@ -25,8 +25,9 @@
 - [x] PR #17: exclusão de comentários isolada por workspace/post (CI #37805298794; 2.428 passed, 1 skipped; sete novos testes, mais dois herdados).
 - [x] PR #18: filtros de replies internas em comentários para papel CLIENT, quatro regressões sintéticas; CI #37807764663 aprovada (2.432 passed/1 skipped), integrada à staging.
 - [x] PR #19: links mágicos após revogação/readmissão/troca de papel; CI #37809392150 verde (2.439 passed/1 skipped; sete novos testes), integrada na staging.
-- [ ] PR #20 — Sistema Vivo: índice, doutrina, snapshots e skills; CI verde no SHA original `3367e10`, mas **novo commit reconciliado com PR #19 precisa de CI antes do merge**.
-- [ ] Escolher formalmente o modelo multi-cliente; preservar as capacidades originais e remover riscos de vazamento antes de produção.
+- [x] PR #20 — Sistema Vivo: índice, doutrina, snapshots e skills; **integrada somente à branch de importação**, merge `fba74835fb00e14bcaf80e5bf4ef535f9b0d6069` (estado de merge verificado). Não usar esta linha como evidência da CI final.
+- [x] PR #30 e PR #31: caracterização M11 e deliberação ADR-0003 **documentadas e integradas somente à importação**; PR #31 merge `648050ab37525cd596e69b61a600ea09a1503886` com CI **pré-merge** 5/5 GREEN.
+- [ ] Escolher formalmente o modelo multi-cliente (ADR-0003 proposta); resolver M11, M10/M09; preservar capacidades originais e eliminar riscos de vazamento antes de produção.
 - [ ] Integrar PR #2 à `main` somente após revisão dos gates relevantes e autorização.
 
 ## Fase 2 — Interface operacional
