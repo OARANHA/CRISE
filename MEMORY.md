@@ -1,20 +1,20 @@
 # VIGIAFAST — memória operacional resumida
 
-**Não é fonte de verdade.** Ordem de leitura: `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → esta memória → ADRs → código/testes/CI.
+**Não é fonte de verdade.** Consultar `docs/PROJECT_SOURCE.md` → `AGENTS.md` → `docs/CANONICAL_STATE.md` → este arquivo → ADRs → código/testes/CI.
 
-## Produto e reuso
-- CRISEDIGITAL / VIGIAFAST: equipe interna e operadores de clientes, inicialmente nove, escalável; interface pt-BR.
-- Reusar integralmente BrightBean Studio Django/Python/PostgreSQL (AGPL-3.0): editor, calendário, aprovações, portal, inbox, analytics, API/MCP, RBAC.
-- Obsei e Bellingcat Auto Archiver são candidatos. Coleta pública de terceiros, armazenamento de evidências privadas e relatórios reputacionais completos **não estão homologados/implementados**.
+## Produto
+- CRISEDIGITAL / VIGIAFAST: operação interna e operadores dos clientes; nove clientes iniciais, sem limites artificiais; interface pt-BR.
+- Base integral BrightBean Studio Django/Python/PostgreSQL, AGPL-3.0; preservar editor, calendário, portal, inbox, analytics, mídia editorial, API/MCP e RBAC.
+- Obsei/Bellingcat Auto Archiver são candidatos. Sem monitoramento real de terceiros, dados reais, storage privado de evidências ou deploy.
 
 ## Estado observado em 2026-10-08
-- `main`: `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, preservada.
-- `feat/brightbean-upstream-import`: `e5f9ec7c6568729bc26220f1ab44b156bc7d6477`; PR #26 integrada somente nessa branch.
-- [CI pós-merge PR #26](https://github.com/OARANHA/CRISE/actions/runs/37858665680): GREEN no SHA acima, cinco jobs success. Dez testes de **caracterização** M10 aprovados; **não corrigem M10**.
-- PR #2 aberta e Draft para `main`. ADR-0001/0002 aceitas; ADR-0003/0004 propostas e **não aceitas**. Nenhum deploy autorizado.
+- `main` @ `f6883b747ce1a6ae6a6968948da5225332ed4f2f`, intacta.
+- `feat/brightbean-upstream-import` @ `20fcb3aae63ffc2763939818f36b70841ce1ed0d`: PR #27 integrada; [CI pós-merge #37862079868](https://github.com/OARANHA/CRISE/actions/runs/37862079868), cinco jobs success nesse SHA.
+- PR #2 segue aberta/Draft para `main`.
+- ADR-0001 e ADR-0002 aceitas; ADR-0003 e ADR-0004 propostas/não aceitas.
 
-## Próximo gate: identidade, permissão e classe de dado (M10)
-- `WorkspaceMembership` registra papel e permissões; não registra afiliação confiável entre funcionário VIGIAFAST e operador do cliente. `EDITOR` de ambos acessa comentários, replies e anexos `INTERNAL` nas rotas caracterizadas.
-- Auditoria de alternativas e proposta de menor impacto: [docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md](docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md). Afiliação independente, não inferida de `is_staff` nem do role, e predicado por ator, ação, recurso, cliente e confidencialidade; **somente PROPOSTO**.
-- Próximo trabalho de runtime depende de decisão explícita sobre ADR-0003, autoridade para classificar usuários legados e política de acesso INTERNAL. A ADR-0004 continua necessária para storage privado. M09 (`Post.internal_notes`) separado.
-- Sem dados reais, deploy, merge sem autorização ou polling de CI. Operador comunica `green`/`red` para verificar uma única execução no SHA da nova PR.
+## Gates de segurança
+- M10 continua **não corrigido**: EDITOR de equipe e EDITOR externo ainda compartilham acesso a comentários, replies e anexos INTERNAL. PR #26 testou o comportamento, não resolveu. PR #27 registrou [proposta de afiliação confiável](docs/audits/2026-10-08-m10-actor-affiliation-architecture-gate.md).
+- Novo slice M11 em branch separada: quatro testes sintéticos para caracterizar a seleção da organização global no middleware. `OrgMembership` pode ter múltiplas organizações para usuário; o middleware global usa `.first()` e `last_workspace_id` separadamente, com possível divergência. [Auditoria M11](docs/audits/2026-10-08-m11-multi-org-context-characterization.md). **CI M11 ainda não verificada; não há mudança de runtime.**
+- A decisão de tenancy da ADR-0003 continua bloqueada até autorização humana: organização por cliente ou organização compartilhada; afiliação interna/externa independente do papel, política de classes de dados e migração supervisionada. M09 (`Post.internal_notes`) e ADR-0004 (storage privado) permanecem separados.
+- Sem merge automático, deploy, alterações à `main` ou dados reais. Operador avisa `green`/`red` para conferência única no SHA exato.
