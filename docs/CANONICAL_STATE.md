@@ -1,32 +1,33 @@
 # VIGIAFAST — estado canônico verificável
 
-**Snapshot:** 2026-10-08, revisão direta do GitHub antes da reconciliação da PR #28. Revalidar SHA/CI após qualquer novo commit. **Sem deploy, clientes reais ou homologação.**
+**Snapshot:** 2026-10-08, após verificação pontual do GitHub. Sempre reconciliar estado atual antes de agir. **Sem deploy, homologação ou dados de clientes reais.**
 
 ## REAL NOW
 
-| Referência | Estado verificado |
+| Referência | Estado comprovado |
 | --- | --- |
-| `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f`; importação não integrada |
-| `feat/brightbean-upstream-import` | `16be52b3ced02ce25881ce4dc3c98c1cff75a1d7` (após merge PR #29) |
-| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta/Draft para `main`; não autorizada para merge |
-| [PR #27](https://github.com/OARANHA/CRISE/pull/27) | Integrada à branch de importação; documentação de afiliação M10 |
-| [PR #29](https://github.com/OARANHA/CRISE/pull/29) | Integrada **somente** à importação; regra Wandora JEV.1 registrada em `AGENTS.md`, `docs/PROJECT_SOURCE.md`, `MEMORY.md` |
-| [CI pós-merge PR #29](https://github.com/OARANHA/CRISE/actions/runs/37864930016) | `completed / success`, 5/5 no SHA `16be52b3...` |
-| [PR #28](https://github.com/OARANHA/CRISE/pull/28) | Testes M11 e auditoria; **reconciliação de conflitos em sua própria branch**, sem merge na importação |
-| [CI original PR #28](https://github.com/OARANHA/CRISE/actions/runs/37863411779) | `completed / success`, 5/5 no SHA antigo `a98b35a...`. **Não valida SHA novo da reconciliação** |
+| `main` | `f6883b747ce1a6ae6a6968948da5225332ed4f2f` — BrightBean ainda não integrado |
+| `feat/brightbean-upstream-import` | `63e0c854e199945435a9c42d5cfe2acfc62611b5` |
+| [PR #2](https://github.com/OARANHA/CRISE/pull/2) | Aberta, Draft, destino `main`; sem autorização de merge |
+| [PR #26](https://github.com/OARANHA/CRISE/pull/26) | Integrada à importação; dez caracterizações sintéticas M10; **não corrige M10** |
+| [PR #27](https://github.com/OARANHA/CRISE/pull/27) | Integrada à importação; estudo de afiliação independente de role |
+| [PR #29](https://github.com/OARANHA/CRISE/pull/29) | Integrada à importação; regra Wandora JEV.1 consultiva em `AGENTS.md`, `PROJECT_SOURCE.md` e memória |
+| [PR #28](https://github.com/OARANHA/CRISE/pull/28) | Integrada **somente à importação**; merge SHA `63e0c854e199945435a9c42d5cfe2acfc62611b5`; quatro caracterizações sintéticas M11 |
+| [CI pós-merge #37866908923](https://github.com/OARANHA/CRISE/actions/runs/37866908923) | `completed / success` no SHA exato `63e0c854...`; **5/5:** Pytest, Ruff, Mypy, Gitleaks, Docker |
+| Documentação de continuidade | Atualização deste snapshot, de `MEMORY.md` e da auditoria M11 em PR separada; **não confundir CI verde do merge #28 com CI desta atualização documental** |
 
 ## PROVEN EVIDENCE
 
-- BrightBean Studio Django/Python/PostgreSQL AGPL-3.0 presente apenas na branch da PR #2; recursos existentes preservados, sem homologação.
-- M10: PR #26 acrescentou testes de caracterização; EDITOR externo continua capaz de ler comentários/replies/anexos `INTERNAL` no comportamento atual. PR #27 comparou alternativas de afiliação sem implementar alteração. **M10 NÃO CORRIGIDO**.
-- M11: `OrgMembership` aceita múltiplas organizações por usuário, mas `RBACMiddleware.__call__` escolhe organização global via `.first()` separadamente de `last_workspace_id`; URL explícita com `workspace_id` revalida membership. Quatro testes de caracterização, sem mudança runtime. [Auditoria M11](audits/2026-10-08-m11-multi-org-context-characterization.md).
-- `MediaAssetManager.for_workspace_with_shared` permite compartilhamento editorial por organização, não autoriza compartilhamento de evidências privadas. M09 (`Post.internal_notes`) permanece risco separado.
-- Wandora JEV.1 é **camada consultiva** obrigatória quando disponível, conforme `AGENTS.md`; julgamento probabilístico não substitui código, testes, doutrina ou autorização. PR #29 integrada.
+- BrightBean Studio Django/Python/PostgreSQL, licença AGPL-3.0, está na branch de importação ligada à PR #2; recursos existentes de editor, calendário, aprovações, portal, inbox, analytics, mídia, API/MCP e RBAC preservados. CI e testes sintéticos **não são homologação operacional**.
+- **M10 aberto:** `WorkspaceMembership` não diferencia, de modo verificável e independente do role, funcionário interno VIGIAFAST de operador externo com `EDITOR`. Os testes da PR #26 caracterizam a visibilidade atual de comentários, respostas e anexos `INTERNAL` a ambos. PR #27 apenas propôs alternativas arquiteturais; não implementou correção.
+- **M11 caracterizado:** testes sintéticos da PR #28 verificam a divergência possível entre `request.org` global e organização de `last_workspace_id` com usuário multi-org; o `process_view` revalida membership de URL explícita, nega workspace sem vínculo e nega acesso após revogação. Isso **não comprova operação multi-org completa** de interfaces, rotas globais, API/MCP ou clientes reais. Ver [auditoria M11](audits/2026-10-08-m11-multi-org-context-characterization.md).
+- Compartilhamento de `MediaAsset` editorial por organização continua no BrightBean: workspaces da mesma organização não fornecem isolamento universal. M09 (`Post.internal_notes`) continua risco específico. Storage privado de evidências ainda requer decisão [ADR-0004](decisions/ADR-0004-private-evidence-storage.md).
+- **Wandora JEV.1:** regra consultiva já integrada pela PR #29 e aplicável a decisões técnicas e arquiteturais quando disponível. Julgamentos probabilísticos não substituem código, testes, doutrina ou autorização humana.
 
 ## GAPS → REUSE GATE → DECISION
 
-1. ADR-0001/0002 ACEITAS; [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) **PROPOSTAS/NÃO ACEITAS**.
-2. A topologia de clientes e afiliação confiável `internal/external/unclassified` independente de role são propostas a deliberar; não implementar política INTERNAL nem migração sem decisão explícita.
-3. Reusar `User`, `OrgMembership`, `WorkspaceMembership`, `CustomRole`, middleware, convites e editor BrightBean; não refazer RBAC.
-4. **Próximo gate:** conferir a CI no novo SHA da PR #28 depois da reconciliação de conflitos, por aviso `green`/`red` do operador. A CI original não vale para esse novo SHA. Merge da PR #28 exige autorização específica.
-5. Sem merge em `main` ou PR #2, deploy, dados reais, alteração de outro sistema, aprovação automática de ADR ou polling contínuo.
+1. **ADRs:** ADR-0001 e ADR-0002 ACEITAS; [ADR-0003](decisions/ADR-0003-client-isolation-boundaries.md) e [ADR-0004](decisions/ADR-0004-private-evidence-storage.md) **PROPOSTAS / NÃO ACEITAS**.
+2. **Gate prioritário:** deliberar topologia multi-cliente (organização por cliente vs. workspaces em organização compartilhada), afiliação verificada `internal/external/unclassified` separada do role, autoridade de classificação/auditoria, usuários legados e acesso a dados `INTERNAL`. **Não inferir aceitação da ADR por CI verde**.
+3. **Reuso:** preservar `User`, `OrgMembership`, `WorkspaceMembership`, `CustomRole`, middleware, convites, sessões, editor, portal e filtros existentes; não reconstruir RBAC. Fazer inventário/experimentos de segurança com usuários sintéticos A/B/C antes de qualquer migração/política de runtime.
+4. **Próxima entrega:** decisão humana sobre ADR-0003; em seguida um slice mínimo, separado, com testes adversariais por ação, recurso, workspace, classe de dado, portal, REST/MCP, links e revogação, preservando funções originais.
+5. **Limites:** não dar `EDITOR` a operadores reais enquanto M10 não for resolvido e testado; não fazer merge de PR #2 na `main`, deploy, operações destrutivas, uso de dados reais ou coleta real de redes; merge incremental somente com autorização específica; sem polling contínuo de CI.
